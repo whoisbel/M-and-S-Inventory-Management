@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import localFont from "next/font/local";
 import "./globals.css";
-
+import { Sidepanel } from "@/components";
 const inter = Inter({ subsets: ["latin"] });
 const sansation = localFont({
   src: "../fonts/Sansation_Regular.ttf",
@@ -19,7 +19,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={sansation.className}>{children}</body>
+      <body className={sansation.className}>
+        <Sidepanel />
+        {children}
+      </body>
     </html>
   );
 }
