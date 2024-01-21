@@ -17,7 +17,7 @@ const Sidepanel = () => {
             pathname == "/"
               ? " bg-main-background text-letters-color"
               : " bg-primary-color"
-          } cursor-pointer  font-bold flex items-center  mt-4 p-2.5 w-full gap-2`}
+          } sidepanel_link`}
           href="/"
         >
           <LuLayoutDashboard
@@ -34,7 +34,7 @@ const Sidepanel = () => {
             pathname.includes("/inventory_input/")
               ? " bg-main-background text-letters-color"
               : " bg-primary-color"
-          } cursor-pointer  font-bold flex items-center  mt-4 p-2.5 w-full  gap-2 `}
+          } sidepanel_link`}
           href="/inventory_input/add_inventory"
         >
           <TfiWrite

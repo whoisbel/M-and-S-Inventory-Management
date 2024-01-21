@@ -9,7 +9,7 @@ export default function RootLayout({
 }>) {
   const pathName = usePathname();
   return (
-    <div className="bg-accent-green w-full h-full m-2 rounded-lg p-2">
+    <>
       <div className="flex">
         <Link
           href="/inventory_input/add_inventory"
@@ -33,6 +33,6 @@ export default function RootLayout({
         </Link>
       </div>
       {children}
-    </div>
+    </>
   );
 }

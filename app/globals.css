@@ -26,3 +26,7 @@ body {
     text-wrap: balance;
   }
 }
+
+.sidepanel_link {
+  @apply cursor-pointer  font-bold flex items-center  mt-4 p-2.5 w-full gap-2;
+}
