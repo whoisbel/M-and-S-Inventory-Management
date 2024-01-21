@@ -21,7 +21,9 @@ export default function RootLayout({
     <html lang="en">
       <body className={sansation.className}>
         <Sidepanel />
-        {children}
+        <div className="bg-accent-green w-full h-full m-2 rounded-lg">
+          {children}
+        </div>
       </body>
     </html>
   );
