@@ -9,10 +9,15 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        "primary-green": "#3AC648",
-        "secondary-green": "#C0E1C2",
-        "custom-gray": "#D9D9D9",
+        "primary-color": "#2F9E3B",
+        "accent-green": "#C0E1C2",
+        "add-minus": "#807F7F",
         "custom-white": "#FFFEFE",
+        "accent-gray": "D9D9D9",
+        "main-background": "#ECEAEA",
+        "buttons-icon": "#F3F3F3",
+        "letters-color": "#06162E"
+        
       },
       backgroundImage: {
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
