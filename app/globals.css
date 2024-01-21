@@ -18,16 +18,15 @@
 
 body {
   color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
+  @apply bg-main-background w-full h-screen flex p-2;
 }
 
 @layer utilities {
   .text-balance {
     text-wrap: balance;
   }
+}
+
+.sidepanel_link {
+  @apply cursor-pointer  font-bold flex items-center  mt-4 p-2.5 w-full gap-2;
 }
