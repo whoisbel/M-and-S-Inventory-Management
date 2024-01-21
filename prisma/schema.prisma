@@ -1,0 +1,128 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+
+model HarvestLog {
+  id Int @id @default(autoincrement())
+  areaId Int
+  quantity Int
+  harvestDate DateTime @default(now())
+  area Area @relation(fields: [areaId], references: [id])
+}
+model Area {
+  id Int @id @default(autoincrement())
+  description String
+  stocks Stock[]
+  harvestLog HarvestLog[]
+}
+model Grade{
+  id Int @id @default(autoincrement())
+  description String 
+  price Float
+  inventories Inventory[]
+  stocks Stock[]
+}
+
+model Inventory{
+  id Int @id @default(autoincrement())
+  gradeId Int
+  grade Grade @relation(fields: [gradeId], references: [id])
+  isWashed Boolean
+  quantity Int
+  
+}
+
+model Stock{
+  id Int @id @default(autoincrement())
+  quantityOnHand Int 
+  gradeId Int
+  areaId Int
+  grade Grade @relation(fields: [gradeId], references: [id])
+  area Area @relation(fields: [areaId], references: [id])
+  stockOut Stockout[]
+  orderDetail OrderDetail[]
+}
+model Stockout {
+  id Int @id @default(autoincrement())
+  stockId Int
+  quantity Int
+  stockoutType String
+  dateOut DateTime @default(now())
+  stock Stock @relation(fields: [stockId], references: [id])
+}
+
+model OrderDetail{
+  id Int @id @default(autoincrement())
+  orderId Int
+  stockId Int
+  isFulfilled Boolean
+  orderQuantity Int
+  sub_total Float
+  loadingSchedule DateTime?
+  status StatusEnum @default(processing)
+  stock Stock @relation(fields: [stockId], references: [id])
+  order Order @relation(fields: [orderId], references: [id], onDelete: Cascade)
+}
+
+model Order {
+  id Int @id @default(autoincrement())
+  customerId Int
+  isPreorder Boolean
+  orderDate DateTime @default(now())
+  orderTotal Decimal
+  isFullfilled Boolean
+  orderDetails OrderDetail[]
+  customer Customer @relation(fields: [customerId], references: [id], onDelete: Cascade)
+}
+model Customer{
+  id Int @id @default(autoincrement())
+  name String
+  mobileNumber String
+  email String
+  orders Order[]
+}
+
+model Personnel{
+  id Int @id @default(autoincrement())
+  name String
+  password String 
+  actions ActionLog[]
+}
+
+model ActionLog{
+  id Int @id @default(autoincrement())
+  personnel_id Int
+  venue Venue
+  event Event
+  action_date DateTime @default(now())
+  personnel Personnel @relation(fields: [personnel_id], references: [id])
+}
+
+
+enum Event {
+  add
+  update
+  delete
+}
+enum Venue{
+  add_inventory
+  category
+  records
+  order_details
+  action_log
+}
+enum StatusEnum {
+  processing 
+  packed
+  scheduled_for_loading
+  fullfilled
+}

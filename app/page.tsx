@@ -1,10 +1,11 @@
 import Link from "next/link";
-
-export default function Home() {
+import { Sidepanel } from "@/components";
+export default function Dashboard() {
   return (
-    <>
-      <h1>Hello</h1>
-      <Link href="/test">Testing</Link>
-    </>
+    <div className="bg-custom-white w-full h-screen flex p-2 ">
+      <Sidepanel />
+      <h1 className="text-black">Hello</h1>
+      <Link href="/test">Test</Link>
+    </div>
   );
 }
