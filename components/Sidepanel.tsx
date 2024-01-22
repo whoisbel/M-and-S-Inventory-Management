@@ -4,7 +4,7 @@ import Link from "next/link";
 import { TfiWrite } from "react-icons/tfi";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
-
+import { SlNotebook } from "react-icons/sl";
 const Sidepanel = () => {
   const pathname = usePathname();
 
@@ -45,6 +45,23 @@ const Sidepanel = () => {
             }  w-11 h-11`}
           />
           Inventory Input
+        </Link>
+        <Link
+          className={`${
+            pathname.includes("/inventory/")
+              ? " bg-main-background text-letters-color"
+              : " bg-primary-color"
+          } sidepanel_link`}
+          href="/inventory/available_products"
+        >
+          <SlNotebook 
+            className={`${
+              pathname.includes("/inventory/")
+                ? "text-primary-color"
+                : "text-main-background"
+            }  w-11 h-11`}
+          />
+          Inventory
         </Link>
       </ul>
     </div>
