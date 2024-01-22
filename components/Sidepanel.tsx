@@ -5,6 +5,7 @@ import { TfiWrite } from "react-icons/tfi";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { SlNotebook } from "react-icons/sl";
+import { MdOutlineReceiptLong, MdOutlineHistory } from "react-icons/md";
 const Sidepanel = () => {
   const pathname = usePathname();
 
@@ -62,6 +63,40 @@ const Sidepanel = () => {
             }  w-11 h-11`}
           />
           Inventory
+        </Link>
+        <Link
+          className={`${
+            pathname.includes("/order_details/")
+              ? " bg-main-background text-letters-color"
+              : " bg-primary-color"
+          } sidepanel_link`}
+          href="/order_details/"
+        >
+          <MdOutlineReceiptLong 
+            className={`${
+              pathname.includes("/order_details/")
+                ? "text-primary-color"
+                : "text-main-background"
+            }  w-11 h-11`}
+          />
+          Order Details
+        </Link>
+        <Link
+          className={`${
+            pathname.includes("/history/")
+              ? " bg-main-background text-letters-color"
+              : " bg-primary-color"
+          } sidepanel_link`}
+          href="/history/"
+        >
+          <MdOutlineHistory 
+            className={`${
+              pathname.includes("/history/")
+                ? "text-primary-color"
+                : "text-main-background"
+            }  w-11 h-11`}
+          />
+          History
         </Link>
       </ul>
     </div>
