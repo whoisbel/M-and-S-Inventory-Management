@@ -13,11 +13,10 @@ const config: Config = {
         "accent-green": "#C0E1C2",
         "add-minus": "#807F7F",
         "custom-white": "#FFFEFE",
-        "accent-gray": "D9D9D9",
+        "accent-gray": "#D9D9D9",
         "main-background": "#ECEAEA",
         "buttons-icon": "#F3F3F3",
-        "letters-color": "#06162E"
-        
+        "letters-color": "#06162E",
       },
       backgroundImage: {
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",

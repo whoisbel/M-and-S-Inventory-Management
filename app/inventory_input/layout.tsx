@@ -10,14 +10,14 @@ export default function RootLayout({
   const pathName = usePathname();
   return (
     <>
-      <div className="flex">
+      <div className="tab_buttons">
         <Link
           href="/inventory_input/add_inventory"
           className={`${
             pathName == "/inventory_input/add_inventory"
               ? "bg-neutral-300 border-b-2 border-primary-color text-black"
               : "bg-neutral-200 text-neutral-800 "
-          } px-4 py-2 rounded-tl-lg font-bold`}
+          } `}
         >
           Add Inventory
         </Link>
@@ -27,7 +27,7 @@ export default function RootLayout({
             pathName == "/inventory_input/categorize"
               ? "bg-neutral-300 border-b-2 border-primary-color text-black"
               : "bg-neutral-200 text-neutral-800 "
-          } px-4 py-2 rounded-tr-lg font-bold`}
+          }`}
         >
           Categorize
         </Link>
