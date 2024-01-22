@@ -66,7 +66,7 @@ const Sidepanel = () => {
         </Link>
         <Link
           className={`${
-            pathname.includes("/order_details/")
+            pathname.includes("/order_details")
               ? " bg-main-background text-letters-color"
               : " bg-primary-color"
           } sidepanel_link`}
@@ -74,7 +74,7 @@ const Sidepanel = () => {
         >
           <MdOutlineReceiptLong 
             className={`${
-              pathname.includes("/order_details/")
+              pathname.includes("/order_details")
                 ? "text-primary-color"
                 : "text-main-background"
             }  w-11 h-11`}
@@ -83,7 +83,7 @@ const Sidepanel = () => {
         </Link>
         <Link
           className={`${
-            pathname.includes("/history/")
+            pathname.includes("/history")
               ? " bg-main-background text-letters-color"
               : " bg-primary-color"
           } sidepanel_link`}
@@ -91,7 +91,7 @@ const Sidepanel = () => {
         >
           <MdOutlineHistory 
             className={`${
-              pathname.includes("/history/")
+              pathname.includes("/history")
                 ? "text-primary-color"
                 : "text-main-background"
             }  w-11 h-11`}
