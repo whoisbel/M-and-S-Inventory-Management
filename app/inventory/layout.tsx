@@ -10,14 +10,14 @@ export default function RootLayout({
   const pathName = usePathname();
   return (
     <>
-      <div className="flex">
+      <div className="tab_buttons">
         <Link
           href="/inventory/available_products"
           className={`${
             pathName == "/inventory/available_products"
               ? "bg-neutral-300 border-b-2 border-primary-color text-black"
               : "bg-neutral-200 text-neutral-800 "
-          } px-4 py-2 rounded-tl-lg font-bold`}
+          } `}
         >
           Available_products
         </Link>
@@ -27,7 +27,7 @@ export default function RootLayout({
             pathName == "/inventory/stockout"
               ? "bg-neutral-300 border-b-2 border-primary-color text-black"
               : "bg-neutral-200 text-neutral-800 "
-          } px-4 py-2 rounded-tr-lg font-bold`}
+          }`}
         >
           stockout
         </Link>
@@ -37,7 +37,7 @@ export default function RootLayout({
             pathName == "/inventory/records"
               ? "bg-neutral-300 border-b-2 border-primary-color text-black"
               : "bg-neutral-200 text-neutral-800 "
-          } px-4 py-2 rounded-tr-lg font-bold`}
+          }`}
         >
           records
         </Link>

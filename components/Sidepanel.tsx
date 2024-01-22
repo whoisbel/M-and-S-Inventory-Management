@@ -55,7 +55,7 @@ const Sidepanel = () => {
           } sidepanel_link`}
           href="/inventory/available_products"
         >
-          <SlNotebook 
+          <SlNotebook
             className={`${
               pathname.includes("/inventory/")
                 ? "text-primary-color"
@@ -72,7 +72,7 @@ const Sidepanel = () => {
           } sidepanel_link`}
           href="/order_details/"
         >
-          <MdOutlineReceiptLong 
+          <MdOutlineReceiptLong
             className={`${
               pathname.includes("/order_details")
                 ? "text-primary-color"
@@ -89,7 +89,7 @@ const Sidepanel = () => {
           } sidepanel_link`}
           href="/history/"
         >
-          <MdOutlineHistory 
+          <MdOutlineHistory
             className={`${
               pathname.includes("/history")
                 ? "text-primary-color"

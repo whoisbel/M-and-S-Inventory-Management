@@ -21,3 +21,10 @@ export type DashboardData = {
 
   [key: string]: Object[];
 };
+
+export type addFormData = {
+  date: string;
+  area: string;
+  quantity: number;
+  [key: string]: string | number;
+};

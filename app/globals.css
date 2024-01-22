@@ -30,3 +30,20 @@ body {
 .sidepanel_link {
   @apply cursor-pointer  font-bold flex items-center  mt-4 p-2.5 w-full gap-2;
 }
+
+.tab_buttons {
+  display: flex;
+}
+.tab_buttons a {
+  @apply px-4 py-2 font-bold;
+}
+.tab_buttons :first-child {
+  @apply rounded-tl-lg;
+}
+.tab_buttons :last-child {
+  @apply rounded-tr-lg;
+}
+
+.form_input {
+  @apply border-add-minus border-2 p-1;
+}
