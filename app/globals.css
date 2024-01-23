@@ -18,7 +18,8 @@
 
 body {
   color: rgb(var(--foreground-rgb));
-  @apply bg-main-background w-full h-screen flex p-2;
+  overflow-y: auto;
+  @apply bg-main-background w-full min-h-screen flex  p-2;
 }
 
 @layer utilities {

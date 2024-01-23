@@ -1,6 +1,6 @@
 "use client";
 import { ChangeEvent, useState } from "react";
-import { AddForm } from "@/components";
+import { InventoryInputForm } from "@/components";
 import { FaPlus } from "react-icons/fa";
 import { addFormData } from "@/types";
 
@@ -16,7 +16,7 @@ const AddInventory = () => {
     setAddFormData([...addFormData, newForm]);
   };
   const handleAddFormChange = (
-    e: ChangeEvent<HTMLInputElement>,
+    e: ChangeEvent<HTMLInputElement> | ChangeEvent<HTMLSelectElement>,
     index: number
   ) => {
     const field = e.target.name;
@@ -27,7 +27,6 @@ const AddInventory = () => {
   const handleRemoveForm = (index: number) => {
     const newAddFormData = [...addFormData];
     newAddFormData.splice(index, 1);
-    console.log("hello");
     setAddFormData(newAddFormData);
   };
 
@@ -39,7 +38,7 @@ const AddInventory = () => {
     */
   };
   return (
-    <div className="h-full w-full bg-white text-black p-7 flex flex-col">
+    <div className=" w-full h-full bg-white text-black p-7 flex flex-col gap-3">
       <button
         onClick={() => {
           handleCreateNewForm();
@@ -50,11 +49,11 @@ const AddInventory = () => {
       </button>
       <div className="flex flex-col gap-3">
         {addFormData.map((data, index) => (
-          <AddForm
+          <InventoryInputForm
             key={index}
             handleChange={handleAddFormChange}
             handleDelete={handleRemoveForm}
-            addFormData={data}
+            inventoryFormData={data}
             index={index}
           />
         ))}

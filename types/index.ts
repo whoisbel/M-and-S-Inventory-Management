@@ -28,3 +28,11 @@ export type addFormData = {
   quantity: number;
   [key: string]: string | number;
 };
+
+export type categoryFormData = {
+  grade: string;
+  quantity: number;
+  [key: string]: string | number;
+};
+
+export type inventoryInputData = addFormData | categoryFormData;

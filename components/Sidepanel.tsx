@@ -10,8 +10,9 @@ const Sidepanel = () => {
   const pathname = usePathname();
 
   // active:bg-main-background active:text-letters-color
+  //h-[calc(100vh-1em)] 1em paras padding top (.5em) and bottom (.5em)
   return (
-    <div className="sticky top-0 left-0 h-full bg-primary-green rounded-lg hidden md:block bg-primary-color">
+    <div className="sticky top-2 left-2 bottom-2  h-[calc(100vh-1em)] bg-primary-green rounded-lg hidden md:block bg-primary-color">
       <ul className="text-[30px] flex flex-col min-w-[300px]">
         <Link
           className={`${
