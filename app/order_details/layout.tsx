@@ -2,6 +2,7 @@
 
 import { usePathname } from "next/navigation";
 import Link from "next/link";
+import { DisplayID } from "@/components";
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -21,6 +22,7 @@ export default function RootLayout({
         >
           Order Details
         </Link>
+        <DisplayID/>
       </div>
       {children}
     </>
