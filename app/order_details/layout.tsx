@@ -10,7 +10,7 @@ export default function RootLayout({
 }>) {
   const pathName = usePathname();
   return (
-    <>
+    <div className="flex flex-col h-full bg-accent-green p-3 rounded-lg">
       <div className="flex">
         <Link
           href="/order_details"
@@ -25,6 +25,6 @@ export default function RootLayout({
         <DisplayID/>
       </div>
       {children}
-    </>
+    </div>
   );
 }

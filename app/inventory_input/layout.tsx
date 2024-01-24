@@ -10,7 +10,7 @@ export default function RootLayout({
 }>) {
   const pathName = usePathname();
   return (
-    <>
+    <div className="flex flex-col h-full bg-accent-green p-3 rounded-lg">
       <div className="tab_buttons">
         <Link
           href="/inventory_input/add_inventory"
@@ -35,6 +35,6 @@ export default function RootLayout({
         <DisplayID/>
       </div>
       {children}
-    </>
+    </div>
   );
 }
