@@ -1,5 +1,3 @@
-import React from "react";
-
 function DisplayID() {
   const id = "123456AAD";
   return (

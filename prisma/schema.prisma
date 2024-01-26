@@ -92,15 +92,15 @@ model Customer{
 }
 
 model Personnel{
-  id Int @id @default(autoincrement())
+  id String @id
   name String
-  password String 
+  password String
   actions ActionLog[]
 }
 
 model ActionLog{
   id Int @id @default(autoincrement())
-  personnel_id Int
+  personnel_id String
   venue Venue
   event Event
   action_date DateTime @default(now())
