@@ -10,7 +10,6 @@ import { signOut, signIn } from "next-auth/react";
 export default function Dashboard() {
   return (
     <div className="w-full h-full flex flex-col">
-      <DisplayID />
       {/* Inventory Summary container */}
       <div className="w-full h-full bg-accent-green rounded-3xl p-7 flex">
         <div className="w-full flex flex-col">

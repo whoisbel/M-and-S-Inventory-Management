@@ -14,7 +14,7 @@ datasource db {
 model HarvestLog {
   id Int @id @default(autoincrement())
   areaId Int
-  quantity Int
+  quantity Decimal
   harvestDate DateTime @default(now())
   area Area @relation(fields: [areaId], references: [id])
 }
@@ -37,13 +37,13 @@ model Inventory{
   gradeId Int
   grade Grade @relation(fields: [gradeId], references: [id])
   isWashed Boolean
-  quantity Int
+  quantity Decimal
   
 }
 
 model Stock{
   id Int @id @default(autoincrement())
-  quantityOnHand Int 
+  quantityOnHand Decimal 
   gradeId Int
   areaId Int
   grade Grade @relation(fields: [gradeId], references: [id])
@@ -54,7 +54,7 @@ model Stock{
 model Stockout {
   id Int @id @default(autoincrement())
   stockId Int
-  quantity Int
+  quantity Decimal
   stockoutType String
   dateOut DateTime @default(now())
   stock Stock @relation(fields: [stockId], references: [id])

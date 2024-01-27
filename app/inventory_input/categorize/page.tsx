@@ -9,8 +9,30 @@ const Categorize = () => {
     []
   );
 
-  const grade = ["grade 1", "grade 2", "grade 3", "grade 4"];
-
+  const grade = ["A", "B", "C", "D", "grade 1", "grade 2", "grade 3"];
+  const area = [
+    {
+      description: "Area 1",
+      quantity: 200,
+    },
+    {
+      description: "Area B",
+      quantity: 100,
+    },
+    {
+      description: "Area C",
+      quantity: 600,
+    },
+    {
+      description: "Area D",
+      quantity: 220,
+    },
+    {
+      description: "Area E",
+      quantity: 500,
+    },
+  ];
+  const [selectedArea, setSelectedArea] = useState<(typeof area)[0]>(area[0]);
   const handleCategoryFormAdd = () => {
     const categoryForm: categoryFormData = {
       grade: "",
@@ -36,18 +58,33 @@ const Categorize = () => {
 
   return (
     <div className="h-full w-full bg-white text-black flex flex-col">
-      <div className="bg-accent-gray py-2 ">
+      <div className="bg-accent-gray py-2 ml-2 flex">
         <label>Area:</label>
-        <input
-          type="text"
+        <select
           name="area"
-          className="mx-2 border-[1px] border-add-minus"
-        />
+          id="area"
+          className="mx-2 border-[1px] bg-white border-add-minus w-[150px]"
+          onChange={(e) => {
+            setSelectedArea(area[Number(e.target.value)]);
+          }}
+        >
+          <option value="Select Area" disabled>
+            Select Area
+          </option>
+          {area.map((a, ind) => (
+            <option value={ind} key={ind}>
+              {a.description}
+            </option>
+          ))}
+        </select>
+
         <label className="ml-2">Unclassified:</label>
         <input
           type="text"
           name="unclassified"
           className="mx-2 border-[1px] border-add-minus"
+          value={selectedArea?.quantity}
+          readOnly
         />
       </div>
       <div className="h-full w-full  p-3 flex flex-col gap-3">

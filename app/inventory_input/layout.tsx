@@ -32,7 +32,6 @@ export default function RootLayout({
         >
           Categorize
         </Link>
-        <DisplayID />
       </div>
       {children}
     </div>
