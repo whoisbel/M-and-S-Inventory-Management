@@ -42,7 +42,6 @@ export default function RootLayout({
         >
           records
         </Link>
-        <DisplayID/>
       </div>
       {children}
     </div>

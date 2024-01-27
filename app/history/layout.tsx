@@ -22,7 +22,6 @@ export default function RootLayout({
         >
           History
         </Link>
-        <DisplayID/>
       </div>
       {children}
     </div>

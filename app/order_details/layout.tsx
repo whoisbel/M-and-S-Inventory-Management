@@ -22,7 +22,6 @@ export default function RootLayout({
         >
           Order Details
         </Link>
-        <DisplayID/>
       </div>
       {children}
     </div>
