@@ -1,8 +1,8 @@
 "use client"
 import Link from "next/link";
 import { DisplayID } from "@/components";
-import { Chart } from "chart.js/auto";
-import { useState, useRef } from "react";
+import Chart from "chart.js/auto";
+import { useState } from "react";
 
 export default function Dashboard() {
 
@@ -16,11 +16,97 @@ export default function Dashboard() {
     setSortOption('area')
   }
 
+  (async function() {
+    const data = {
+      labels: [
+        'Red',
+        'Blue',
+        'Yellow'
+      ],
+      datasets:[{
+        label: "Test",
+        data: [300,50,100],
+        backgroundColor: [
+          'rgb(255, 99, 132)',
+          'rgb(54, 162, 235)',
+          'rgb(255, 205, 86)'
+        ],
+        hoverOffset: 4
+      }]
+    };
+  
+    // Test chart: Only for demonstration
+    // PIE CHART
+    new Chart(
+      document.getElementById('acquisitions') as HTMLCanvasElement,
+      {
+        type: 'doughnut',
+        data: data,
+        options: {
+          layout: {
+            padding:{
+              top: 10,
+              bottom: 10,
+              left: 10,
+            }
+          },
+          aspectRatio:2,
+          plugins: {
+            legend: {
+              display: true,
+              labels:{
+                color: 'rgb(24, 25, 26)',
+                font: {
+                  size: 40
+                },
+                boxWidth: 40,
+                boxHeight: 40
+              },
+              position: "left",
+              align: "start"
+            },
+          },
+        }
+      }
+    );
+  })();
+  (async function() {
+    const data = {
+      labels: [
+        'Red',
+        'Blue',
+        'Yellow'
+      ],
+      datasets:[{
+        label: "Test",
+        data: [300,50,100],
+        backgroundColor: [
+          'rgb(255, 99, 132)',
+          'rgb(54, 162, 235)',
+          'rgb(255, 205, 86)'
+        ],
+        hoverOffset: 4
+      }]
+    };
+    new Chart(
+      document.getElementById('line-graph') as HTMLCanvasElement,
+      {
+        type: 'line',
+        data: data,
+        options: {
+          plugins: {
+            legend: {
+              display: false,
+            },
+          },
+        }
+      }
+    );
+  })();
   return <div className="w-full h-full flex flex-col">
-    
     <DisplayID/>
     {/* Inventory Summary container */}
-    <div className="w-full h-full bg-accent-green rounded-3xl p-7 flex">
+    <div className="w-full h-1/2 bg-accent-green rounded-3xl p-7 flex">
       <div className="w-full flex flex-col">
         <h1 className="text-[30px] text-letters-color font-black pb-4">Inventory Summary</h1>
         <div className="w-full h-full pr-4">
@@ -65,13 +151,19 @@ export default function Dashboard() {
       </div>
       <div className="bg-custom-white w-full h-full rounded-3xl text-letters-color">
         {/* Pie Chart HERE */}
+        <div className="w-full h-full flex justify-center items-center">
+          <canvas id="acquisitions"></canvas>
+        </div>
       </div>
     </div>
     {/* Seasonal and Yearly chart container */}
-    <div className="w-full h-full flex">
+    <div className="w-full h-1/2 flex">
       {/* Seasonal chart container */}
       <div className="w-full h-full rounded-3xl pr-4 pt-4">
-        <div className="w-full h-full rounded-3xl bg-custom-white"></div>
+        <div className="w-full h-full rounded-3xl bg-custom-white p-7">
+          <h1 className="font-bold text-letters-color text-[30px]">Seasonal Chart</h1>
+          <canvas id="line-graph" className="mt-4"></canvas>
+        </div>
       </div>
       {/* Yearly chart container */}
       <div className="w-full h-full rounded-3xl pt-4">
