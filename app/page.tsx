@@ -37,6 +37,10 @@ export default function Dashboard() {
   
     // Test chart: Only for demonstration
     // PIE CHART
+    const existingChart = Chart.getChart("acquisitions");
+    if (existingChart) {
+      existingChart.destroy();
+    }
     new Chart(
       document.getElementById('acquisitions') as HTMLCanvasElement,
       {
@@ -88,6 +92,10 @@ export default function Dashboard() {
         hoverOffset: 4
       }]
     };
+    const existingChart = Chart.getChart("line-graph");
+    if (existingChart) {
+      existingChart.destroy();
+    }
     new Chart(
       document.getElementById('line-graph') as HTMLCanvasElement,
       {
@@ -103,10 +111,45 @@ export default function Dashboard() {
       }
     );
   })();
+  (async function() {
+    const data = {
+      labels: [
+        'Red',
+        'Blue',
+        'Yellow'
+      ],
+      datasets:[{
+        label: "Test",
+        data: [300,50,100],
+        backgroundColor: [
+          'rgb(255, 99, 132)',
+        ],
+        hoverOffset: 4
+      }]
+    };
+    const existingChart = Chart.getChart("bar-graph");
+    if (existingChart) {
+      existingChart.destroy();
+    }
+    new Chart(
+      document.getElementById('bar-graph') as HTMLCanvasElement,
+      {
+        type: 'bar',
+        data: data,
+        options: {
+          plugins: {
+            legend: {
+              display: false,
+            },
+          },
+        }
+      }
+    );
+  })();
   return <div className="w-full h-full flex flex-col">
     <DisplayID/>
     {/* Inventory Summary container */}
-    <div className="w-full h-1/2 bg-accent-green rounded-3xl p-7 flex">
+    <div className="w-full h-1/2 bg-accent-green rounded-3xl p-4 flex">
       <div className="w-full flex flex-col">
         <h1 className="text-[30px] text-letters-color font-black pb-4">Inventory Summary</h1>
         <div className="w-full h-full pr-4">
@@ -140,7 +183,7 @@ export default function Dashboard() {
                       <h1 className="text-[35px] font-bold text-letters-color self-center">4000 KG</h1>
                     </div>
                     <div className="rounded-xl flex flex-col w-[250px] h-[100px] bg-blue-400 p-4">
-                      <h1 className="text-[15px] font-bold text-letters-color">Regular D</h1>
+                      <h1 className="text-[15px] font-bold text-letters-color">Rejects</h1>
                       <h1 className="text-[35px] font-bold text-letters-color self-center">4000 KG</h1>
                     </div>
                   </div>
@@ -160,14 +203,17 @@ export default function Dashboard() {
     <div className="w-full h-1/2 flex">
       {/* Seasonal chart container */}
       <div className="w-full h-full rounded-3xl pr-4 pt-4">
-        <div className="w-full h-full rounded-3xl bg-custom-white p-7">
+        <div className="w-full h-full rounded-3xl bg-custom-white p-4">
           <h1 className="font-bold text-letters-color text-[30px]">Seasonal Chart</h1>
           <canvas id="line-graph" className="mt-4"></canvas>
         </div>
       </div>
       {/* Yearly chart container */}
-      <div className="w-full h-full rounded-3xl pt-4">
-        <div className="w-full h-full rounded-3xl bg-custom-white"></div>
+      <div className="w-full h-full rounded-3xl pt-4 ">
+        <div className="w-full h-full rounded-3xl bg-custom-white p-4">
+          <h1 className="font-bold text-letters-color text-[30px]">Yearly Chart</h1>
+          <canvas id="bar-graph" className="mt-4"></canvas>
+        </div>
       </div>
     </div>
   </div>;
