@@ -8,6 +8,12 @@ import { getProviders } from "next-auth/react";
 import { signOut, signIn } from "next-auth/react";
 
 export default function Dashboard() {
+  fetch("api/dashboard").then((response) => {
+    response.json().then((res) => {
+      console.log(res);
+    });
+  });
+  console.log("working");
   return (
     <div className="w-full h-full flex flex-col">
       {/* Inventory Summary container */}
