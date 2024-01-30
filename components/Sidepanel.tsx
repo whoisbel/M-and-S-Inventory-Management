@@ -6,6 +6,8 @@ import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { SlNotebook } from "react-icons/sl";
 import { MdOutlineReceiptLong, MdOutlineHistory } from "react-icons/md";
+import { TbLogout } from "react-icons/tb";
+import { signOut } from "next-auth/react";
 const Sidepanel = () => {
   const pathname = usePathname();
 
@@ -99,6 +101,15 @@ const Sidepanel = () => {
           />
           History
         </Link>
+        <li
+          className="sidepanel_link bg-primary-color"
+          onClick={() => {
+            signOut();
+          }}
+        >
+          <TbLogout className="w-12 h-12" />
+          Sign Out
+        </li>
       </ul>
     </div>
   );

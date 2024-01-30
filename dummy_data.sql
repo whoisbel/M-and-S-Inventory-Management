@@ -13,3 +13,5 @@ VALUES
   (30, 2, 1),
   (20, 3, 1),
   (15, 1, 1);
+
+insert into personnel values ("hello", "hello" , "hello");

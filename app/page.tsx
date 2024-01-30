@@ -191,7 +191,18 @@ export default function Dashboard() {
             </div>
           </div>
         </div>
+        <div className="bg-custom-white w-full h-full rounded-3xl text-letters-color"></div>
       </div>
+
+      {/* Seasonal and Yearly chart container */}
+      <div className="w-full h-full flex">
+        {/* Seasonal chart container */}
+        <div className="w-full h-full rounded-3xl pr-4 pt-4">
+          <div className="w-full h-full rounded-3xl bg-custom-white"></div>
+        </div>
+        {/* Yearly chart container */}
+        <div className="w-full h-full rounded-3xl pt-4">
+          <div className="w-full h-full rounded-3xl bg-custom-white"></div>
       <div className="bg-custom-white w-full h-full rounded-3xl text-letters-color">
         {/* Pie Chart HERE */}
         <div className="w-full h-full flex justify-center items-center">
@@ -213,8 +224,9 @@ export default function Dashboard() {
         <div className="w-full h-full rounded-3xl bg-custom-white p-4">
           <h1 className="font-bold text-letters-color text-[30px]">Yearly Chart</h1>
           <canvas id="bar-graph" className="mt-4"></canvas>
+
         </div>
       </div>
-    </div>
-  </div>;
+    </div> 
+  );
 }

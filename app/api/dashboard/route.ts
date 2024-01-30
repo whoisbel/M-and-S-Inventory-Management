@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { PrismaClient } from "@prisma/client";
 import { DashboardData } from "@/types";
-
 const prisma = new PrismaClient();
 
 /* 
@@ -64,6 +63,6 @@ export async function GET(request: NextRequest) {
     pastYearHarvestData:
       pastYearHarvestData as DashboardData["pastYearHarvestData"],
   };
-
-  return NextResponse.json(data);
+  const p = prisma.personnel.findMany();
+  return NextResponse.json(p);
 }
