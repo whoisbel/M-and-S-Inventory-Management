@@ -43,7 +43,9 @@ app.on("ready", async () => {
       webSecurity: false,
     },
   });
-  await startServer();
+  if (app.isPackaged) {
+    await startServer();
+  }
   win.loadURL("http://localhost:3000");
   win.webContents.openDevTools();
   win.webContents.on("did-fail-load", (e, code, desc) => {

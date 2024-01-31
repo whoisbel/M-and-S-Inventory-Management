@@ -1,12 +1,11 @@
 "use client";
 import Link from "next/link";
 import { DisplayID } from "@/components";
-import { Chart, ArcElement } from "chart.js/auto";
+import Chart from "chart.js/auto";
 import { useRef, useState } from "react";
 import { Doughnut, Bar, Line } from "react-chartjs-2";
 
 export default function Dashboard() {
-  Chart.register(ArcElement);
   const [sortOption, setSortOption] = useState("grade");
 
   const sortByGrade = () => {
@@ -16,48 +15,121 @@ export default function Dashboard() {
   const sortByArea = () => {
     setSortOption("area");
   };
-  const donutData = {
-    labels: ["Red", "Blue", "Yellow"],
-    datasets: [
-      {
-        label: "Test",
-        data: [300, 50, 100],
-        backgroundColor: [
-          "rgb(255, 99, 132)",
-          "rgb(54, 162, 235)",
-          "rgb(255, 205, 86)",
-        ],
-        hoverOffset: 4,
-      },
-    ],
-  };
-  const barData = {
-    labels: ["Red", "Blue", "Yellow"],
-    datasets: [
-      {
-        label: "Test",
-        data: [300, 50, 100],
-        backgroundColor: [
-          "rgb(255, 99, 132)",
-          "rgb(54, 162, 235)",
-          "rgb(255, 205, 86)",
-        ],
-        hoverOffset: 4,
-      },
-    ],
-  };
-  const lineData = {
-    labels: ["Red", "Blue", "Yellow"],
-    datasets: [
-      {
-        label: "Test",
-        data: [300, 50, 100],
-        backgroundColor: ["rgb(255, 99, 132)"],
-        hoverOffset: 4,
-      },
-    ],
-  };
 
+  (async function () {
+    const data = {
+      labels: ["Red", "Blue", "Yellow"],
+      datasets: [
+        {
+          label: "Test",
+          data: [300, 50, 100],
+          backgroundColor: [
+            "rgb(255, 99, 132)",
+            "rgb(54, 162, 235)",
+            "rgb(255, 205, 86)",
+          ],
+          hoverOffset: 4,
+        },
+      ],
+    };
+
+    // Test chart: Only for demonstration
+    // PIE CHART
+    const existingChart = Chart.getChart("acquisitions");
+
+    if (existingChart) {
+      existingChart.destroy();
+    }
+    new Chart(document.getElementById("acquisitions") as HTMLCanvasElement, {
+      type: "doughnut",
+      data: data,
+      options: {
+        layout: {
+          padding: {
+            top: 10,
+            bottom: 10,
+            left: 10,
+          },
+        },
+        aspectRatio: 2,
+        plugins: {
+          legend: {
+            display: true,
+            labels: {
+              color: "rgb(24, 25, 26)",
+              font: {
+                size: 40,
+              },
+              boxWidth: 40,
+              boxHeight: 40,
+            },
+            position: "left",
+            align: "start",
+          },
+        },
+      },
+    });
+  })();
+  (async function () {
+    const data = {
+      labels: ["Red", "Blue", "Yellow"],
+      datasets: [
+        {
+          label: "Test",
+          data: [300, 50, 100],
+          backgroundColor: [
+            "rgb(255, 99, 132)",
+            "rgb(54, 162, 235)",
+            "rgb(255, 205, 86)",
+          ],
+          hoverOffset: 4,
+        },
+      ],
+    };
+    const existingChart = Chart.getChart("line-graph");
+    if (existingChart) {
+      existingChart.destroy();
+    }
+    new Chart(document.getElementById("line-graph") as HTMLCanvasElement, {
+      type: "line",
+      data: data,
+      options: {
+        plugins: {
+          legend: {
+            display: false,
+          },
+        },
+      },
+    });
+  })();
+  (async function () {
+    const data = {
+      labels: ["Red", "Blue", "Yellow"],
+      datasets: [
+        {
+          label: "Test",
+          data: [300, 50, 100],
+          backgroundColor: ["rgb(255, 99, 132)"],
+          hoverOffset: 4,
+        },
+      ],
+    };
+    const existingChart = Chart.getChart("bar-graph");
+    if (existingChart) {
+      existingChart.destroy();
+    }
+    new Chart(document.getElementById("bar-graph") as HTMLCanvasElement, {
+      type: "bar",
+      data: data,
+      options: {
+        plugins: {
+          legend: {
+            display: false,
+          },
+        },
+      },
+    });
+  })();
   return (
     <div className="w-full h-full flex flex-col">
       <DisplayID />
@@ -140,40 +212,44 @@ export default function Dashboard() {
               </div>
             </div>
           </div>
+          <div className="bg-custom-white w-full h-full rounded-3xl text-letters-color"></div>
         </div>
 
-        {/* Yearly chart container */}
-        <div className="w-full h-full rounded-3xl pt-4">
-          <div className="w-full h-full rounded-3xl bg-custom-white">
+        {/* Seasonal and Yearly chart container */}
+        <div className="w-full h-full flex">
+          {/* Seasonal chart container */}
+          <div className="w-full h-full rounded-3xl pr-4 pt-4">
+            <div className="w-full h-full rounded-3xl bg-custom-white"></div>
+          </div>
+          {/* Yearly chart container */}
+          <div className="w-full h-full rounded-3xl pt-4">
+            <div className="w-full h-full rounded-3xl bg-custom-white"></div>
             <div className="bg-custom-white w-full h-full rounded-3xl text-letters-color">
               {/* Pie Chart HERE */}
               <div className="w-full h-full flex justify-center items-center">
-                <Doughnut data={donutData} />
+                <canvas id="acquisitions"></canvas>
               </div>
             </div>
           </div>
-        </div>
-      </div>
-      {/* Seasonal and Yearly chart container */}
-      <div className="w-full h-full flex">
-        {/* Seasonal and Yearly chart container */}
-        <div className="w-full h-1/2 flex">
-          {/* Seasonal chart container */}
-          <div className="w-full h-full rounded-3xl pr-4 pt-4">
-            <div className="w-full h-full rounded-3xl bg-custom-white p-4">
-              <h1 className="font-bold text-letters-color text-[30px]">
-                Seasonal Chart
-              </h1>
-              <Line data={lineData} />
+          {/* Seasonal and Yearly chart container */}
+          <div className="w-full h-1/2 flex">
+            {/* Seasonal chart container */}
+            <div className="w-full h-full rounded-3xl pr-4 pt-4">
+              <div className="w-full h-full rounded-3xl bg-custom-white p-4">
+                <h1 className="font-bold text-letters-color text-[30px]">
+                  Seasonal Chart
+                </h1>
+                <canvas id="line-graph" className="mt-4"></canvas>
+              </div>
             </div>
-          </div>
-          {/* Yearly chart container */}
-          <div className="w-full h-full rounded-3xl pt-4 ">
-            <div className="w-full h-full rounded-3xl bg-custom-white p-4">
-              <h1 className="font-bold text-letters-color text-[30px]">
-                Yearly Chart
-              </h1>
-              <Bar data={barData} />
+            {/* Yearly chart container */}
+            <div className="w-full h-full rounded-3xl pt-4 ">
+              <div className="w-full h-full rounded-3xl bg-custom-white p-4">
+                <h1 className="font-bold text-letters-color text-[30px]">
+                  Yearly Chart
+                </h1>
+                <canvas id="bar-graph" className="mt-4"></canvas>
+              </div>
             </div>
           </div>
         </div>
