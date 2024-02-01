@@ -45,9 +45,11 @@ app.on("ready", async () => {
   });
   if (app.isPackaged) {
     await startServer();
+  } else {
+    win.webContents.openDevTools();
   }
   win.loadURL("http://localhost:3000");
-  win.webContents.openDevTools();
+
   win.webContents.on("did-fail-load", (e, code, desc) => {
     win.webContents.reloadIgnoringCache();
   });

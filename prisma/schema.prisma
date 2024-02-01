@@ -17,11 +17,12 @@ model HarvestLog {
   quantity Decimal
   harvestDate DateTime @default(now())
   area Area @relation(fields: [areaId], references: [id])
+  stock Stock[]
 }
 model Area {
   id Int @id @default(autoincrement())
   description String
-  stocks Stock[]
+
   harvestLog HarvestLog[]
 }
 model Grade{
@@ -45,9 +46,11 @@ model Stock{
   id Int @id @default(autoincrement())
   quantityOnHand Decimal 
   gradeId Int
-  areaId Int
+
+  batchId Int
+  harvestLog HarvestLog @relation(fields:[batchId], references: [id])
   grade Grade @relation(fields: [gradeId], references: [id])
-  area Area @relation(fields: [areaId], references: [id])
+  
   stockOut Stockout[]
   orderDetail OrderDetail[]
 }
