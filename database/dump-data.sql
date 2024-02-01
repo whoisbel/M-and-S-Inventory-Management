@@ -1,8 +1,8 @@
 INSERT INTO Area (description) VALUES ('Area 1'), ('Area 2'), ('Area 3'), ('Area 4'), ('Area 5'), ('Area 6'), ('Area 7'), ('Area 8'), ('Area 9'), ('Area 10');
 
-INSERT INTO Grade (description, price) VALUES ('A', 90), ('B', 80), ('C', 70), ('D', 60), ('Ungraded');
+INSERT INTO Grade (description, price) VALUES ('A', 90), ('B', 80), ('C', 70), ('D', 60), ('Ungraded', 0);
 
-INSERT INTO Users (user_id, password)
+INSERT INTO Users (id, password)
 VALUES
     ('AAD1234', 'securepassword1'),
     ('BBC5678', 'strongpass789'),
@@ -23,7 +23,7 @@ VALUES
     ('Diego', 'Tan', 'diego.tan@example.com', '+639911234567'),
     ('Angela', 'Garcia', 'angela.garcia@example.com', '+639221234567');
 
-INSERT INTO HarvestLog (area_id, quantity, harvestDate)
+INSERT INTO HarvestLog (id, quantity, harvestDate)
 VALUES
     (1, 100, '2024-01-15 10:00:00'),
     (2, 150, '2024-01-16 11:30:00'),
@@ -31,7 +31,7 @@ VALUES
     (4, 200, '2024-01-18 14:20:00'),
     (5, 180, '2024-01-19 08:00:00');
 
-INSERT INTO Inventory (batch_id, stock_id, grade_id, isOutOfStock, isWashed, quantity)
+INSERT INTO Inventory (id, stock_id, grade_id, isOutOfStock, isWashed, quantity)
 VALUES
     (1, 1, 1, FALSE, TRUE, 80),
     (1, 1, 2, FALSE, TRUE, 20),

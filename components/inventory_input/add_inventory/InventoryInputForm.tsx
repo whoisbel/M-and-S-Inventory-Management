@@ -1,13 +1,14 @@
 import { ChangeEvent } from "react";
 import { FaMinus } from "react-icons/fa";
 import { inventoryInputData } from "@/types";
-
+import { Area, Grade } from "@prisma/client";
 const InventoryInputForm = ({
   handleChange,
   handleDelete,
   inventoryFormData,
   index,
   grade,
+  area,
 }: {
   handleChange: (
     e: ChangeEvent<HTMLInputElement> | ChangeEvent<HTMLSelectElement>,
@@ -16,11 +17,11 @@ const InventoryInputForm = ({
   handleDelete: (index: number) => void;
   inventoryFormData: inventoryInputData;
   index: number;
-  grade?: string[];
+  grade?: Grade[];
+  area?: Area[];
 }) => {
-  console.log(inventoryFormData);
   return (
-    <div className="bg-accent-gray w-full min-h-[54px] flex gap-5 p-2 border-add-minus border-[1px] rounded-lg overflow-auto items-center">
+    <div className="bg-accent-gray shadow w-full min-h-[54px] flex gap-5 p-2 border-add-minus border-[1px] rounded-lg overflow-auto items-center">
       {Object.keys(inventoryFormData).map((key) => {
         let type = "text";
         switch (key) {
@@ -42,14 +43,35 @@ const InventoryInputForm = ({
                 className="form_input ml-3 min-w-[150px] text-center"
                 onChange={(e) => handleChange(e, index)}
               >
-                {grade?.map((grade, index) => (
-                  <option key={index} value={grade}>
-                    {grade}
+                {grade?.map((grade) => (
+                  <option key={grade.id} value={grade.description}>
+                    {grade.description}
                   </option>
                 ))}
               </select>
             </div>
           );
+        } else if (key === "area") {
+          return (
+            <div key={index}>
+              <label htmlFor="area" className="font-semibold">
+                Area:{" "}
+              </label>
+
+              <select
+                name="area"
+                className="form_input ml-3 min-w-[150px] text-center"
+                onChange={(e) => handleChange(e, index)}
+              >
+                {area?.map((area) => (
+                  <option key={area.id} value={area.id}>
+                    {area.description}
+                  </option>
+                ))}
+              </select>
+            </div>
+          );
+        } else if (key === "date") {
         } else {
           return (
             <div key={key}>
