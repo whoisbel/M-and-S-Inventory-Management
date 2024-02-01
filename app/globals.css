@@ -48,3 +48,19 @@ body {
 .form_input {
   @apply border-add-minus border-2 p-1;
 }
+
+table,
+td,
+th {
+  border: 1px solid;
+  @apply border-accent-gray;
+}
+td,
+th {
+  padding: 5px 10px;
+}
+table {
+  border-radius: 10px;
+  border-collapse: separate;
+  border-spacing: 0;
+}

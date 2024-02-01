@@ -10,7 +10,7 @@ const prisma = new PrismaClient();
 export async function GET(request: NextRequest) {
   //returns  id | quantity | areaId | areaName | quantityOnHand  | gradeId | gradeName
   const results = await prisma.$queryRaw`SELECT 
-  h.id,h.quantity, h.harvestDate, h.areaId, a.description as areaName, s.quantityOnHand,
+  h.id,h.quantity, DATE_FORMAT(h.harvestDate, '%m-%d-%Y') as harvestDate, h.areaId, a.description as areaName, s.quantityOnHand,
   s.gradeId , g.description as gradeName FROM harvestlog h
   LEFT JOIN stock s ON s.batchId = h.id
   LEFT JOIN area a ON a.id = h.areaId
@@ -55,10 +55,13 @@ export async function GET(request: NextRequest) {
     }
   }
 
-  const grade = await prisma.grade.findMany();
+  const areas = await prisma.area.findMany();
+  const dates =
+    await prisma.$queryRaw`SELECT DISTINCT(DATE_FORMAT(harvestDate, '%m-%d-%Y')) as harvestDate FROM HarvestLog;`;
+  console.log(dates);
   console.log(JSON.stringify(harvestLogs[1]));
 
-  return NextResponse.json({ harvestLogs, grade });
+  return NextResponse.json({ harvestLogs, areas, dates });
 }
 export async function POST(request: NextRequest) {
   console.log(await request.json());

@@ -25,7 +25,7 @@ export default function RootLayout({
         <Link
           href="/inventory_input/harvest_logs"
           className={`${
-            pathName == "/inventory_input/categorize"
+            pathName == "/inventory_input/harvest_logs"
               ? "bg-neutral-300 border-b-2 border-primary-color text-black"
               : "bg-neutral-200 text-neutral-800 "
           }`}

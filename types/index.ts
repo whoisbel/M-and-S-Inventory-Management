@@ -59,3 +59,10 @@ export type harvestLogCategoryData = {
 export type harvestLogsCategoryDict = {
   [key: number]: harvestLogCategoryData;
 };
+
+export type customTableProps = {
+  headers: string[];
+  data: string[][];
+  handleUpdate?: () => void;
+  handleDelete?: () => void;
+};

@@ -12,6 +12,7 @@ export const options: NextAuthOptions = {
         password: { label: "password", type: "password" },
       },
       async authorize(credentials, req) {
+        console.log(credentials);
         const user = await prisma.personnel.findUnique({
           where: {
             id: credentials?.id,
@@ -34,7 +35,7 @@ export const options: NextAuthOptions = {
   callbacks: {
     async session({ session }) {
       //get the user in database and add id in the new session.
-
+      console.log(session);
       return session;
     },
   },
