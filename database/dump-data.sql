@@ -1,6 +1,7 @@
 INSERT INTO Area (description) VALUES ('Area 1'), ('Area 2'), ('Area 3'), ('Area 4'), ('Area 5'), ('Area 6'), ('Area 7'), ('Area 8'), ('Area 9'), ('Area 10');
 
-INSERT INTO Grade (description, price) VALUES ('A', 90), ('B', 80), ('C', 70), ('D', 60), ('Ungraded');
+INSERT INTO Grade (description, price) VALUES ('A', 90), ('B', 80), ('C', 70), ('D', 60), ('Ungraded', 0);
+
 
 INSERT INTO Personnel (first_name, last_name, middle_name, username, role,  password, hasAccess)
 VALUES
@@ -27,6 +28,7 @@ VALUES
     (3, 120, '2024-01-17 09:45:00', FALSE),
     (4, 200, '2024-01-18 14:20:00', FALSE),
     (5, 180, '2024-01-19 08:00:00', FALSE);
+
 
 INSERT INTO Inventory (batch_id, stock_id, grade_id, isOutOfStock, isWashed, quantity, isDeleted)
 VALUES
