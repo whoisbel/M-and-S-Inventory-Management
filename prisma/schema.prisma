@@ -12,21 +12,20 @@ datasource db {
 
 
 model HarvestLog {
-  id Int @id @default(autoincrement())
-  areaId Int
+  id Int  @id @default(autoincrement()) 
+  areaId Int @map("area_id")
   quantity Decimal
-  harvestDate DateTime @default(now())
+  harvestDate DateTime @map("harvest_date") @default(now()) 
   area Area @relation(fields: [areaId], references: [id])
   stock Stock[]
 }
 model Area {
   id Int @id @default(autoincrement())
   description String
-
   harvestLog HarvestLog[]
 }
 model Grade{
-  id Int @id @default(autoincrement())
+  id Int @id @default(autoincrement()) 
   description String 
   price Float
   inventories Inventory[]
@@ -35,19 +34,19 @@ model Grade{
 
 model Inventory{
   id Int @id @default(autoincrement())
-  gradeId Int
+  gradeId Int @map("grade_id")
   grade Grade @relation(fields: [gradeId], references: [id])
-  isWashed Boolean
+  isWashed Boolean @map("is_washed")
   quantity Decimal
   
 }
 
 model Stock{
-  id Int @id @default(autoincrement())
-  quantityOnHand Decimal 
-  gradeId Int
+  id Int @id @default(autoincrement()) 
+  quantityOnHand Decimal @map("quantity_on_hand")
+  gradeId Int @map("grade_id")
 
-  batchId Int
+  batchId Int @map("batch_id")
   harvestLog HarvestLog @relation(fields:[batchId], references: [id])
   grade Grade @relation(fields: [gradeId], references: [id])
   
@@ -56,41 +55,41 @@ model Stock{
 }
 model Stockout {
   id Int @id @default(autoincrement())
-  stockId Int
+  stockId Int @map("stock_id")
   quantity Decimal
-  stockoutType String
-  dateOut DateTime @default(now())
+  stockoutType String @map("stock_out_type")
+  dateOut DateTime @default(now()) @map("date_out")
   stock Stock @relation(fields: [stockId], references: [id])
 }
 
 model OrderDetail{
-  id Int @id @default(autoincrement())
-  orderId Int
-  stockId Int
-  isFulfilled Boolean
-  orderQuantity Int
-  sub_total Float
-  loadingSchedule DateTime?
+  id Int @id @default(autoincrement()) 
+  orderId Int  @map("order_id")
+  stockId Int @map("stock_id")
+  isFulfilled Boolean @map("is_fullfilled")
+  orderQuantity Int @map("order_quantity")
+  subTotal Float @map("sub_total")
+  loadingSchedule DateTime? @map("loading_schedule")
   status StatusEnum @default(processing)
   stock Stock @relation(fields: [stockId], references: [id])
   order Order @relation(fields: [orderId], references: [id], onDelete: Cascade)
 }
 
 model Order {
-  id Int @id @default(autoincrement())
-  customerId Int
-  isPreorder Boolean
-  orderDate DateTime @default(now())
-  orderTotal Decimal
-  isFullfilled Boolean
+  id Int @id @default(autoincrement()) 
+  customerId Int @map("customer_id")
+  isPreorder Boolean  @map("is_preorder")
+  orderDate DateTime @default(now()) @map("order_date")
+  orderTotal Decimal @map("order_total")
+  isFulfilled Boolean @map("is_fulfilled")
   orderDetails OrderDetail[]
   customer Customer @relation(fields: [customerId], references: [id], onDelete: Cascade)
 }
 model Customer{
-  id Int @id @default(autoincrement())
-  name String
-  mobileNumber String
-  email String
+  id Int @id @default(autoincrement()) 
+  name String 
+  mobileNumber String @map("mobile_number")
+  email String 
   orders Order[]
 }
 
@@ -103,11 +102,11 @@ model Personnel{
 
 model ActionLog{
   id Int @id @default(autoincrement())
-  personnel_id String
+  personnelId String @map("personnel_id")
   venue Venue
   event Event
-  action_date DateTime @default(now())
-  personnel Personnel @relation(fields: [personnel_id], references: [id])
+  actionDate DateTime @default(now()) @map("action_date")
+  personnel Personnel @relation(fields: [personnelId], references: [id])
 }
 
 

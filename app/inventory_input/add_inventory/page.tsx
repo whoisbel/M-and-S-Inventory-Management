@@ -55,12 +55,16 @@ const AddInventory = () => {
         body: JSON.stringify({ addFormData, date }),
       });
       if (response.ok) {
-        swal.fire({
-          title: "Harvest Added",
-          icon: "success",
+        swal
+          .fire({
+            title: "Harvest Added",
+            icon: "success",
 
-          customClass: swalCustomClass,
-        });
+            customClass: swalCustomClass,
+          })
+          .then(() => {
+            setAddFormData([]);
+          });
       }
     } else {
       swal.fire({

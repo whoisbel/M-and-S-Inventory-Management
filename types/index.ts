@@ -62,7 +62,7 @@ export type harvestLogsCategoryDict = {
 
 export type customTableProps = {
   headers: string[];
-  data: string[][];
-  handleUpdate?: () => void;
-  handleDelete?: () => void;
+  data: { [key: number]: string[] };
+  handleUpdate?: (index: number) => void;
+  handleDelete?: (index: number) => void;
 };

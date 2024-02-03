@@ -4,4 +4,12 @@ import InventoryInputForm from "./inventory_input/add_inventory/InventoryInputFo
 import DisplayID from "./DisplayID";
 import Provider from "./Provider";
 import CustomTable from "./CustomTable";
-export { Sidepanel, DisplayID, InventoryInputForm, Provider, CustomTable };
+import LoadingRing from "./LoadingRing";
+export {
+  Sidepanel,
+  DisplayID,
+  InventoryInputForm,
+  Provider,
+  CustomTable,
+  LoadingRing,
+};
