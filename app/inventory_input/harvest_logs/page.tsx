@@ -1,21 +1,24 @@
 "use client";
-import { ChangeEvent, useEffect, useState } from "react";
-
+import { FormEvent, useEffect, useRef, useState } from "react";
+import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
+import { swalCustomClass } from "@/utils/swalConfig";
 import { categoryFormData, harvestLogsCategoryDict } from "@/types";
 import { Area, Grade } from "@prisma/client";
-import { CustomTable } from "@/components";
-
+import { CustomTable, LoadingRing } from "@/components";
+import { useRouter } from "next/navigation";
 const HarvestLogs = () => {
   const [harvestLogs, setHarvestLogs] = useState<harvestLogsCategoryDict>({});
   const [areas, setAreas] = useState<{ description: string; id: number }[]>();
   const [dates, setDates] = useState<{ harvestDate: string }[]>();
-  const [tableData, setTableData] = useState<string[][]>([]);
+  const [tableData, setTableData] = useState<{ [key: number]: string[] }>([]);
   const [areaFilter, setAreaFilter] = useState("");
   const [dateFilter, setDateFilter] = useState("");
+  const [dateInput, setDateInput] = useState("");
 
   useEffect(() => {
     const fetchHarvestLogs = async () => {
-      const response = await fetch("/api/inventory_input/category");
+      const response = await fetch("/api/inventory_input/harvest_log ");
       if (response.ok) {
         const { harvestLogs, areas, dates } = await response.json();
         setHarvestLogs(harvestLogs);
@@ -36,7 +39,8 @@ const HarvestLogs = () => {
   }, [areaFilter, dateFilter]);
 
   function getDefaultData() {
-    const defaultTableData: string[][] = [];
+    const defaultTableData: { [key: number]: string[] } = {};
+
     console.log(harvestLogs);
     Object.keys(harvestLogs).map((key) => {
       const harvestLog = harvestLogs[Number(key)];
@@ -45,31 +49,148 @@ const HarvestLogs = () => {
         String(harvestLog.harvestDate),
         harvestLog.areaName,
         String(harvestLog.quantity),
-        String("Update / Delete"),
+        String("update delete"),
       ];
-      defaultTableData.push(tableRow);
+      defaultTableData[harvestLog.id] = tableRow;
     });
     return defaultTableData;
   }
   const filterData = () => {
     const defaultTableData = getDefaultData();
-    let newTableData = defaultTableData.filter((data) => {
+    let newTableData = Object.keys(defaultTableData).filter((data) => {
       if (areaFilter == "") {
         return true;
       } else {
-        return data[1] == areaFilter;
+        return defaultTableData[Number(data)][1] == areaFilter;
       }
     });
     newTableData = newTableData.filter((data) => {
       if (dateFilter == "") {
         return true;
       } else {
-        return data[0] == dateFilter;
+        return defaultTableData[Number(data)][0] == dateFilter;
       }
     });
-    setTableData(newTableData);
+    const filteredData: typeof defaultTableData = {};
+    newTableData.map((key) => {
+      filteredData[Number(key)] = defaultTableData[Number(key)];
+    });
+    setTableData(filteredData);
   };
 
+  const handleUpdate = (index: number) => {
+    const area = tableData[index][1];
+    const harvestDate = tableData[index][0].split("-").reverse().join("-");
+    const swal = withReactContent(Swal);
+    setDateInput(tableData[index][0].split("-").reverse().join("-"));
+
+    const onUpdate = async (event: FormEvent<HTMLFormElement>) => {
+      event.preventDefault();
+      swal.showLoading();
+      const formData = new FormData(event.currentTarget);
+
+      const response = await fetch("/api/inventory_input/harvest_log", {
+        method: "PATCH",
+        body: formData,
+      });
+      swal.close();
+      if (response.ok) {
+        swal
+          .fire({
+            customClass: swalCustomClass,
+            title: "Harvest Log Updated",
+            icon: "success",
+          })
+          .then(() => {
+            location.reload();
+          });
+      } else {
+        swal.fire({
+          customClass: swalCustomClass,
+          title: "Update Error",
+          icon: "error",
+        });
+      }
+    };
+
+    swal.fire({
+      customClass: swalCustomClass,
+      showCancelButton: false,
+      showConfirmButton: false,
+      html: (
+        <form
+          className="flex flex-col gap-4"
+          action=""
+          onSubmit={(e) => {
+            onUpdate(e);
+          }}
+        >
+          <input
+            type="number"
+            name="harvestLogId"
+            value={index}
+            hidden
+            readOnly
+          />
+          <label htmlFor="">Area</label>
+          <select name="area" id="" defaultValue={area} onChange={() => {}}>
+            {areas?.map((area, ind) => (
+              <option key={ind} value={area.description}>
+                {area.description}
+              </option>
+            ))}
+          </select>
+          <label htmlFor="">Harvest Date</label>
+          <input
+            type="date"
+            name="harvestDate"
+            id="harvestDate"
+            className="py-1"
+            defaultValue={harvestDate}
+            onChange={() => {}}
+          />
+          <div>
+            <button
+              type="button"
+              className="bg-add-minus hover:bg-slate-500 text-white w-[150px] py-2 px-2 self-center rounded shadow mx-1"
+              onClick={(e) => {
+                swal.close();
+              }}
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              className="bg-primary-color hover:bg-green-700 text-white w-[150px] py-2 px-2 self-center rounded shadow mx-1"
+            >
+              Submit
+            </button>
+          </div>
+        </form>
+      ),
+    });
+  };
+  const handeDelete = (index: number) => {
+    const swal = withReactContent(Swal);
+    swal
+      .fire({
+        title: "Are you sure you want to delete (To be edited ang prompt)",
+        icon: "warning",
+        iconColor: "red",
+        showCancelButton: true,
+        customClass: {
+          confirmButton: "!bg-red-500",
+        },
+      })
+      .then(() => {
+        fetch("/api/inventory_input/harvest_log", {
+          method: "DELETE",
+          body: JSON.stringify({ id: index }),
+        }).then(() => {
+          location.reload();
+        });
+      });
+  };
   const headers = ["Harvest Date", "Area", "Quantity", "Actions"];
   return (
     <div className="h-full w-full bg-white text-black flex flex-col">
@@ -120,7 +241,18 @@ const HarvestLogs = () => {
         </select>
       </div>
       <div className="h-full w-full  p-3 flex flex-col gap-3">
-        <CustomTable headers={headers} data={tableData} />
+        {Object.keys(harvestLogs).length == 0 ? (
+          <div className="mt-[10em]">
+            <LoadingRing width={200} height={200} borderWidth={15} />
+          </div>
+        ) : (
+          <CustomTable
+            headers={headers}
+            data={tableData}
+            handleDelete={handeDelete}
+            handleUpdate={handleUpdate}
+          />
+        )}
       </div>
     </div>
   );
