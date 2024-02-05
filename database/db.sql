@@ -21,7 +21,7 @@ CREATE TABLE IF NOT EXISTS Personnel (
     password VARCHAR(255) NOT NULL,
     hasAccess BOOLEAN DEFAULT FALSE,
     FOREIGN KEY (role_id) REFERENCES Role (role_id)
-    );
+);
 
 CREATE TABLE IF NOT EXISTS Area(
     area_id INT PRIMARY KEY AUTO_INCREMENT,
@@ -62,7 +62,7 @@ CREATE TABLE IF NOT EXISTS HarvestLog(
     FOREIGN KEY (area_id) REFERENCES Area(area_id)
 );
 
-CREATE TABLE IF NOT EXISTS Stock(
+CREATE TABLE IF NOT EXISTS Stock( 
     stock_id INT PRIMARY KEY AUTO_INCREMENT,
     area_id INT NOT NULL,
     grade_id INT NOT NULL,
@@ -72,7 +72,7 @@ CREATE TABLE IF NOT EXISTS Stock(
     FOREIGN KEY (grade_id) REFERENCES Grade(grade_id)
 );
 
-CREATE TABLE IF NOT EXISTS Inventory(
+CREATE TABLE IF NOT EXISTS Inventory( 
     inventory_id INT PRIMARY KEY AUTO_INCREMENT,
     batch_id INT NOT NULL,
     stock_id INT NOT NULL,

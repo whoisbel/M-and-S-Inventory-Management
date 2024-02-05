@@ -66,3 +66,22 @@ export type customTableProps = {
   handleUpdate?: (index: number) => void;
   handleDelete?: (index: number) => void;
 };
+
+export type createAccountData = {
+  firstName: string;
+  middleName: string;
+  lastName: string;
+  password1: string;
+  password2: string;
+  companyRole: string;
+  username: string;
+  code?: string;
+  isSetup?: boolean;
+  [key: string]: string | boolean | undefined;
+};
+
+export type loginAccountData = {
+  username: string;
+  password: string;
+  [key: string]: string;
+};
