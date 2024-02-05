@@ -38,18 +38,15 @@ model Inventory{
   grade Grade @relation(fields: [gradeId], references: [id])
   isWashed Boolean @map("is_washed")
   quantity Decimal
-  
 }
-
+//batch_id -> log_id 
 model Stock{
   id Int @id @default(autoincrement()) 
   quantityOnHand Decimal @map("quantity_on_hand")
   gradeId Int @map("grade_id")
-
-  batchId Int @map("batch_id")
-  harvestLog HarvestLog @relation(fields:[batchId], references: [id])
+  logId Int @map("log_id")
+  harvestLog HarvestLog @relation(fields:[logId], references: [id])
   grade Grade @relation(fields: [gradeId], references: [id])
-  
   stockOut Stockout[]
   orderDetail OrderDetail[]
 }
@@ -93,20 +90,27 @@ model Customer{
   orders Order[]
 }
 
-model Personnel{
-  id String @id
-  name String
+model User{
+  id Int @id @default(autoincrement())
+  userName String @map("username")
+  firstName String @map("first_name")
+  lastName  String @map("last_name")
+  middleName String @map("middle_name")
   password String
   actions ActionLog[]
+  hasAccess Boolean @map("has_access") @default(false)
+  isAdmin Boolean @map("is_admin")
+  dateCreated DateTime @map("date_created") @default(now())
 }
+
 
 model ActionLog{
   id Int @id @default(autoincrement())
-  personnelId String @map("personnel_id")
+  userId Int @map("personnel_id")
   venue Venue
   event Event
   actionDate DateTime @default(now()) @map("action_date")
-  personnel Personnel @relation(fields: [personnelId], references: [id])
+  user User @relation(fields: [userId], references: [id])
 }
 
 
@@ -115,6 +119,7 @@ enum Event {
   update
   delete
 }
+
 enum Venue{
   add_inventory
   category

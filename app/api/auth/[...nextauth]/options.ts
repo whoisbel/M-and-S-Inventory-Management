@@ -1,26 +1,27 @@
-import type { NextAuthOptions } from "next-auth";
+import type { NextAuthOptions, User } from "next-auth";
 import { PrismaClient } from "@prisma/client";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { PrismaAdapter } from "@auth/prisma-adapter";
+import { sha256 } from "js-sha256";
+import { User as UserType } from "@prisma/client";
 const prisma = new PrismaClient();
 export const options: NextAuthOptions = {
   providers: [
     CredentialsProvider({
       name: "Credentials",
       credentials: {
-        id: { label: "id", type: "text" },
+        username: { label: "username", type: "text" },
         password: { label: "password", type: "password" },
       },
       async authorize(credentials, req) {
-        console.log(credentials);
-        const user = await prisma.personnel.findUnique({
+        const user: UserType = await prisma.user.findFirst({
           where: {
-            id: credentials?.id,
-            password: credentials?.password,
+            userName: credentials?.username,
+            password: sha256(credentials!.password),
           },
         });
-        console.log(user);
-        if (user) {
+
+        if (user.hasAccess) {
           return user;
         }
         return null;
@@ -28,15 +29,26 @@ export const options: NextAuthOptions = {
     }),
   ],
   pages: {
-    signIn: "/login",
+    signIn: "/auth",
   },
 
   session: { strategy: "jwt" },
   callbacks: {
-    async session({ session }) {
+    async jwt({ token, account, profile, user }) {
+      return token;
+    },
+    async session({ session, token }) {
       //get the user in database and add id in the new session.
-      console.log(session);
+      session.user = await prisma.user.findUnique({
+        where: {
+          id: Number(token.sub),
+        },
+      });
+
       return session;
+    },
+    async signIn({ user }) {
+      return true;
     },
   },
 };

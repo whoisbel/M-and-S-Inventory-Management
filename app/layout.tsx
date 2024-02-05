@@ -4,6 +4,7 @@ import localFont from "next/font/local";
 import "./globals.css";
 import { Sidepanel, Provider } from "@/components";
 import { getServerSession } from "next-auth";
+import { options } from "./api/auth/[...nextauth]/options";
 const sansation = localFont({
   src: "../fonts/Sansation_Regular.ttf",
 });
@@ -17,8 +18,8 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const session = await getServerSession();
-  console.log(session);
+  const session = await getServerSession(options);
+
   return (
     <html lang="en">
       <body className={sansation.className}>
