@@ -17,13 +17,11 @@ const RegistrationModal = ({
   isSetup?: boolean;
 }) => {
   useEffect(() => {
-    if (isSetup) {
-      setAccountData({
-        ...accountData,
-        companyRole: "Admin",
-        isSetup: isSetup,
-      });
-    }
+    setAccountData({
+      ...accountData,
+      companyRole: "Admin",
+      isSetup: isSetup,
+    });
   }, []);
   const options = [
     { label: "Admin", value: "Admin" },

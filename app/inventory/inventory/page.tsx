@@ -1,23 +1,6 @@
 "use client";
 import { CustomTable } from "@/components";
-import { useState, useEffect } from "react";
-
-const OrderDetails = () => {
-  const [filters, setFilters] = useState({
-    date: "",
-    grade: "",
-    status: "",
-  });
-
-  const [orderDetails, setOrderDetails] = useState();
-  useEffect(() => {
-    const fetchData = async () => {
-      const response = await fetch("api/order_details");
-      if (response.ok) {
-      }
-    };
-    fetchData();
-  }, []);
+const Inventory = () => {
   const headers = [
     "Order Date",
     "Customer",
@@ -80,4 +63,4 @@ const OrderDetails = () => {
   );
 };
 
-export default OrderDetails;
+export default Inventory;

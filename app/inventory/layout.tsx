@@ -13,6 +13,16 @@ export default function RootLayout({
     <div className="flex flex-col h-full bg-accent-green p-3 rounded-lg">
       <div className="tab_buttons">
         <Link
+          href="/inventory/inventory"
+          className={`${
+            pathName == "/inventory/records"
+              ? "bg-neutral-300 border-b-2 border-primary-color text-black"
+              : "bg-neutral-200 text-neutral-800 "
+          }`}
+        >
+          Inventory
+        </Link>
+        <Link
           href="/inventory/available_products"
           className={`${
             pathName == "/inventory/available_products"
@@ -31,16 +41,6 @@ export default function RootLayout({
           }`}
         >
           stockout
-        </Link>
-        <Link
-          href="/inventory/records"
-          className={`${
-            pathName == "/inventory/records"
-              ? "bg-neutral-300 border-b-2 border-primary-color text-black"
-              : "bg-neutral-200 text-neutral-800 "
-          }`}
-        >
-          records
         </Link>
       </div>
       {children}

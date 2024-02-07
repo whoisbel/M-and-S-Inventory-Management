@@ -1,6 +1,20 @@
 import { customTableProps } from "@/types";
 import { BiEdit, BiTrash } from "react-icons/bi";
 
+/* 
+  Custom Table 
+  params: 
+  array of string for the table headers,
+  object where key is type number and returns a array value,
+  handleDelete a function (id: number) => {delete}
+  handleUpdate (id: number) => update,
+  ex. Usage
+  const headers = ['id','name', 'age' ]
+  cosnt data = {
+    1: [1, 'name1', 23]
+    2: [2, 'name2', 23]
+  }
+*/
 const CustomTable = ({
   headers,
   data,

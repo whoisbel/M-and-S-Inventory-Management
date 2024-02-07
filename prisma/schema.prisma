@@ -84,7 +84,9 @@ model Order {
 }
 model Customer{
   id Int @id @default(autoincrement()) 
-  name String 
+  firstName String @map("first_name")
+  lastName  String @map("last_name")
+  middleName String @map("middle_name")
   mobileNumber String @map("mobile_number")
   email String 
   orders Order[]
