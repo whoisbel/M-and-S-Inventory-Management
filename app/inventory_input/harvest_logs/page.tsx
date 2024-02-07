@@ -15,7 +15,7 @@ const HarvestLogs = () => {
   const [areaFilter, setAreaFilter] = useState("");
   const [dateFilter, setDateFilter] = useState("");
   const [dateInput, setDateInput] = useState("");
-
+  const [isLoading, setIsLoading] = useState(true);
   useEffect(() => {
     const fetchHarvestLogs = async () => {
       const response = await fetch("/api/inventory_input/harvest_log ");
@@ -24,6 +24,7 @@ const HarvestLogs = () => {
         setHarvestLogs(harvestLogs);
         setAreas(areas);
         setDates(dates);
+        setIsLoading(false);
       }
     };
     fetchHarvestLogs();
@@ -38,10 +39,10 @@ const HarvestLogs = () => {
     filterData();
   }, [areaFilter, dateFilter]);
 
+  //turn json to table json data
   function getDefaultData() {
     const defaultTableData: { [key: number]: string[] } = {};
 
-    console.log(harvestLogs);
     Object.keys(harvestLogs).map((key) => {
       const harvestLog = harvestLogs[Number(key)];
 
@@ -170,7 +171,7 @@ const HarvestLogs = () => {
       ),
     });
   };
-  const handeDelete = (index: number) => {
+  const handleDelete = (index: number) => {
     const swal = withReactContent(Swal);
     swal
       .fire({
@@ -241,18 +242,13 @@ const HarvestLogs = () => {
         </select>
       </div>
       <div className="h-full w-full  p-3 flex flex-col gap-3">
-        {Object.keys(harvestLogs).length == 0 ? (
-          <div className="mt-[10em]">
-            <LoadingRing width={200} height={200} borderWidth={15} />
-          </div>
-        ) : (
-          <CustomTable
-            headers={headers}
-            data={tableData}
-            handleDelete={handeDelete}
-            handleUpdate={handleUpdate}
-          />
-        )}
+        <CustomTable
+          headers={headers}
+          data={tableData}
+          handleDelete={handleDelete}
+          handleUpdate={handleUpdate}
+          isLoading={isLoading}
+        />
       </div>
     </div>
   );

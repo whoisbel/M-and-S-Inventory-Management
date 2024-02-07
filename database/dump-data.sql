@@ -8,18 +8,18 @@ VALUES
     ('Admin J', 'admin', '', 'admin', 1, 'admin', TRUE),
     ('Employee J', 'emp', '', 'employee', 2, 'employee', TRUE);
 
-INSERT INTO Customer (first_name, last_name, email, mobile, isDeleted)
+INSERT INTO Customer (first_name, last_name, email, mobile_number)
 VALUES
-    ('Juan', 'Dela Cruz', 'juan.delacruz@example.com', '+639171234567', FALSE),
-    ('Maria', 'Santos', 'maria.santos@example.com', '+639281234567', FALSE),
-    ('Jose', 'Reyes', 'jose.reyes@example.com', '+639351234567', FALSE),
-    ('Sofia', 'Lim', 'sofia.lim@example.com', '+639461234567', FALSE),
-    ('Miguel', 'Cruz', 'miguel.cruz@example.com', '+639571234567', FALSE),
-    ('Isabella', 'Gonzales', 'isabella.gonzales@example.com', '+639681234567', FALSE),
-    ('Andres', 'Ramos', 'andres.ramos@example.com', '+639791234567', FALSE),
-    ('Julia', 'Perez', 'julia.perez@example.com', '+639801234567', FALSE),
-    ('Diego', 'Tan', 'diego.tan@example.com', '+639911234567', FALSE),
-    ('Angela', 'Garcia', 'angela.garcia@example.com', '+639221234567', FALSE);
+    ('Juan', 'Dela Cruz', 'juan.delacruz@example.com', '+639171234567'),
+    ('Maria', 'Santos', 'maria.santos@example.com', '+639281234567'),
+    ('Jose', 'Reyes', 'jose.reyes@example.com', '+639351234567'),
+    ('Sofia', 'Lim', 'sofia.lim@example.com', '+639461234567'),
+    ('Miguel', 'Cruz', 'miguel.cruz@example.com', '+639571234567'),
+    ('Isabella', 'Gonzales', 'isabella.gonzales@example.com', '+639681234567'),
+    ('Andres', 'Ramos', 'andres.ramos@example.com', '+639791234567'),
+    ('Julia', 'Perez', 'julia.perez@example.com', '+639801234567'),
+    ('Diego', 'Tan', 'diego.tan@example.com', '+639911234567'),
+    ('Angela', 'Garcia', 'angela.garcia@example.com', '+639221234567');
 
 INSERT INTO HarvestLog (area_id, quantity, harvestDate, isDeleted)
 VALUES

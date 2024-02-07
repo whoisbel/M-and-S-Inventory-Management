@@ -15,7 +15,7 @@ export default function RootLayout({
         <Link
           href="/inventory/inventory"
           className={`${
-            pathName == "/inventory/records"
+            pathName == "/inventory/inventory"
               ? "bg-neutral-300 border-b-2 border-primary-color text-black"
               : "bg-neutral-200 text-neutral-800 "
           }`}
@@ -40,7 +40,7 @@ export default function RootLayout({
               : "bg-neutral-200 text-neutral-800 "
           }`}
         >
-          stockout
+          Stockout
         </Link>
       </div>
       {children}
