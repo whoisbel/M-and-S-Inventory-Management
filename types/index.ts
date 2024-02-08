@@ -63,6 +63,7 @@ export type harvestLogsCategoryDict = {
 export type customTableProps = {
   headers: string[];
   data: { [key: number]: string[] };
+  isLoading?: boolean;
   handleUpdate?: (index: number) => void;
   handleDelete?: (index: number) => void;
 };
@@ -85,3 +86,15 @@ export type loginAccountData = {
   password: string;
   [key: string]: string;
 };
+
+export type inventoryDataType = {
+  id: number;
+  isWashed: boolean;
+  harvestDate: Date;
+  areaName: string;
+  gradeName: string;
+
+  [key: string]: number | boolean | Date | string;
+};
+
+export type customTableDataType = { [key: number]: string[] };

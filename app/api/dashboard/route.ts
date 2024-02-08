@@ -63,6 +63,6 @@ export async function GET(request: NextRequest) {
     pastYearHarvestData:
       pastYearHarvestData as DashboardData["pastYearHarvestData"],
   };
-  const p = prisma.personnel.findMany();
-  return NextResponse.json(p);
+
+  return NextResponse.json(data);
 }

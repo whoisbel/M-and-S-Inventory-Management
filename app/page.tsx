@@ -147,9 +147,7 @@ export default function Dashboard() {
           <h1 className="font-bold text-letters-color text-[30px]">
             Inventory Summary
           </h1>
-          <button className="font-bold text-[20px] text-letters-color text-center border-[1px] border-add-minus rounded-[10px] p-4 bg-accent-gray">
-            Generate Report +
-          </button>
+          <button className="generate-report-button">Generate Report +</button>
         </div>
         <div className="w-full h-full flex">
           <div className="w-full flex flex-col">

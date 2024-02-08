@@ -10,15 +10,8 @@ const prisma = new PrismaClient();
 export async function GET(request: NextRequest) {
   //returns  id | quantity | areaId | areaName | quantityOnHand  | gradeId | gradeName
   const results = await prisma.$queryRaw`SELECT 
-  h.id,h.quantity, DATE_FORMAT(h.harvest_date, '%m-%d-%Y') as harvestDate, h.area_id, a.description as areaName, s.quantity_on_hand,
-  s.grade_id , g.description as gradeName FROM harvestlog h
-  LEFT JOIN stock s ON s.batch_id = h.id
-  LEFT JOIN area a ON a.id = h.area_id
-  LEFT JOIN grade g ON g.id = s.grade_id
-  WHERE h.quantity > (
-      SELECT COALESCE(SUM(quantity_on_hand), 0)
-      FROM stock s
-      WHERE s.batch_id = h.id);`;
+  h.id,h.quantity, DATE_FORMAT(h.harvest_date, '%m-%d-%Y') as harvestDate, h.area_id, a.description as areaName
+  FROM harvestlog h LEFT JOIN area a ON a.id = h.area_id;`;
 
   const harvestLogs: harvestLogsCategoryDict = {};
 

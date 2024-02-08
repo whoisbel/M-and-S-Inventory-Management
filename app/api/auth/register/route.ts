@@ -31,7 +31,7 @@ export async function POST(request: NextRequest) {
       password: sha256(data.password1),
       userName: data.username,
       isAdmin: data.companyRole == "Admin",
-      hasAccess: data.isSetup,
+      hasAccess: data.isSetup === true,
     };
     const userCreated = await prisma.user.create({
       data: userRequest,
