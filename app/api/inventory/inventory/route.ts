@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
+
 export async function GET(request: NextRequest) {
   const data =
     await prisma.$queryRaw`SELECT i.id, is_washed as isWashed, i.quantity,
@@ -20,4 +21,11 @@ export async function GET(request: NextRequest) {
   FROM inventory
   INNER JOIN harvestlog h ON inventory.log_id = h.id;`;
   return NextResponse.json({ data, area, grade, date });
+}
+
+export async function POST(request: NextRequest) {
+  const data = await request.json();
+  console.log(data);
+
+  return NextResponse.json("good");
 }

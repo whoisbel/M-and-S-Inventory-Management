@@ -5,7 +5,7 @@ const prisma = new PrismaClient();
 
 export async function GET(request: NextRequest) {
   const data = await prisma.$queryRaw`SELECT
-  customer.name AS customerName,
+  customer.first_name AS customerName,
   grade.description AS gradeName,
   stock.grade_id,
   orderdetail.order_quantity,

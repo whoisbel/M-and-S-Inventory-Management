@@ -120,3 +120,7 @@ table {
 .generate-report-button {
   @apply font-bold text-[20px] text-letters-color text-center border-[1px] border-add-minus rounded-[10px] p-4 bg-accent-gray;
 }
+
+.button:hover {
+  scale: 105%;
+}

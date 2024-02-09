@@ -112,6 +112,7 @@ const Inventory = () => {
   };
 
   const swal = withReactContent(Swal);
+
   const handleUpdate = (index: number) => {
     swal.fire({
       didOpen: () => setSwalShown(true),
@@ -123,7 +124,6 @@ const Inventory = () => {
       },
     });
     setSelectedUpdateData(tableData[index]);
-    console.log(swal.getHtmlContainer());
   };
   return (
     <div className="h-full w-full bg-white text-black">
@@ -132,7 +132,9 @@ const Inventory = () => {
           <InventoryModal
             inventoryData={selectedUpdateData}
             swal={swal}
+            setSwalShown={setSwalShown}
             grade={grade}
+            inventoryId={0}
           />,
           swal.getHtmlContainer()!
         )}
@@ -209,10 +211,14 @@ const InventoryModal = ({
   inventoryData,
   swal,
   grade,
+  setSwalShown,
+  inventoryId,
 }: {
   inventoryData: string[];
   swal: typeof Swal;
-  grade: string[];
+  grade: Grade[];
+  setSwalShown: (val: boolean) => void;
+  inventoryId?: number;
 }) => {
   const [categoryFormData, setCategoryFormData] = useState<categoryFormData[]>(
     []
@@ -220,24 +226,32 @@ const InventoryModal = ({
   const [ungradedQuantity, setUngradedQuantity] = useState(
     Number(inventoryData[3])
   );
+
   const createInventoryForm = () => {
     const newData: categoryFormData = {
-      grade: "",
+      grade: grade[0].id,
       quantity: 0,
+      isWashed: false,
     };
     setCategoryFormData([...categoryFormData, newData]);
   };
   useEffect(() => {
     computeUngradedQuantity();
   }, [categoryFormData]);
+
   const handleInventoryFormChange = (
     e: ChangeEvent<HTMLInputElement> | ChangeEvent<HTMLSelectElement>,
     index: number
   ) => {
-    const field = e.target.name;
     const newCategoryFormData = [...categoryFormData];
-    newCategoryFormData[index][field] = e.target.value;
-    setCategoryFormData(newCategoryFormData);
+    const field = e.target.name;
+    console.log(e.target.name);
+    if (e.target.name === "isWashed") {
+      newCategoryFormData[index][field] = !newCategoryFormData[index][field];
+    } else {
+      newCategoryFormData[index][field] = Number(e.target.value);
+      setCategoryFormData(newCategoryFormData);
+    }
   };
 
   const handleRemoveForm = (index: number) => {
@@ -251,8 +265,15 @@ const InventoryModal = ({
     categoryFormData.map((data) => {
       sortedQuantity += Number(data.quantity);
     });
-    console.log(sortedQuantity);
+
     setUngradedQuantity(Number(inventoryData[3]) - sortedQuantity);
+  };
+
+  const saveForm = async () => {
+    const response = await fetch("/api/inventory/inventory", {
+      method: "POST",
+      body: JSON.stringify(categoryFormData),
+    });
   };
   return (
     <div className="flex bg-white min-w-[900px] min-h-[400px] flex-col text-black rounded">
@@ -286,7 +307,7 @@ const InventoryModal = ({
             readOnly
           />
           <button
-            className="px-3 py-2 shadow-neutral-600 border-add-minus shadow  hover:bg-neutral-500 bg-accent-gray border-[1px] rounded flex"
+            className="px-3 py-2 shadow-neutral-600 border-add-minus shadow button hover:bg-neutral-500 bg-accent-gray border-[1px] rounded flex"
             onClick={() => {
               createInventoryForm();
             }}
@@ -295,7 +316,7 @@ const InventoryModal = ({
             <CgAdd />
           </button>
         </div>
-        <div className="py-2 h-[500px] overflow-y-auto flex h-full flex-col gap-3">
+        <div className="py-2 h-[500px] overflow-y-auto flex  flex-col gap-3">
           {categoryFormData.map((data, index) => (
             <InventoryInputForm
               handleChange={handleInventoryFormChange}
@@ -319,11 +340,14 @@ const InventoryModal = ({
           <button
             className="bg-primary-color text-white float-right min-w-[100px] rounded-full px-4 py-2"
             onClick={() => {
+              saveForm();
+              setSwalShown(false);
               swal.fire({
                 title: "Success",
                 icon: "success",
                 text: "The inventory is saved ahahaha",
               });
+              console.log(categoryFormData);
             }}
           >
             Save

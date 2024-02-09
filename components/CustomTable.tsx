@@ -89,7 +89,7 @@ const CustomTable = ({
                           onClick={(e) => {
                             handleUpdate!(Number(key));
                           }}
-                          className="bg-primary-color hover:bg-green-700 text-white px-2 py-2 rounded shadow"
+                          className="bg-primary-color hover:bg-green-700 text-white px-2 py-2 rounded shadow hover:scale-105"
                         >
                           <BiEdit className="w-7 h-7" />
                         </button>{" "}
@@ -102,7 +102,7 @@ const CustomTable = ({
                           onClick={(e) => {
                             handleDelete!(Number(key));
                           }}
-                          className="bg-red-500 hover:bg-red-700 text-white px-2 py-2 rounded shadow"
+                          className="bg-red-500  text-white px-2 py-2 rounded shadow hover:bg-red-700 hover:scale-105"
                         >
                           <BiTrash className="w-7 h-7" />
                         </button>
