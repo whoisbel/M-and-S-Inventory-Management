@@ -25,7 +25,7 @@ CREATE TABLE `Grade` (
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
--- CreateTable
+-- CreateTableS
 CREATE TABLE `Inventory` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `grade_id` INTEGER NOT NULL,
@@ -40,7 +40,7 @@ CREATE TABLE `Stock` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `quantity_on_hand` DECIMAL(65, 30) NOT NULL,
     `grade_id` INTEGER NOT NULL,
-    `batch_id` INTEGER NOT NULL,
+    `log_id` INTEGER NOT NULL,
 
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -48,7 +48,7 @@ CREATE TABLE `Stock` (
 -- CreateTable
 CREATE TABLE `Stockout` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
-    `stockId` INTEGER NOT NULL,
+    `stock_id` INTEGER NOT NULL,
     `quantity` DECIMAL(65, 30) NOT NULL,
     `stock_out_type` VARCHAR(191) NOT NULL,
     `date_out` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
@@ -93,10 +93,16 @@ CREATE TABLE `Customer` (
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
-CREATE TABLE `Personnel` (
-    `id` VARCHAR(191) NOT NULL,
-    `name` VARCHAR(191) NOT NULL,
+CREATE TABLE `User` (
+    `id` INTEGER NOT NULL AUTO_INCREMENT,
+    `username` VARCHAR(191) NOT NULL,
+    `first_name` VARCHAR(191) NOT NULL,
+    `last_name` VARCHAR(191) NOT NULL,
+    `middle_name` VARCHAR(191) NOT NULL,
     `password` VARCHAR(191) NOT NULL,
+    `has_access` BOOLEAN NOT NULL DEFAULT false,
+    `is_admin` BOOLEAN NOT NULL,
+    `date_created` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
 
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -104,7 +110,7 @@ CREATE TABLE `Personnel` (
 -- CreateTable
 CREATE TABLE `ActionLog` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
-    `personnel_id` VARCHAR(191) NOT NULL,
+    `personnel_id` INTEGER NOT NULL,
     `venue` ENUM('add_inventory', 'category', 'records', 'order_details', 'action_log') NOT NULL,
     `event` ENUM('add', 'update', 'delete') NOT NULL,
     `action_date` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
@@ -119,13 +125,13 @@ ALTER TABLE `HarvestLog` ADD CONSTRAINT `HarvestLog_area_id_fkey` FOREIGN KEY (`
 ALTER TABLE `Inventory` ADD CONSTRAINT `Inventory_grade_id_fkey` FOREIGN KEY (`grade_id`) REFERENCES `Grade`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `Stock` ADD CONSTRAINT `Stock_batch_id_fkey` FOREIGN KEY (`batch_id`) REFERENCES `HarvestLog`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE `Stock` ADD CONSTRAINT `Stock_log_id_fkey` FOREIGN KEY (`log_id`) REFERENCES `HarvestLog`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `Stock` ADD CONSTRAINT `Stock_grade_id_fkey` FOREIGN KEY (`grade_id`) REFERENCES `Grade`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `Stockout` ADD CONSTRAINT `Stockout_stockId_fkey` FOREIGN KEY (`stockId`) REFERENCES `Stock`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE `Stockout` ADD CONSTRAINT `Stockout_stock_id_fkey` FOREIGN KEY (`stock_id`) REFERENCES `Stock`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `OrderDetail` ADD CONSTRAINT `OrderDetail_stock_id_fkey` FOREIGN KEY (`stock_id`) REFERENCES `Stock`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
@@ -137,4 +143,4 @@ ALTER TABLE `OrderDetail` ADD CONSTRAINT `OrderDetail_order_id_fkey` FOREIGN KEY
 ALTER TABLE `Order` ADD CONSTRAINT `Order_customer_id_fkey` FOREIGN KEY (`customer_id`) REFERENCES `Customer`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `ActionLog` ADD CONSTRAINT `ActionLog_personnel_id_fkey` FOREIGN KEY (`personnel_id`) REFERENCES `Personnel`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE `ActionLog` ADD CONSTRAINT `ActionLog_personnel_id_fkey` FOREIGN KEY (`personnel_id`) REFERENCES `User`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
