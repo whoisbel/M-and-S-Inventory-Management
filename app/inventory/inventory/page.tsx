@@ -12,7 +12,7 @@ import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import { createPortal } from "react-dom";
 import { CgAdd } from "react-icons/cg";
-
+import { BiSearch } from "react-icons/bi";
 const Inventory = () => {
   const [inventoryData, setInventoryData] = useState<inventoryDataType[]>([]);
   const [tableData, setTableData] = useState<customTableDataType>({});
@@ -26,7 +26,11 @@ const Inventory = () => {
   });
   const [area, setArea] = useState<Area[]>([]);
   const [grade, setGrade] = useState<Grade[]>([]);
-  const [dates, setDates] = useState<{ harvestDate: string }[]>([]);
+  const [dates, setDates] = useState<
+    {
+      harvestDate: string;
+    }[]
+  >([]);
   //get data from api
   useEffect(() => {
     const fetchData = async () => {
@@ -168,7 +172,10 @@ const Inventory = () => {
             className="w min-w-[150px]"
             defaultValue=""
             onChange={(e) => {
-              setFilter({ ...filter, gradeFilter: e.target.value });
+              setFilter({
+                ...filter,
+                gradeFilter: e.target.value,
+              });
             }}
           >
             <option value="">Grade</option>
@@ -181,7 +188,10 @@ const Inventory = () => {
           <select
             className="w min-w-[150px]"
             onChange={(e) => {
-              setFilter({ ...filter, areaFilter: e.target.value });
+              setFilter({
+                ...filter,
+                areaFilter: e.target.value,
+              });
             }}
           >
             <option value="">Area</option>
@@ -191,6 +201,16 @@ const Inventory = () => {
               </option>
             ))}
           </select>
+        </div>
+        <div className="flex-1 flex justify-end items-center ">
+          <input
+            type="text"
+            name="search"
+            id="search"
+            placeholder="Search"
+            className="rounded-lg placeholder:pl-2"
+          />
+          <BiSearch className="-ml-[1.25em] text-primary-color" />
         </div>
       </div>
       <div className="flex flex-col p-3 bg-white">
