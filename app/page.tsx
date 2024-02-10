@@ -1,11 +1,12 @@
 "use client";
 import Link from "next/link";
-import { DisplayID } from "@/components";
 import { Chart, ArcElement } from "chart.js/auto";
 import { useEffect, useRef, useState } from "react";
 import { Doughnut, Bar, Line } from "react-chartjs-2";
 import { plugin } from "postcss";
 import { getSession } from "next-auth/react";
+import { Pagination, GradePage } from "@/components";
+import { generateRandomPastelColor } from '../utils/generatePastelColor'
 export default function Dashboard() {
   useEffect(() => {
     const fetchSession = async () => {
@@ -24,17 +25,23 @@ export default function Dashboard() {
   const sortByArea = () => {
     setSortOption("area");
   };
+  function generateRandomPastelColors(count: number) {
+    const colors = [];
+    for (let i = 0; i < count; i++) {
+      colors.push(generateRandomPastelColor());
+    }
+    return colors;
+  }
+  const [donutColors] = useState(() => generateRandomPastelColors(3));
+  const [barColors] = useState(() => generateRandomPastelColors(1));
+  const [lineColors] = useState(() => generateRandomPastelColors(1));
   const donutData = {
     labels: ["Red", "Blue", "Yellow"],
     datasets: [
       {
         label: "Test",
         data: [300, 50, 100],
-        backgroundColor: [
-          "rgb(255, 99, 132)",
-          "rgb(54, 162, 235)",
-          "rgb(255, 205, 86)",
-        ],
+        backgroundColor: donutColors,
         hoverOffset: 4,
       },
     ],
@@ -116,28 +123,53 @@ export default function Dashboard() {
       {
         label: "Test",
         data: [300, 50, 100],
-        backgroundColor: [
-          "rgb(255, 99, 132)",
-          "rgb(54, 162, 235)",
-          "rgb(255, 205, 86)",
-        ],
+        backgroundColor: barColors,
         hoverOffset: 4,
       },
     ],
   };
-
   const lineData = {
     labels: ["Red", "Blue", "Yellow"],
     datasets: [
       {
         label: "Test",
         data: [300, 50, 100],
-        backgroundColor: ["rgb(255, 99, 132)"],
+        backgroundColor: lineColors,
         hoverOffset: 4,
       },
     ],
   };
+  const [currentPage, setCurrentPage] = useState(0);
+  
+  const grades = [
+    { name: "Regular A", weight: "4000 KG" },
+    { name: "Regular B", weight: "4000 KG" },
+    { name: "Regular C", weight: "4000 KG" },
+    { name: "Rejects", weight: "4000 KG" },
+    { name: "Rejects D", weight: "4000 KG" },
+    { name: "Rejects E", weight: "4000 KG" },
+    { name: "Rejects F", weight: "4000 KG" },
+    { name: "Rejects G", weight: "4000 KG" },
+    { name: "Rejects H", weight: "4000 KG" },
+    { name: "Rejects I", weight: "4000 KG" },
+    { name: "Rejects J", weight: "4000 KG" },
+    { name: "Rejects K", weight: "4000 KG" },
+  ];
 
+  
+  function generateGradeElements(grades: any[]) {
+    const gradesPerPage = 4; // Adjust as needed
+    const pages = [];
+    for (let i = 0; i < grades.length; i += gradesPerPage) {
+      pages.push(grades.slice(i, i + gradesPerPage));
+    }
+    return pages;
+  }
+
+  // Function to handle page change
+  const handlePageChange = (index: number) => {
+    setCurrentPage(index);
+  };
   return (
     // Parent container
     <div className="w-full h-full flex flex-col">
@@ -160,8 +192,8 @@ export default function Dashboard() {
                     <button
                       className={
                         sortOption === "grade"
-                          ? "w-[250px] h-[50px] rounded-xl bg-accent-green flex justify-center items-center"
-                          : "w-[250px] h-[50px] rounded-xl bg-custom-white border-2 border-opacity-40 flex ju" +
+                          ? "w-full h-[50px] rounded-xl bg-accent-green flex justify-center items-center"
+                          : "w-full h-[50px] rounded-xl bg-custom-white border-2 border-opacity-40 flex ju" +
                             "stify-center items-center"
                       }
                       onClick={sortByGrade}
@@ -179,8 +211,8 @@ export default function Dashboard() {
                     <button
                       className={
                         sortOption === "area"
-                          ? "w-[250px] h-[50px] rounded-xl bg-accent-green flex justify-center items-center"
-                          : "w-[250px] h-[50px] rounded-xl bg-custom-white border-2 border-opacity-40 flex ju" +
+                          ? "w-full h-[50px] rounded-xl bg-accent-green flex justify-center items-center ml-[1rem] "
+                          : "w-full h-[50px] rounded-xl bg-custom-white border-2 border-opacity-40 flex  ml-[1rem] ju" +
                             "stify-center items-center"
                       }
                       onClick={sortByArea}
@@ -197,44 +229,13 @@ export default function Dashboard() {
                     </button>
                   </div>
                   <div className="w-full h-full pt-[20px]">
-                    {/* REGULAR A TO D HERE */}
-                    <div className="w-full justify-evenly flex">
-                      <div className="rounded-xl flex flex-col w-[250px] h-[100px] bg-red-400 p-2">
-                        <h1 className="text-[20px] font-bold text-letters-color">
-                          Regular A
-                        </h1>
-                        <h1 className="text-[30px] font-bold text-letters-color self-center">
-                          4000 KG
-                        </h1>
-                      </div>
-                      <div className="rounded-xl flex flex-col w-[250px] h-[100px] bg-blue-400 p-2">
-                        <h1 className="text-[20px] font-bold text-letters-color">
-                          Regular B
-                        </h1>
-                        <h1 className="text-[30px] font-bold text-letters-color self-center">
-                          4000 KG
-                        </h1>
-                      </div>
-                    </div>
-                    <div className="w-full justify-evenly flex pt-[20px]">
-                      <div className="rounded-xl flex flex-col w-[250px] h-[100px] bg-red-400 p-2">
-                        <h1 className="text-[20px] font-bold text-letters-color">
-                          Regular C
-                        </h1>
-                        <h1 className="text-[30px] font-bold text-letters-color self-center">
-                          4000 KG
-                        </h1>
-                      </div>
-                      <div className="rounded-xl flex flex-col w-[250px] h-[100px] bg-blue-400 p-2">
-                        <h1 className="text-[20px] font-bold text-letters-color">
-                          Rejects
-                        </h1>
-                        <h1 className="text-[30px] font-bold text-letters-color self-center">
-                          4000 KG
-                        </h1>
-                      </div>
-                    </div>
+                      <GradePage page={generateGradeElements(grades)[currentPage]} generateRandomPastelColor={generateRandomPastelColor} />
                   </div>
+                    <Pagination
+                      numPages={generateGradeElements(grades).length}
+                      currentPage={currentPage}
+                      onPageChange={setCurrentPage}
+                    />
                 </div>
               </div>
             </div>
