@@ -14,7 +14,7 @@ const LoginModal = ({
 }) => {
   return (
     <div>
-      <div className="relative bg-main-background rounded-[20px] w-[300px] h-[50px] mb-[22px] shadow-lg border-2 group">
+      <div className="relative bg-main-background rounded-[20px] w-[300px] h-[46px] mb-[18px] shadow-lg border-2 group">
         <input
           type="text"
           className={`w-full h-full px-4 pt-2 text-[20px] bg-transparent border-none focus:outline-none relative z-1 ${
@@ -31,10 +31,10 @@ const LoginModal = ({
             loginData.username ? "opacity-100" : "opacity-0"
           } transition-opacity bg-transparent group-active:inline-block`}
         >
-          ID
+          Username
         </label>
       </div>
-      <div className="relative bg-main-background rounded-[20px] w-[300px] h-[50px] mb-[22px] shadow-lg border-2 group">
+      <div className="relative bg-main-background rounded-[20px] w-[300px] h-[46px] mb-[10px] shadow-lg border-2 group">
         <input
           type="password"
           className={`w-full h-full px-4 pt-2 text-[20px] bg-transparent border-none focus:outline-none relative z-1 ${
@@ -54,6 +54,14 @@ const LoginModal = ({
           Password
         </label>
       </div>
+      <p
+        className="text-right pr-4 mb-2 text-[#0094FF] text-[15px] underline cursor-pointer"
+        onClick={(e) => {
+          
+        }}
+      >
+        Forgot password?
+      </p>
       <button
         onClick={() => {
           signIn("credentials", {
@@ -62,7 +70,7 @@ const LoginModal = ({
             callbackUrl: "/",
           });
         }}
-        className="w-[300px] h-[50px] text-custom-white bg-primary-color rounded-3xl font-bold text-[20px]"
+        className="w-[300px] h-[46px] text-custom-white bg-primary-color rounded-3xl font-bold text-[20px]"
       >
         Login
       </button>
