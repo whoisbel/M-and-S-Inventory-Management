@@ -1,7 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
-import { PrismaClient } from "@prisma/client";
+
 import { sha256 } from "js-sha256";
-import { User } from "@prisma/client";
+import {
+  PrismaClient,
+  User,
+  SecurityQuestions,
+  SecurityQuestionsAnswer,
+} from "@prisma/client";
 
 import { createAccountData } from "@/types";
 import { signIn } from "next-auth/react";
@@ -9,32 +14,48 @@ import { signIn } from "next-auth/react";
 const prisma = new PrismaClient();
 export async function GET(request: NextRequest) {
   const userCount = await prisma.user.count();
-  console.log(userCount);
-  return NextResponse.json({ isSetup: userCount == 0 });
+  const securityQuestion = await prisma.securityQuestions.findMany();
+
+  return NextResponse.json({
+    isSetup: userCount == 0,
+    securityQuestions: securityQuestion,
+  });
 }
 
 export async function POST(request: NextRequest) {
   try {
-    const data = await request.json();
-    if (data.isSetup) {
-      if (data.code != process.env.SETUP_ACCESS_CODE) {
+    const { user, securityQuestionAnswers } = await request.json();
+    if (user.isSetup) {
+      if (user.code != process.env.SETUP_ACCESS_CODE) {
         return NextResponse.json(
           { error: "Access Code Incorrect" },
           { status: 401 }
         );
       }
     }
+
     const userRequest: User = {
-      firstName: data.firstName,
-      middleName: data.middleName,
-      lastName: data.lastName,
-      password: sha256(data.password1),
-      userName: data.username,
-      isAdmin: data.companyRole == "Admin",
-      hasAccess: data.isSetup === true,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      password: sha256(user.password1),
+      userName: user.username,
+      isAdmin: user.companyRole == "Admin",
+      hasAccess: user.isSetup,
     };
     const userCreated = await prisma.user.create({
       data: userRequest,
+    });
+
+    await prisma.securityQuestionsAnswer.createMany({
+      data: securityQuestionAnswers.map(
+        (answer: { id: number; answer: string }) => {
+          return {
+            questionId: Number(answer.id),
+            answer: sha256(answer.answer.toLowerCase()),
+            userId: userCreated.id,
+          };
+        }
+      ),
     });
 
     return NextResponse.json({ status: 200 });

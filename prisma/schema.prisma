@@ -54,6 +54,7 @@ model Stock{
   areaId Int @map("area_id")
   area Area @relation(fields:[areaId], references: [id])
   grade Grade @relation(fields: [gradeId], references: [id])
+  isWashed Boolean @map("is_washed") @default(false)
   stockOut Stockout[]
   orderDetail OrderDetail[]
   inventory Inventory[]
@@ -105,14 +106,28 @@ model User{
   userName String @map("username")
   firstName String @map("first_name")
   lastName  String @map("last_name")
-  middleName String @map("middle_name")
+ 
   password String
   actions ActionLog[]
   hasAccess Boolean @map("has_access") @default(false)
   isAdmin Boolean @map("is_admin")
   dateCreated DateTime @map("date_created") @default(now())
+  securitQuestionsAnswer SecurityQuestionsAnswer[]
 }
 
+model SecurityQuestions {
+  id Int @id @default(autoincrement())
+  question String @unique
+  securityQuestionsAnswer SecurityQuestionsAnswer[]
+}
+model SecurityQuestionsAnswer {
+  id Int @id @default(autoincrement())
+  userId Int @map("user_id")
+  questionId Int @map("question_id")
+  answer String
+  user User @relation(fields: [userId], references: [id])
+  question SecurityQuestions @relation(fields: [questionId], references: [id])
+}
 
 model ActionLog{
   id Int @id @default(autoincrement())

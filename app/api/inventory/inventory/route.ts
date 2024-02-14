@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient, Prisma } from "@prisma/client";
+import { categoryFormData } from "@/types";
 
 const prisma = new PrismaClient();
 
@@ -11,7 +12,8 @@ export async function GET(request: NextRequest) {
     FROM inventory i
     INNER JOIN harvestlog h ON i.log_id = h.id
     INNER JOIN area a ON h.area_id = a.id
-    INNER JOIN grade g ON i.grade_id = g.id;
+    INNER JOIN grade g ON i.grade_id = g.id 
+    WHERE i.quantity > 0;
 `;
 
   const area = await prisma.area.findMany();
@@ -24,8 +26,97 @@ export async function GET(request: NextRequest) {
 }
 
 export async function POST(request: NextRequest) {
-  const data = await request.json();
-  console.log(data);
+  const { categoryFormData, inventoryId } = await request.json();
+  let totalAmount = 0; //this is the total amount to subtract from the ungraded inventory
+  const sortedData: { [key: number]: { [key: string]: { quantity: number } } } =
+    {}; //gamiton nato ang grade as ilhanan
 
+  console.log(categoryFormData);
+  const data = await prisma.inventory.findUnique({
+    where: {
+      id: inventoryId,
+    },
+    select: {
+      stockId: true,
+      harvestLog: {
+        select: {
+          id: true,
+          area: {
+            select: {
+              id: true,
+            },
+          },
+        },
+      },
+    },
+  });
+  const {
+    harvestLog: {
+      id: logId,
+      area: { id: areaId },
+    },
+  } = data;
+
+  categoryFormData.map((data: categoryFormData) => {
+    if (
+      sortedData[data.grade] &&
+      sortedData[data.grade][String(data.isWashed)]
+    ) {
+      sortedData[data.grade][String(data.isWashed)].quantity += data.quantity;
+    } else {
+      sortedData[data.grade] = {
+        ...sortedData[data.grade],
+        [String(data.isWashed)]: {
+          quantity: data.quantity,
+        },
+      };
+    }
+  });
+  const insertData: Prisma.InventoryCreateManyInput[] = [];
+
+  Object.keys(sortedData).map((gradeString) => {
+    const gradeId = Number(gradeString);
+    Object.keys(sortedData[gradeId]).map((isWashed) => {
+      totalAmount += sortedData[gradeId][isWashed].quantity;
+      insertData.push({
+        stockId: 0,
+        gradeId: gradeId,
+        isWashed: isWashed == "true",
+        quantity: sortedData[gradeId][isWashed].quantity,
+        logId: logId,
+      });
+    });
+  });
+  await prisma.inventory.createMany({
+    data: insertData,
+  });
+
+  //update the ungraded inventory
+  await prisma.inventory.update({
+    where: {
+      id: inventoryId,
+    },
+    data: {
+      quantity: {
+        decrement: totalAmount,
+      },
+    },
+  });
+
+  await prisma.stock.update({
+    where: {
+      id: data.stockId,
+    },
+    data: {
+      quantityOnHand: {
+        decrement: totalAmount,
+      },
+    },
+  });
+  console.log({ insertData });
   return NextResponse.json("good");
+}
+
+export async function DELETE(request: NextRequest) {
+  return NextResponse.json({ status: 400 });
 }

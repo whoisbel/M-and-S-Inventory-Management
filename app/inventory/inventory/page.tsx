@@ -1,24 +1,27 @@
 "use client";
+"use client";
+import { useEffect, useState } from "react";
+import { BiErrorAlt, BiSearch } from "react-icons/bi";
+import { CgAdd } from "react-icons/cg";
+import { BiError } from "react-icons/bi";
 import { CustomTable, InventoryInputForm } from "@/components";
-import { ChangeEvent, FormEvent, useEffect, useState } from "react";
-import {
-  categoryFormData,
-  customTableDataType,
-  customTableProps,
-  inventoryDataType,
-} from "@/types";
 import { Area, Grade } from "@prisma/client";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import { createPortal } from "react-dom";
-import { CgAdd } from "react-icons/cg";
-import { BiSearch } from "react-icons/bi";
+import {
+  categoryFormData,
+  customTableDataType,
+  inventoryDataType,
+} from "@/types";
+
 const Inventory = () => {
   const [inventoryData, setInventoryData] = useState<inventoryDataType[]>([]);
   const [tableData, setTableData] = useState<customTableDataType>({});
   const [isLoading, setIsLoading] = useState(true);
   const [swalShown, setSwalShown] = useState(false);
   const [selectedUpdateData, setSelectedUpdateData] = useState<string[]>([]);
+  const [selectedIndex, setSelectedIndex] = useState(0);
   const [filter, setFilter] = useState({
     dateFilter: "",
     areaFilter: "",
@@ -26,12 +29,8 @@ const Inventory = () => {
   });
   const [area, setArea] = useState<Area[]>([]);
   const [grade, setGrade] = useState<Grade[]>([]);
-  const [dates, setDates] = useState<
-    {
-      harvestDate: string;
-    }[]
-  >([]);
-  //get data from api
+  const [dates, setDates] = useState<{ harvestDate: string }[]>([]);
+
   useEffect(() => {
     const fetchData = async () => {
       const response = await fetch("/api/inventory/inventory");
@@ -41,19 +40,18 @@ const Inventory = () => {
       setArea(area);
       setGrade(grade);
       setDates(date);
-      console.log(date);
     };
     fetchData();
   }, []);
 
-  //trigger after inventory data is set
   useEffect(() => {
     setTableData(getDefaultData());
-    console.log(tableData);
   }, [inventoryData]);
+
   useEffect(() => {
     filterTable();
   }, [filter]);
+
   const headers = [
     "Harvest Date",
     "Area",
@@ -62,56 +60,39 @@ const Inventory = () => {
     "Washed",
     "Actions",
   ];
-  const data = {
-    0: ["06/02/2024", "Charles", "grade a", "quantity", "unit price", "Update"],
-  };
 
-  //turn json data to table json
   function getDefaultData() {
-    const defaultTableData: customTableDataType = {};
-
-    inventoryData.map((data) => {
-      defaultTableData[data.id] = [
+    return inventoryData.reduce((acc, data) => {
+      acc[data.id] = [
         String(data.harvestDate),
         data.areaName,
         data.gradeName,
         String(data.quantity),
         data.isWashed ? "True" : "False",
-        "update delete",
+        data.gradeName == "Ungraded" ? "update delete" : "delete",
       ];
-    });
-    return defaultTableData;
+      return acc;
+    }, {} as customTableDataType);
   }
 
   const filterTable = () => {
     const defaultTableData = getDefaultData();
-
-    let newTableData = Object.keys(defaultTableData).filter((data) => {
-      if (filter.areaFilter == "") {
-        return true;
-      } else {
-        return defaultTableData[Number(data)][1] == filter.areaFilter;
-      }
-    });
-    newTableData = newTableData.filter((data) => {
-      if (filter.gradeFilter == "") {
-        return true;
-      } else {
-        return defaultTableData[Number(data)][2] == filter.gradeFilter;
-      }
-    });
-    newTableData = newTableData.filter((data) => {
-      if (filter.dateFilter == "") {
-        return true;
-      } else {
-        return defaultTableData[Number(data)][0] == filter.dateFilter;
-      }
+    const newTableData = Object.keys(defaultTableData).filter((key) => {
+      return (
+        (filter.areaFilter === "" ||
+          defaultTableData[Number(key)][1] === filter.areaFilter) &&
+        (filter.gradeFilter === "" ||
+          defaultTableData[Number(key)][2] === filter.gradeFilter) &&
+        (filter.dateFilter === "" ||
+          defaultTableData[Number(key)][0] === filter.dateFilter)
+      );
     });
 
-    const filteredData: typeof defaultTableData = {};
-    newTableData.map((key) => {
-      filteredData[Number(key)] = defaultTableData[Number(key)];
-    });
+    const filteredData = newTableData.reduce((acc, key) => {
+      acc[Number(key)] = defaultTableData[Number(key)];
+      return acc;
+    }, {} as customTableDataType);
+
     setTableData(filteredData);
   };
 
@@ -127,22 +108,24 @@ const Inventory = () => {
         htmlContainer: "!m-0 !rounded p-0",
       },
     });
-    setSelectedUpdateData(tableData[index]);
+
+    setSelectedIndex(index);
   };
+
   return (
     <div className="h-full w-full bg-white text-black">
       {swalShown &&
         createPortal(
           <InventoryModal
-            inventoryData={selectedUpdateData}
+            inventoryData={tableData[selectedIndex]}
             swal={swal}
             setSwalShown={setSwalShown}
             grade={grade}
-            inventoryId={0}
+            inventoryId={selectedIndex}
           />,
           swal.getHtmlContainer()!
         )}
-      <div className="bg-accent-gray py-2  px-3 flex gap-2">
+      <div className="bg-accent-gray py-2 px-3 flex gap-2">
         <div className="flex gap-3">
           <label>Sort by:</label>
           <select name="sort-select" id="">
@@ -213,6 +196,7 @@ const Inventory = () => {
           <BiSearch className="-ml-[1.25em] text-primary-color" />
         </div>
       </div>
+
       <div className="flex flex-col p-3 bg-white">
         <CustomTable
           headers={headers}
@@ -224,7 +208,6 @@ const Inventory = () => {
     </div>
   );
 };
-
 export default Inventory;
 
 const InventoryModal = ({
@@ -246,6 +229,8 @@ const InventoryModal = ({
   const [ungradedQuantity, setUngradedQuantity] = useState(
     Number(inventoryData[3])
   );
+  const [isQuantityError, setIsQuantityError] = useState(false);
+  const [isError, setIsError] = useState(false);
 
   const createInventoryForm = () => {
     const newData: categoryFormData = {
@@ -255,12 +240,15 @@ const InventoryModal = ({
     };
     setCategoryFormData([...categoryFormData, newData]);
   };
+
   useEffect(() => {
     computeUngradedQuantity();
   }, [categoryFormData]);
 
   const handleInventoryFormChange = (
-    e: ChangeEvent<HTMLInputElement> | ChangeEvent<HTMLSelectElement>,
+    e:
+      | React.ChangeEvent<HTMLInputElement>
+      | React.ChangeEvent<HTMLSelectElement>,
     index: number
   ) => {
     const newCategoryFormData = [...categoryFormData];
@@ -285,15 +273,40 @@ const InventoryModal = ({
     categoryFormData.map((data) => {
       sortedQuantity += Number(data.quantity);
     });
-
-    setUngradedQuantity(Number(inventoryData[3]) - sortedQuantity);
+    const ungradedQuantity = Number(inventoryData[3]) - sortedQuantity;
+    setUngradedQuantity(ungradedQuantity);
+    if (ungradedQuantity < 0) {
+      setIsQuantityError(true);
+    } else {
+      setIsQuantityError(false);
+      setIsError(false);
+    }
   };
 
   const saveForm = async () => {
-    const response = await fetch("/api/inventory/inventory", {
-      method: "POST",
-      body: JSON.stringify(categoryFormData),
-    });
+    if (isQuantityError) {
+      setIsError(true);
+    } else {
+      const response = await fetch("/api/inventory/inventory", {
+        method: "POST",
+        body: JSON.stringify({
+          categoryFormData: categoryFormData,
+          inventoryId: inventoryId,
+        }),
+      });
+      if (response.ok) {
+        swal.fire({
+          title: "Success",
+          icon: "success",
+          text: "The inventory is saved ahahaha",
+        });
+      } else {
+        swal.fire({
+          title: "error",
+        });
+      }
+      setSwalShown(false);
+    }
   };
   return (
     <div className="flex bg-white min-w-[900px] min-h-[400px] flex-col text-black rounded">
@@ -322,7 +335,9 @@ const InventoryModal = ({
           <input
             type="text"
             name="quantity"
-            className="h-[20px] py-3 px-1 border-2 border-add-minus"
+            className={`h-[20px] py-3 px-1 border-2 border-add-minus ${
+              isQuantityError && "text-red-600"
+            }`}
             value={ungradedQuantity}
             readOnly
           />
@@ -348,6 +363,12 @@ const InventoryModal = ({
             />
           ))}
         </div>
+        {isError && (
+          <p className="flex justify-center items-center text-red-500">
+            <BiErrorAlt className=" h-[40px] w-[40px] mr-4" /> Sorted Quantity
+            doesn't match the ungraded quantity.
+          </p>
+        )}
         <div className="py-4 flex gap-3 justify-center">
           <button
             className="bg-red-500 text-white float-right min-w-[100px] rounded-full px-4 py-2"
@@ -361,12 +382,7 @@ const InventoryModal = ({
             className="bg-primary-color text-white float-right min-w-[100px] rounded-full px-4 py-2"
             onClick={() => {
               saveForm();
-              setSwalShown(false);
-              swal.fire({
-                title: "Success",
-                icon: "success",
-                text: "The inventory is saved ahahaha",
-              });
+
               console.log(categoryFormData);
             }}
           >
