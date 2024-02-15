@@ -295,11 +295,15 @@ const InventoryModal = ({
         }),
       });
       if (response.ok) {
-        swal.fire({
-          title: "Success",
-          icon: "success",
-          text: "The inventory is saved ahahaha",
-        });
+        swal
+          .fire({
+            title: "Success",
+            icon: "success",
+            text: "Inventory Saved",
+          })
+          .then(() => {
+            location.reload();
+          });
       } else {
         swal.fire({
           title: "error",
@@ -366,7 +370,7 @@ const InventoryModal = ({
         {isError && (
           <p className="flex justify-center items-center text-red-500">
             <BiErrorAlt className=" h-[40px] w-[40px] mr-4" /> Sorted Quantity
-            doesn't match the ungraded quantity.
+            does not match the ungraded quantity.
           </p>
         )}
         <div className="py-4 flex gap-3 justify-center">

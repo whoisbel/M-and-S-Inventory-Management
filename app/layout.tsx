@@ -19,12 +19,12 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   const session = await getServerSession(options);
-
+  console.log(session);
   return (
     <html lang="en">
       <body className={sansation.className}>
         <Provider>
-          {session && <Sidepanel />}
+          {session && <Sidepanel user={session.user} />}
           <div className="bg-main-background w-full  max-h-full rounded-lg ml-2 flex flex-col">
             {children}
           </div>

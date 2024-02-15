@@ -2,7 +2,7 @@ function GradePage({
   page,
   generateRandomPastelColor,
 }: {
-  page: { totalQuantity: number; name: string }[];
+  page: { quantity: number; name: string }[];
   generateRandomPastelColor: any;
 }) {
   const pastelColors = [0, 1, 2, 3, 4].map(() => generateRandomPastelColor());
@@ -19,7 +19,7 @@ function GradePage({
               {grade.name}
             </h1>
             <h1 className="text-[30px] font-bold text-letters-color self-center">
-              {grade.totalQuantity}
+              {grade.quantity + " kg"}
             </h1>
           </div>
         ))}
@@ -42,7 +42,7 @@ function GradePage({
                 {grade.name}
               </h1>
               <h1 className="text-[30px] font-bold text-letters-color self-center">
-                {grade.totalQuantity}
+                {grade.quantity + " kg"}
               </h1>
             </div>
           ))}
@@ -56,7 +56,7 @@ function GradePage({
                 {page[page.length - 1].name}
               </h1>
               <h1 className="text-[30px] font-bold text-letters-color self-center">
-                {page[page.length - 1].totalQuantity}
+                {page[page.length - 1].quantity + " kg"}
               </h1>
             </div>
           )}

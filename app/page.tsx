@@ -9,12 +9,28 @@ import { Pagination, GradePage } from "@/components";
 import { generateRandomPastelColor } from "../utils/generatePastelColor";
 
 type dashboardDataType = {
-  areaSummary: { totalQuantity: number; name: string }[];
-  gradeSummary: { totalQuantity: number; name: string }[];
+  areaSummary: { quantity: number; name: string }[];
+  gradeSummary: { quantity: number; name: string }[];
+  monthSummary: { quantity: number; month: number }[];
+  yearSummary: { quantity: number; year: number }[];
 };
 
 export default function Dashboard() {
   const [dashboardData, setDashboardData] = useState<dashboardDataType>();
+  const months = [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
+  ];
   useEffect(() => {
     const fetchSession = async () => {
       const session = await getSession();
@@ -60,8 +76,7 @@ export default function Dashboard() {
     datasets: [
       {
         label: "Kilograms",
-        data:
-          dashboardData?.gradeSummary.map((grade) => grade.totalQuantity) || [],
+        data: dashboardData?.gradeSummary.map((grade) => grade.quantity) || [],
         backgroundColor: donutColors,
         hoverOffset: 4,
       },
@@ -69,11 +84,12 @@ export default function Dashboard() {
   };
 
   const barData = {
-    labels: ["Red", "Blue", "Yellow"],
+    labels: dashboardData?.yearSummary.map((year) => year.year) || [],
     datasets: [
       {
-        label: "Test",
-        data: [300, 50, 100],
+        label: "Kilograms",
+        data: dashboardData?.yearSummary.map((year) => year.quantity) || [],
+
         backgroundColor: barColors,
         hoverOffset: 4,
       },
@@ -81,11 +97,18 @@ export default function Dashboard() {
   };
 
   const lineData = {
-    labels: ["Red", "Blue", "Yellow"],
+    labels: months,
     datasets: [
       {
         label: "Test",
-        data: [300, 50, 100],
+        data:
+          months.map((month, index) => {
+            return (
+              dashboardData?.monthSummary.find(
+                (monthData) => monthData.month === index + 1
+              )?.quantity || 0
+            );
+          }) || [],
         backgroundColor: lineColors,
         hoverOffset: 4,
       },
@@ -165,9 +188,7 @@ export default function Dashboard() {
 
   const [currentPage, setCurrentPage] = useState(0);
 
-  function generateGradeElements(
-    grades: { totalQuantity: number; name: string }[]
-  ) {
+  function generateGradeElements(grades: { quantity: number; name: string }[]) {
     const gradesPerPage = 4; // Adjust as needed
     const pages = [];
     for (let i = 0; i < grades.length; i += gradesPerPage) {

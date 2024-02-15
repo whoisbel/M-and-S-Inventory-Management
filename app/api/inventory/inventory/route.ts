@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { PrismaClient, Prisma } from "@prisma/client";
 import { categoryFormData } from "@/types";
+import { Console } from "console";
 
 const prisma = new PrismaClient();
 
@@ -13,9 +14,10 @@ export async function GET(request: NextRequest) {
     INNER JOIN harvestlog h ON i.log_id = h.id
     INNER JOIN area a ON h.area_id = a.id
     INNER JOIN grade g ON i.grade_id = g.id 
-    WHERE i.quantity > 0;
-`;
+    WHERE i.quantity > 0
+    ORDER BY h.harvest_date DESC;`;
 
+  console.log(data);
   const area = await prisma.area.findMany();
   const grade = await prisma.grade.findMany();
   const date =
@@ -118,5 +120,12 @@ export async function POST(request: NextRequest) {
 }
 
 export async function DELETE(request: NextRequest) {
+  const { inventoryId } = await request.json();
+  await prisma.inventory.delete({
+    where: {
+      id: inventoryId,
+    },
+  });
+  return NextResponse.json("good");
   return NextResponse.json({ status: 400 });
 }

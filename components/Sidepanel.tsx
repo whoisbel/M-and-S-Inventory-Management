@@ -8,14 +8,31 @@ import { SlNotebook } from "react-icons/sl";
 import { MdOutlineReceiptLong, MdOutlineHistory } from "react-icons/md";
 import { TbLogout } from "react-icons/tb";
 import { signOut } from "next-auth/react";
-const Sidepanel = () => {
+import { BiUserCircle } from "react-icons/bi";
+import { User } from "@prisma/client";
+const Sidepanel = ({ user }: User) => {
   const pathname = usePathname();
-
+  console.log(user);
   // active:bg-main-background active:text-letters-color
   //h-[calc(100vh-1em)] 1em paras padding top (.5em) and bottom (.5em)
+
   return (
     <div className="sticky top-2 left-2 bottom-2 h-[calc(100vh-1em)] bg-primary-green rounded-lg lg:block bg-primary-color">
       <ul className="text-[30px] flex flex-col w-full lg:min-w-[300px]">
+        <li className="h-[95px] bg-accent-green text-black flex p-3 rounded-t-lg items-center">
+          <BiUserCircle className="w-[44px] h-[44px]" />
+          <div className="ml-[20px] lg:inline hidden">
+            <h3 className="text-[20px] font-bold ">
+              {user.firstName &&
+                `${user.firstName
+                  .substring(0, 1)
+                  .toUpperCase()}${user.firstName.substring(1)} ${user.lastName
+                  .substring(0, 1)
+                  .toUpperCase()}${user.lastName.substring(1)}`}
+            </h3>
+            <p className="text-[15px]">{user.isAdmin ? "Admin" : "Employee"}</p>
+          </div>
+        </li>
         <Link
           className={`${
             pathname == "/"
