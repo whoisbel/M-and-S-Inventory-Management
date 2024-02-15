@@ -78,7 +78,7 @@ export async function PATCH(request: NextRequest) {
     });
     return NextResponse.json("success");
   } catch (error) {
-    return NextResponse.error;
+    return NextResponse.json("error");
   }
 }
 
@@ -92,6 +92,6 @@ export async function DELETE(request: NextRequest) {
     });
     return NextResponse.json("success");
   } catch (error) {
-    return NextResponse.error;
+    return NextResponse.json("error");
   }
 }

@@ -2,7 +2,7 @@ INSERT INTO Area (description) VALUES ('Area 1'), ('Area 2'), ('Area 3'), ('Area
 
 INSERT INTO Grade (description, price) VALUES ('A', 90), ('B', 80), ('C', 70), ('D', 60), ('Ungraded', 0);
 
-
+INSERT INTO SecurityQuestions (question) VALUES ('What is your mother''s maiden name?'), ('What is the name of your first pet?'), ('What is the name of your first school?'), ('What is your favorite color?'), ('What is your favorite food?');
 INSERT INTO Personnel (first_name, last_name, middle_name, username, role,  password, hasAccess)
 VALUES
     ('Admin J', 'admin', '', 'admin', 1, 'admin', TRUE),

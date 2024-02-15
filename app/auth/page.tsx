@@ -7,11 +7,12 @@ import { RegistrationModal } from "@/components";
 import { LoginModal } from "@/components";
 const Auth = () => {
   const [isSetup, setIsSetup] = useState(false);
+  const [securityQuestions, setSecurityQuestions] = useState([]);
   //account registration
   const [showRegisterModal, setShowRegisterModal] = useState(false);
   const [accountData, setAccountData] = useState<createAccountData>({
     firstName: "",
-    middleName: "",
+    middleName: "charles",
     lastName: "",
     password1: "",
     password2: "",
@@ -26,8 +27,9 @@ const Auth = () => {
   useEffect(() => {
     const fetchIsSetup = async () => {
       const response = await fetch("/api/auth/register");
-      const { isSetup } = await response.json();
+      const { isSetup, securityQuestions } = await response.json();
       setIsSetup(isSetup);
+      setSecurityQuestions(securityQuestions);
     };
     fetchIsSetup();
   }, []);
@@ -49,6 +51,7 @@ const Auth = () => {
           accountData={accountData}
           setAccountData={setAccountData}
           isSetup={isSetup}
+          securityQuestions={securityQuestions}
         />
       )}
     </div>

@@ -6,15 +6,48 @@ import { Doughnut, Bar, Line } from "react-chartjs-2";
 import { plugin } from "postcss";
 import { getSession } from "next-auth/react";
 import { Pagination, GradePage } from "@/components";
-import { generateRandomPastelColor } from '../utils/generatePastelColor'
+import { generateRandomPastelColor } from "../utils/generatePastelColor";
+
+type dashboardDataType = {
+  areaSummary: { quantity: number; name: string }[];
+  gradeSummary: { quantity: number; name: string }[];
+  monthSummary: { quantity: number; month: number }[];
+  yearSummary: { quantity: number; year: number }[];
+};
+
 export default function Dashboard() {
+  const [dashboardData, setDashboardData] = useState<dashboardDataType>();
+  const months = [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
+  ];
   useEffect(() => {
     const fetchSession = async () => {
       const session = await getSession();
-      console.log(session, "hello");
     };
     fetchSession();
   });
+
+  useEffect(() => {
+    const fetchDashboardData = async () => {
+      const response = await fetch("/api/dashboard");
+      const data = await response.json();
+
+      setDashboardData(data);
+    };
+    fetchDashboardData();
+  }, []);
+
   Chart.register(ArcElement);
   const [sortOption, setSortOption] = useState("grade");
 
@@ -35,17 +68,53 @@ export default function Dashboard() {
   const [donutColors] = useState(() => generateRandomPastelColors(3));
   const [barColors] = useState(() => generateRandomPastelColors(1));
   const [lineColors] = useState(() => generateRandomPastelColors(1));
+
+  // dataaasss
+
   const donutData = {
-    labels: ["Red", "Blue", "Yellow"],
+    labels: dashboardData?.gradeSummary.map((grade) => grade.name) || [],
     datasets: [
       {
-        label: "Test",
-        data: [300, 50, 100],
+        label: "Kilograms",
+        data: dashboardData?.gradeSummary.map((grade) => grade.quantity) || [],
         backgroundColor: donutColors,
         hoverOffset: 4,
       },
     ],
   };
+
+  const barData = {
+    labels: dashboardData?.yearSummary.map((year) => year.year) || [],
+    datasets: [
+      {
+        label: "Kilograms",
+        data: dashboardData?.yearSummary.map((year) => year.quantity) || [],
+
+        backgroundColor: barColors,
+        hoverOffset: 4,
+      },
+    ],
+  };
+
+  const lineData = {
+    labels: months,
+    datasets: [
+      {
+        label: "Test",
+        data:
+          months.map((month, index) => {
+            return (
+              dashboardData?.monthSummary.find(
+                (monthData) => monthData.month === index + 1
+              )?.quantity || 0
+            );
+          }) || [],
+        backgroundColor: lineColors,
+        hoverOffset: 4,
+      },
+    ],
+  };
+
   const donutOptions = {
     plugins: {
       legend: {
@@ -117,52 +186,15 @@ export default function Dashboard() {
     },
   };
 
-  const barData = {
-    labels: ["Red", "Blue", "Yellow"],
-    datasets: [
-      {
-        label: "Test",
-        data: [300, 50, 100],
-        backgroundColor: barColors,
-        hoverOffset: 4,
-      },
-    ],
-  };
-  const lineData = {
-    labels: ["Red", "Blue", "Yellow"],
-    datasets: [
-      {
-        label: "Test",
-        data: [300, 50, 100],
-        backgroundColor: lineColors,
-        hoverOffset: 4,
-      },
-    ],
-  };
   const [currentPage, setCurrentPage] = useState(0);
-  
-  const grades = [
-    { name: "Regular A", weight: "4000 KG" },
-    { name: "Regular B", weight: "4000 KG" },
-    { name: "Regular C", weight: "4000 KG" },
-    { name: "Rejects", weight: "4000 KG" },
-    { name: "Rejects D", weight: "4000 KG" },
-    { name: "Rejects E", weight: "4000 KG" },
-    { name: "Rejects F", weight: "4000 KG" },
-    { name: "Rejects G", weight: "4000 KG" },
-    { name: "Rejects H", weight: "4000 KG" },
-    { name: "Rejects I", weight: "4000 KG" },
-    { name: "Rejects J", weight: "4000 KG" },
-    { name: "Rejects K", weight: "4000 KG" },
-  ];
 
-  
-  function generateGradeElements(grades: any[]) {
+  function generateGradeElements(grades: { quantity: number; name: string }[]) {
     const gradesPerPage = 4; // Adjust as needed
     const pages = [];
     for (let i = 0; i < grades.length; i += gradesPerPage) {
       pages.push(grades.slice(i, i + gradesPerPage));
     }
+
     return pages;
   }
 
@@ -196,7 +228,7 @@ export default function Dashboard() {
                           : "w-full h-[50px] rounded-xl bg-custom-white border-2 border-opacity-40 flex ju" +
                             "stify-center items-center"
                       }
-                      onClick={sortByGrade}
+                      onClick={() => setSortOption("grade")}
                     >
                       <h1
                         className={
@@ -215,7 +247,7 @@ export default function Dashboard() {
                           : "w-full h-[50px] rounded-xl bg-custom-white border-2 border-opacity-40 flex  ml-[1rem] ju" +
                             "stify-center items-center"
                       }
-                      onClick={sortByArea}
+                      onClick={() => setSortOption("area")}
                     >
                       <h1
                         className={
@@ -228,14 +260,54 @@ export default function Dashboard() {
                       </h1>
                     </button>
                   </div>
-                  <div className="w-full h-full pt-[20px]">
-                      <GradePage page={generateGradeElements(grades)[currentPage]} generateRandomPastelColor={generateRandomPastelColor} />
-                  </div>
-                    <Pagination
-                      numPages={generateGradeElements(grades).length}
-                      currentPage={currentPage}
-                      onPageChange={setCurrentPage}
-                    />
+                  {sortOption == "grade" && dashboardData?.gradeSummary && (
+                    <>
+                      <div className="w-full h-full pt-[20px]">
+                        <GradePage
+                          page={
+                            generateGradeElements(dashboardData.gradeSummary)[
+                              currentPage
+                            ]
+                          }
+                          generateRandomPastelColor={generateRandomPastelColor}
+                        />
+                      </div>
+                      <Pagination
+                        numPages={
+                          dashboardData.gradeSummary
+                            ? generateGradeElements(dashboardData.gradeSummary)
+                                .length
+                            : 0
+                        }
+                        currentPage={currentPage}
+                        onPageChange={setCurrentPage}
+                      />
+                    </>
+                  )}
+                  {sortOption == "area" && dashboardData?.areaSummary && (
+                    <>
+                      <div className="w-full h-full pt-[20px]">
+                        <GradePage
+                          page={
+                            generateGradeElements(dashboardData.areaSummary)[
+                              currentPage
+                            ]
+                          }
+                          generateRandomPastelColor={generateRandomPastelColor}
+                        />
+                      </div>
+                      <Pagination
+                        numPages={
+                          dashboardData.areaSummary
+                            ? generateGradeElements(dashboardData.areaSummary)
+                                .length
+                            : 0
+                        }
+                        currentPage={currentPage}
+                        onPageChange={setCurrentPage}
+                      />
+                    </>
+                  )}
                 </div>
               </div>
             </div>

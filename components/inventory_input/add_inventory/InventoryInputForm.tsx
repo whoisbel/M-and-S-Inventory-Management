@@ -31,6 +31,8 @@ const InventoryInputForm = ({
           case "quantity":
             type = "number";
             break;
+          case "isWashed":
+            type = "checkbox";
         }
         if (key === "grade") {
           return (
@@ -41,10 +43,11 @@ const InventoryInputForm = ({
               <select
                 name="grade"
                 className="form_input ml-3 min-w-[150px] text-center"
+                value={Number(inventoryFormData[key])}
                 onChange={(e) => handleChange(e, index)}
               >
                 {grade?.map((grade) => (
-                  <option key={grade.id} value={grade.description}>
+                  <option key={grade.id} value={grade.id}>
                     {grade.description}
                   </option>
                 ))}
@@ -72,6 +75,19 @@ const InventoryInputForm = ({
             </div>
           );
         } else if (key === "date") {
+        } else if (key === "isWashed") {
+          return (
+            <div key={key}>
+              <input
+                type={type}
+                name={key}
+                className="form_input mr-3"
+                value={String(inventoryFormData[key])}
+                onChange={(e) => handleChange(e, index)}
+              />
+              <label className="font-semibold">Washed</label>
+            </div>
+          );
         } else {
           return (
             <div key={key}>
@@ -83,7 +99,9 @@ const InventoryInputForm = ({
                 name={key}
                 className="form_input ml-3"
                 value={
-                  inventoryFormData[key] === 0 ? "" : inventoryFormData[key]
+                  inventoryFormData[key] === 0
+                    ? ""
+                    : String(inventoryFormData[key])
                 }
                 onChange={(e) => handleChange(e, index)}
               />

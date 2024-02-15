@@ -25,13 +25,14 @@ export type DashboardData = {
 export type addFormData = {
   area: string;
   quantity: number;
-  [key: string]: string | number;
+  [key: string]: string | number | boolean;
 };
 
 export type categoryFormData = {
-  grade: string;
+  grade: number;
   quantity: number;
-  [key: string]: string | number;
+  isWashed: boolean;
+  [key: string]: number | boolean;
 };
 
 export type inventoryInputData = addFormData | categoryFormData;
