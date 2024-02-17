@@ -122,14 +122,14 @@ const RegistrationModal = ({
     setSecurityQuestionAnswers([...newAnswers]);
   };
   return (
-    <div className="w-full h-full flex justify-center items-center fixed bg-main-background/90">
-      <div className="w-[650px] rounded-lg bg-custom-white">
-        <div className="flex w-full justify-between items-center bg-accent-gray py-3 px-4 rounded-t-lg">
+    <div className="w-full h-full flex justify-center flex-col items-center fixed bg-main-background/90">
+      <div className="flex w-[650px] justify-between items-center bg-accent-gray py-3 px-4 rounded-t-lg">
           <p className="text-[20px] font-bold text-letters-color">
             {isSetup ? "Setup Account" : "Create Account"}
           </p>
           <button onClick={closeModal}>X</button>
         </div>
+      <div className="w-[650px] h-1/2 overflow-y-auto rounded-lg bg-custom-white">
         <div className="w-full flex justify-center items-center">
           <div className="w-max h-max flex flex-col justify-center">
             <h1 className="text-[40px] font-bold text-letters-color self-center">

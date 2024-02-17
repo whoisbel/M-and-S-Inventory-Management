@@ -19,7 +19,7 @@ const Sidepanel = ({ user }: User) => {
   return (
     <div className="sticky top-2 left-2 bottom-2 lg:min-w-[300px] h-[calc(100vh-1em)] bg-primary-green rounded-lg lg:block bg-primary-color ">
       <ul className="text-[20px] flex flex-col w-full">
-        <li className="rounded-t-lg sidepanel_link bg-accent-green text-black h-[95px]">
+        <li className="rounded-t-lg sidepanel_link bg-accent-green text-letters-color h-[95px]">
           <div className="set_icon">
             <BiUserCircle className="w-[35px] h-[35px]" />
           </div>

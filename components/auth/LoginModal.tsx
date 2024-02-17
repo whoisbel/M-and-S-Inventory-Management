@@ -5,10 +5,12 @@ import { loginAccountData } from "@/types";
 
 const LoginModal = ({
   setShowRegisterModal,
+  setShowForgotPasswordModal,
   loginData,
   setLoginData,
 }: {
   setShowRegisterModal: (val: boolean) => void;
+  setShowForgotPasswordModal: (val: boolean) => void;
   loginData: loginAccountData;
   setLoginData: (val: loginAccountData) => void;
 }) => {
@@ -57,7 +59,7 @@ const LoginModal = ({
       <p
         className="text-right pr-4 mb-2 text-[#0094FF] text-[15px] underline cursor-pointer"
         onClick={(e) => {
-          
+          setShowForgotPasswordModal(true);
         }}
       >
         Forgot password?
