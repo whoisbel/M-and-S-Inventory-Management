@@ -17,7 +17,6 @@ import Swal from "sweetalert2";
 const AvailableProducts = () => {
   const [availableProducts, setAvailableProducts] = useState<Stock[]>([]);
   const [filter, setFilter] = useState({
-    areaFilter: "",
     gradeFilter: "",
   });
 
@@ -65,7 +64,7 @@ const AvailableProducts = () => {
     const newTableData = Object.keys(defaultTableData).filter((key) => {
       return (
         filter.gradeFilter === "" ||
-        defaultTableData[Number(key)][1] === filter.gradeFilter
+        defaultTableData[Number(key)][0] === filter.gradeFilter
       );
     });
 
@@ -98,7 +97,7 @@ const AvailableProducts = () => {
                 defaultValue=""
                 onChange={(e) => {
                   {
-                    setFilter({ ...filter, gradeFilter: e.target.value });
+                    setFilter({ gradeFilter: e.target.value });
                   }
                 }}
               >
