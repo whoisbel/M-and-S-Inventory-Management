@@ -1,10 +1,10 @@
 import type { NextAuthOptions, User } from "next-auth";
-import { PrismaClient } from "@prisma/client";
+import prisma from "@/utils/prisma";
 import CredentialsProvider from "next-auth/providers/credentials";
-import { PrismaAdapter } from "@auth/prisma-adapter";
+
 import { sha256 } from "js-sha256";
 import { User as UserType } from "@prisma/client";
-const prisma = new PrismaClient();
+
 export const options: NextAuthOptions = {
   providers: [
     CredentialsProvider({
