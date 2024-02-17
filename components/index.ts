@@ -8,6 +8,7 @@ import RegistrationModal from "./auth/RegistrationModal";
 import LoginModal from "./auth/LoginModal";
 import Pagination from "./dashboard/Pagination";
 import GradePage from "./dashboard/GradePage";
+import ForgotPasswordModal from "./auth/ForgotPasswordModal"
 export {
   Sidepanel,
   InventoryInputForm,
@@ -17,5 +18,6 @@ export {
   RegistrationModal,
   LoginModal,
   Pagination,
-  GradePage
+  GradePage,
+  ForgotPasswordModal
 };

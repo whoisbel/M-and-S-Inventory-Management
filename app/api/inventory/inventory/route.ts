@@ -120,8 +120,6 @@ export async function POST(request: NextRequest) {
 export async function DELETE(request: NextRequest) {
   const { inventoryId } = await request.json();
 
-  console.log(inventoryId);
-
   try {
     const inventoryForDeletion = await prisma.inventory.findUnique({
       where: {
@@ -135,7 +133,7 @@ export async function DELETE(request: NextRequest) {
         },
       },
     });
-    console.log(inventoryForDeletion);
+
     const ungradedInventory = await prisma.inventory.findFirst({
       where: {
         harvestLog: {

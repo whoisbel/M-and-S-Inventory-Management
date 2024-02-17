@@ -3,7 +3,7 @@ import Link from "next/link";
 import { Chart, ArcElement } from "chart.js/auto";
 import { useEffect, useRef, useState } from "react";
 import { Doughnut, Bar, Line } from "react-chartjs-2";
-import { plugin } from "postcss";
+
 import { getSession } from "next-auth/react";
 import { Pagination, GradePage } from "@/components";
 import { generateRandomPastelColor } from "../utils/generatePastelColor";

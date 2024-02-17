@@ -6,8 +6,8 @@ export default withAuth(function middleware(req) {}, {
       if (!req.nextUrl.pathname.startsWith("/auth") && token === null) {
         return false;
       } else {
+        return true;
       }
-      return true;
     },
   },
 });

@@ -17,6 +17,5 @@ export async function GET(request: NextRequest) {
   const area = await prisma.area.findMany();
   const grade = await prisma.grade.findMany();
 
-  console.log({ availableProducts });
   return NextResponse.json({ availableProducts, area, grade });
 }
