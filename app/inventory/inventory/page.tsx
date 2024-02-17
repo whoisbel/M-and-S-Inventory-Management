@@ -19,7 +19,8 @@ const Inventory = () => {
   const [inventoryData, setInventoryData] = useState<inventoryDataType[]>([]);
   const [tableData, setTableData] = useState<customTableDataType>({});
   const [isLoading, setIsLoading] = useState(true);
-  const [swalShown, setSwalShown] = useState(false);
+  const [ungradedAlertShown, setUngradedAlertShown] = useState(false);
+  const [gradedAlertShown, setGradedAlertShown] = useState(false);
   const [selectedUpdateData, setSelectedUpdateData] = useState<string[]>([]);
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [filter, setFilter] = useState({
@@ -69,13 +70,13 @@ const Inventory = () => {
         data.gradeName,
         String(data.quantity),
         data.isWashed ? "True" : "False",
-        data.gradeName == "Ungraded" ? "update delete" : "delete",
+        "update delete",
       ];
       return acc;
     }, {} as customTableDataType);
   }
 
-  const filterTable = () => {
+  function filterTable() {
     const defaultTableData = getDefaultData();
     const newTableData = Object.keys(defaultTableData).filter((key) => {
       return (
@@ -94,34 +95,87 @@ const Inventory = () => {
     }, {} as customTableDataType);
 
     setTableData(filteredData);
-  };
+  }
 
   const swal = withReactContent(Swal);
 
-  const handleUpdate = (index: number) => {
+  function ungradedUpdate(index: number) {
     swal.fire({
-      didOpen: () => setSwalShown(true),
-      didClose: () => setSwalShown(false),
+      didOpen: () => setUngradedAlertShown(true),
+      didClose: () => setUngradedAlertShown(false),
       showConfirmButton: false,
       customClass: {
         popup: "m-0 flex !w-auto !rounded !p-0",
         htmlContainer: "!m-0 !rounded p-0",
       },
     });
+  }
 
+  function gradedUpdate(index: number) {
+    swal.fire({
+      didOpen: () => setGradedAlertShown(true),
+      didClose: () => setGradedAlertShown(false),
+      showConfirmButton: false,
+      customClass: {
+        popup: "m-0 flex !w-auto !rounded !p-0",
+        htmlContainer: "!m-0 !rounded p-0",
+      },
+    });
+  }
+
+  function handleUpdate(index: number) {
     setSelectedIndex(index);
-  };
+    if (tableData[index][2] == "Ungraded") {
+      ungradedUpdate(index);
+    } else {
+      gradedUpdate(index);
+    }
+  }
+
+  function handleDelete(inventoryId: number) {
+    const swal = withReactContent(Swal);
+    swal
+      .fire({
+        title: "Are you sure you want to delete (To be edited ang prompt)",
+        icon: "warning",
+        iconColor: "red",
+        showCancelButton: true,
+        customClass: {
+          confirmButton: "!bg-red-500",
+        },
+      })
+      .then((response) => {
+        if (response.isConfirmed) {
+          fetch("/api/inventory/inventory", {
+            method: "DELETE",
+            body: JSON.stringify({ inventoryId: inventoryId }),
+          }).then(() => {
+            location.reload();
+          });
+        }
+      });
+  }
 
   return (
     <div className="h-full w-full bg-white text-black">
-      {swalShown &&
+      {ungradedAlertShown &&
         createPortal(
-          <InventoryModal
+          <SortModal
             inventoryData={tableData[selectedIndex]}
             swal={swal}
-            setSwalShown={setSwalShown}
+            setSwalShown={setUngradedAlertShown}
             grade={grade}
             inventoryId={selectedIndex}
+          />,
+          swal.getHtmlContainer()!
+        )}
+      {gradedAlertShown &&
+        createPortal(
+          <InventoryUpdateForm
+            inventoryData={tableData[selectedIndex]}
+            inventoryId={selectedIndex}
+            swal={swal}
+            setSwalShown={setGradedAlertShown}
           />,
           swal.getHtmlContainer()!
         )}
@@ -203,14 +257,16 @@ const Inventory = () => {
           data={tableData}
           isLoading={isLoading}
           handleUpdate={handleUpdate}
+          handleDelete={handleDelete}
         />
       </div>
     </div>
   );
 };
+
 export default Inventory;
 
-const InventoryModal = ({
+const SortModal = ({
   inventoryData,
   swal,
   grade,
@@ -394,6 +450,43 @@ const InventoryModal = ({
           </button>
         </div>
       </div>
+    </div>
+  );
+};
+
+const InventoryUpdateForm = ({
+  inventoryData,
+  inventoryId,
+  swal,
+  setSwalShown,
+}: {
+  inventoryData: string[];
+  inventoryId: number;
+  swal: typeof Swal;
+  setSwalShown: (val: boolean) => void;
+}) => {
+  const [quantity, setQuantity] = useState(inventoryData[3]);
+  return (
+    <div className="min-h-[500px] min-w-[500px] flex flex-col p-5 gap-3 items-center">
+      <label htmlFor="">Quantity</label>
+      <input
+        className="w-[300px] "
+        type="range"
+        value={quantity}
+        onChange={(e) => {
+          setQuantity(e.target.value);
+        }}
+      />
+      <input type="number" value={quantity} readOnly />
+      <button
+        className="mt-auto bg-primary-color text-white rounded-full px-4 py-2 w-[100px]"
+        onClick={() => {
+          setSwalShown(false);
+          swal.close();
+        }}
+      >
+        Click
+      </button>
     </div>
   );
 };

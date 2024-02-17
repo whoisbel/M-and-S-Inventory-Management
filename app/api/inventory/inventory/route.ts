@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { PrismaClient, Prisma } from "@prisma/client";
 import { categoryFormData } from "@/types";
-import { Console } from "console";
 
 const prisma = new PrismaClient();
 
@@ -17,7 +16,6 @@ export async function GET(request: NextRequest) {
     WHERE i.quantity > 0
     ORDER BY h.harvest_date DESC;`;
 
-  console.log(data);
   const area = await prisma.area.findMany();
   const grade = await prisma.grade.findMany();
   const date =
@@ -33,7 +31,6 @@ export async function POST(request: NextRequest) {
   const sortedData: { [key: number]: { [key: string]: { quantity: number } } } =
     {}; //gamiton nato ang grade as ilhanan
 
-  console.log(categoryFormData);
   const data = await prisma.inventory.findUnique({
     where: {
       id: inventoryId,
@@ -115,17 +112,158 @@ export async function POST(request: NextRequest) {
       },
     },
   });
-  console.log({ insertData });
+
   return NextResponse.json("good");
 }
 
 export async function DELETE(request: NextRequest) {
   const { inventoryId } = await request.json();
-  await prisma.inventory.delete({
-    where: {
-      id: inventoryId,
-    },
-  });
-  return NextResponse.json("good");
-  return NextResponse.json({ status: 400 });
+
+  console.log(inventoryId);
+
+  try {
+    const inventoryForDeletion = await prisma.inventory.findUnique({
+      where: {
+        id: inventoryId,
+      },
+      include: {
+        harvestLog: {
+          select: {
+            area: true,
+          },
+        },
+      },
+    });
+    console.log(inventoryForDeletion);
+    const ungradedInventory = await prisma.inventory.findFirst({
+      where: {
+        harvestLog: {
+          area: {
+            id: inventoryForDeletion.harvestLog.area.id,
+          },
+        },
+        grade: {
+          description: "ungraded",
+        },
+      },
+      include: {
+        harvestLog: {
+          select: {
+            area: true,
+          },
+        },
+      },
+    });
+
+    //The quantity that is being deleted is back to the ungraded quantity
+    await prisma.inventory.update({
+      where: {
+        id: ungradedInventory.id,
+      },
+      data: {
+        quantity: {
+          increment: inventoryForDeletion.quantity,
+        },
+      },
+    });
+    await prisma.stock.update({
+      where: {
+        id: ungradedInventory.stockId,
+      },
+      data: {
+        quantityOnHand: {
+          increment: inventoryForDeletion.quantity,
+        },
+      },
+    });
+    // Remove the quantity from stock
+    await prisma.stock.update({
+      where: {
+        id: inventoryForDeletion.stockId,
+      },
+      data: {
+        quantityOnHand: {
+          decrement: inventoryForDeletion.quantity,
+        },
+      },
+    });
+    await prisma.inventory.delete({
+      where: {
+        id: inventoryId,
+      },
+    });
+    return NextResponse.json({ status: 200 });
+  } catch (error) {
+    console.log(error);
+    return NextResponse.json({ status: 500 });
+  }
+}
+
+export async function PATCH(request: NextRequest) {
+  const { inventoryId, newQuantity } = await request.json();
+  try {
+    const inventory = await prisma.inventory.findUnique({
+      where: {
+        id: inventoryId,
+      },
+      include: {
+        stock: true,
+      },
+    });
+    const ungradedInventory = await prisma.inventory.findFirst({
+      where: {
+        stockId: inventory.stockId,
+        grade: {
+          description: "ungraded",
+        },
+      },
+    });
+    const difference = inventory.quantity - newQuantity;
+
+    //update inventory
+    await prisma.inventory.update({
+      where: {
+        id: inventoryId,
+      },
+      data: {
+        quantity: newQuantity,
+      },
+    });
+    await prisma.inventory.update({
+      where: {
+        id: ungradedInventory.id,
+      },
+      data: {
+        quantity: {
+          increment: difference,
+        },
+      },
+    });
+
+    //update stock
+    await prisma.stock.update({
+      where: {
+        id: inventory.stockId,
+      },
+      data: {
+        quantityOnHand: {
+          decrement: difference,
+        },
+      },
+    });
+    await prisma.stock.update({
+      where: {
+        id: ungradedInventory.stockId,
+      },
+      data: {
+        quantityOnHand: {
+          increment: difference,
+        },
+      },
+    });
+    return NextResponse.json({ status: 200 });
+  } catch (error) {
+    console.log(error);
+    return NextResponse.json({ status: 500 });
+  }
 }

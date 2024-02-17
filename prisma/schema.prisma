@@ -41,7 +41,7 @@ model Inventory{
   quantity Decimal
   stockId Int @map("stock_id")
   logId Int @map("log_id")
-  harvestLog HarvestLog @relation(fields:[logId], references: [id])
+  harvestLog HarvestLog @relation(fields:[logId], references: [id], onDelete: Cascade)
   grade Grade @relation(fields: [gradeId], references: [id])
   stock Stock @relation(fields: [stockId], references: [id])
 }
