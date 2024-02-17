@@ -224,8 +224,11 @@ export async function PATCH(request: NextRequest) {
         },
       },
     });
-    const difference = inventory.quantity - newQuantity;
-
+    const difference = +inventory.quantity - +newQuantity;
+    console.log({
+      invetoryQuantity: inventory.quantity,
+      newQuantity: newQuantity,
+    });
     //update inventory
     await prisma.inventory.update({
       where: {

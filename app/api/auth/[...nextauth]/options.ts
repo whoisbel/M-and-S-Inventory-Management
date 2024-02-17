@@ -22,7 +22,7 @@ export const options: NextAuthOptions = {
             },
           });
 
-          if (user.hasAccess) {
+          if (user && user.hasAccess) {
             return user;
           } else {
             return null;

@@ -20,7 +20,7 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   const session = await getServerSession(options);
-  console.log({ session }, "Layout.tsx");
+
   return (
     <html lang="en">
       <body className={sansation.className}>
