@@ -2,7 +2,7 @@
 import React, { ChangeEvent, useEffect, useState } from "react";
 import { signIn } from "next-auth/react";
 
-import { createAccountData, loginAccountData } from "@/types";
+import { createAccountData, loginAccountData, forgotPasswordData } from "@/types";
 import { RegistrationModal } from "@/components";
 import { LoginModal } from "@/components";
 import { ForgotPasswordModal } from "@/components"
@@ -22,6 +22,12 @@ const Auth = () => {
     username: "",
     code: "",
   });
+  const [forgotPasswordData, setShowForgotPasswordData] = useState<forgotPasswordData>({
+    firstName: "",
+    lastName: "",
+    username: "",
+    securityQuestions: []
+  })
   const [loginData, setLoginData] = useState<loginAccountData>({
     username: "",
     password: "",
@@ -57,7 +63,10 @@ const Auth = () => {
         />
       )}
       {(showForgotPasswordModal && !isSetup) && (
-        <ForgotPasswordModal setShowForgotPasswordModal={setShowForgotPasswordModal}/>
+        <ForgotPasswordModal 
+        setShowForgotPasswordModal={setShowForgotPasswordModal}
+        forgotPasswordData={forgotPasswordData} 
+        setShowForgotPasswordData={setShowForgotPasswordData}/>
       )}
     </div>
   );
