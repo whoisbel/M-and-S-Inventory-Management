@@ -5,11 +5,13 @@ import { signIn } from "next-auth/react";
 import { createAccountData, loginAccountData } from "@/types";
 import { RegistrationModal } from "@/components";
 import { LoginModal } from "@/components";
+import { ForgotPasswordModal } from "@/components"
 const Auth = () => {
   const [isSetup, setIsSetup] = useState(false);
   const [securityQuestions, setSecurityQuestions] = useState([]);
   //account registration
   const [showRegisterModal, setShowRegisterModal] = useState(false);
+  const [showForgotPasswordModal, setShowForgotPasswordModal] = useState(false);
   const [accountData, setAccountData] = useState<createAccountData>({
     firstName: "",
     middleName: "charles",
@@ -40,11 +42,11 @@ const Auth = () => {
         <h1 className="text-[41px] font-bold mb-[22px]">M&S Company</h1>
         <LoginModal
           setShowRegisterModal={setShowRegisterModal}
+          setShowForgotPasswordModal={setShowForgotPasswordModal}
           loginData={loginData}
           setLoginData={setLoginData}
         />
       </div>
-
       {(showRegisterModal || isSetup) && (
         <RegistrationModal
           setShowModal={setShowRegisterModal}
@@ -53,6 +55,9 @@ const Auth = () => {
           isSetup={isSetup}
           securityQuestions={securityQuestions}
         />
+      )}
+      {(showForgotPasswordModal && !isSetup) && (
+        <ForgotPasswordModal setShowForgotPasswordModal={setShowForgotPasswordModal}/>
       )}
     </div>
   );
