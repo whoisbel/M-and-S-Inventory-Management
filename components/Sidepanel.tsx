@@ -9,8 +9,9 @@ import { TbLogout } from "react-icons/tb";
 import { IoMdSettings } from "react-icons/io";
 import { RiAdminLine } from "react-icons/ri";
 import { signOut } from "next-auth/react";
-import { User } from "@prisma/client"
-const Sidepanel = ({user}: User) => {
+import { User } from "@prisma/client";
+import { BiUserCircle } from "react-icons/bi";
+const Sidepanel = ({ user }: User) => {
   const pathname = usePathname();
 
   // active:bg-main-background active:text-letters-color
@@ -18,12 +19,12 @@ const Sidepanel = ({user}: User) => {
   return (
     <div className="sticky top-2 left-2 bottom-2 lg:min-w-[300px] h-[calc(100vh-1em)] bg-primary-green rounded-lg lg:block bg-primary-color ">
       <ul className="text-[20px] flex flex-col w-full">
-        <li className="rounded-t-lg sidepanel_link bg-accent-green h-[95px]">
+        <li className="rounded-t-lg sidepanel_link bg-accent-green text-black h-[95px]">
           <div className="set_icon">
-          <TbLogout className="w-[35px] h-[35px]" />
+            <BiUserCircle className="w-[35px] h-[35px]" />
           </div>
           <div className="grid justify-items-start">
-          <h3 className="text-[20px] font-bold ">
+            <h3 className="text-[20px] font-bold ">
               {user.firstName &&
                 `${user.firstName
                   .substring(0, 1)
@@ -43,13 +44,13 @@ const Sidepanel = ({user}: User) => {
           href="/"
         >
           <div className="set_icon">
-          <LuLayoutDashboard
-            className={
-              pathname == "/"
-                ? "text-primary-color w-[35px] h-[35px]"
-                : "text-main-background w-[35px] h-[35px]"
-            }
-          />
+            <LuLayoutDashboard
+              className={
+                pathname == "/"
+                  ? "text-primary-color w-[35px] h-[35px]"
+                  : "text-main-background w-[35px] h-[35px]"
+              }
+            />
           </div>
 
           <span className="lg:inline hidden">Dashboard</span>
@@ -63,14 +64,14 @@ const Sidepanel = ({user}: User) => {
           href="/admin_mngt/"
         >
           <div className="set_icon">
-          <RiAdminLine
-            className={
-              pathname == "/"
-                ? "text-primary-color w-[35px] h-[35px]"
-                : "text-main-background w-[35px] h-[35px]"
-            }
-          />
-            </div>
+            <RiAdminLine
+              className={
+                pathname == "/admin"
+                  ? "text-primary-color w-[35px] h-[35px]"
+                  : "text-main-background w-[35px] h-[35px]"
+              }
+            />
+          </div>
           <span className="lg:inline hidden">Admin Management</span>
         </Link>
         <Link
@@ -82,15 +83,15 @@ const Sidepanel = ({user}: User) => {
           href="/inventory_input/add_inventory"
         >
           <div className="set_icon">
-          <TfiWrite
-            className={`${
-              pathname.includes("/inventory_input/")
-                ? "text-primary-color"
-                : "text-main-background"
-            }  w-[35px] h-[35px]`}
-          />
+            <TfiWrite
+              className={`${
+                pathname.includes("/inventory_input/")
+                  ? "text-primary-color"
+                  : "text-main-background"
+              }  w-[35px] h-[35px]`}
+            />
           </div>
-          
+
           <span className="lg:inline hidden">Inventory Input</span>
         </Link>
         <Link
@@ -102,15 +103,15 @@ const Sidepanel = ({user}: User) => {
           href="/inventory/inventory"
         >
           <div className="set_icon">
-          <SlNotebook
-            className={`${
-              pathname.includes("/inventory/")
-                ? "text-primary-color"
-                : "text-main-background"
-            }  w-[35px] h-[35px]`}
-          />
+            <SlNotebook
+              className={`${
+                pathname.includes("/inventory/")
+                  ? "text-primary-color"
+                  : "text-main-background"
+              }  w-[35px] h-[35px]`}
+            />
           </div>
-          
+
           <span className="lg:inline hidden">Inventory</span>
         </Link>
         <Link
@@ -122,15 +123,15 @@ const Sidepanel = ({user}: User) => {
           href="/order_details/"
         >
           <div className="set_icon">
-          <MdOutlineReceiptLong
-            className={`${
-              pathname.includes("/order_details")
-                ? "text-primary-color"
-                : "text-main-background"
-            }  w-[35px] h-[35px]`}
-          />
+            <MdOutlineReceiptLong
+              className={`${
+                pathname.includes("/order_details")
+                  ? "text-primary-color"
+                  : "text-main-background"
+              }  w-[35px] h-[35px]`}
+            />
           </div>
-          
+
           <span className="lg:inline hidden">Order Details</span>
         </Link>
         <Link
@@ -142,13 +143,13 @@ const Sidepanel = ({user}: User) => {
           href="/history/"
         >
           <div className="set_icon">
-          <MdOutlineHistory
-            className={`${
-              pathname.includes("/history")
-                ? "text-primary-color"
-                : "text-main-background"
-            }  w-[35px] h-[35px]`}
-          />
+            <MdOutlineHistory
+              className={`${
+                pathname.includes("/history")
+                  ? "text-primary-color"
+                  : "text-main-background"
+              }  w-[35px] h-[35px]`}
+            />
           </div>
 
           <span className="lg:inline hidden">History</span>
@@ -162,15 +163,15 @@ const Sidepanel = ({user}: User) => {
           href="/user_settings/"
         >
           <div className="set_icon">
-          <IoMdSettings
-            className={
-              pathname == "/"
-                ? "text-primary-color w-[35px] h-[35px]"
-                : "text-main-background w-[35px] h-[35px]"
-            }
-          />
+            <IoMdSettings
+              className={
+                pathname == "/user_settings"
+                  ? "text-primary-color w-[35px] h-[35px]"
+                  : "text-main-background w-[35px] h-[35px]"
+              }
+            />
           </div>
-          
+
           <span className="lg:inline hidden">User Settings</span>
         </Link>
         <li
@@ -182,7 +183,7 @@ const Sidepanel = ({user}: User) => {
           <div className="set_icon">
             <TbLogout className="w-[35px] h-[35px]" />
           </div>
-          
+
           <span className="lg:inline hidden">Sign Out</span>
         </li>
       </ul>
