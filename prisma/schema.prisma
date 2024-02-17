@@ -112,7 +112,7 @@ model User{
   hasAccess Boolean @map("has_access") @default(false)
   isAdmin Boolean @map("is_admin")
   dateCreated DateTime @map("date_created") @default(now())
-  securitQuestionsAnswer SecurityQuestionsAnswer[]
+  securityQuestionsAnswer SecurityQuestionsAnswer[]
 }
 
 model SecurityQuestions {

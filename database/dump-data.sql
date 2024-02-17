@@ -23,11 +23,11 @@ VALUES
 
 INSERT INTO HarvestLog (area_id, quantity, harvestDate, isDeleted)
 VALUES
-    (1, 100, '2024-01-15 10:00:00', FALSE),
-    (2, 150, '2024-01-16 11:30:00', FALSE),
-    (3, 120, '2024-01-17 09:45:00', FALSE),
-    (4, 200, '2024-01-18 14:20:00', FALSE),
-    (5, 180, '2024-01-19 08:00:00', FALSE);
+    (1, 100, '2024-01-15 10:00:00'),
+    (2, 150, '2024-01-16 11:30:00'),
+    (3, 120, '2024-01-17 09:45:00'),
+    (4, 200, '2024-01-18 14:20:00'),
+    (5, 180, '2024-01-19 08:00:00');
 
 
 INSERT INTO Inventory (batch_id, stock_id, grade_id, isOutOfStock, isWashed, quantity, isDeleted)

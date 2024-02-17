@@ -103,7 +103,6 @@ CREATE TABLE `User` (
     `username` VARCHAR(191) NOT NULL,
     `first_name` VARCHAR(191) NOT NULL,
     `last_name` VARCHAR(191) NOT NULL,
-    `middle_name` VARCHAR(191) NOT NULL,
     `password` VARCHAR(191) NOT NULL,
     `has_access` BOOLEAN NOT NULL DEFAULT false,
     `is_admin` BOOLEAN NOT NULL,
