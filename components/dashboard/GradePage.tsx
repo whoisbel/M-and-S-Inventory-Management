@@ -5,6 +5,11 @@ function GradePage({
   page: { quantity: number; name: string }[];
   generateRandomPastelColor: any;
 }) {
+  // Check if page data is null or empty
+  if (!page || page.length === 0) {
+    return <div className="w-full h-full items-center justify-center flex text-[20px] text-letters-color">No data available</div>; // or return a message like <div>No data available</div>
+  }
+
   const pastelColors = [0, 1, 2, 3, 4].map(() => generateRandomPastelColor());
   return (
     <div>

@@ -29,7 +29,11 @@ body {
 }
 
 .sidepanel_link {
-  @apply cursor-pointer  font-bold flex items-center  mt-4 p-2.5 w-full gap-2;
+  @apply cursor-pointer  font-bold flex items-center w-full border-t-[3px] gap-2;
+}
+
+.set_icon {
+  @apply h-[75px] w-[75px] flex items-center justify-center
 }
 
 .tab_buttons {
@@ -119,8 +123,4 @@ table {
 
 .generate-report-button {
   @apply font-bold text-[20px] text-letters-color text-center border-[1px] border-add-minus rounded-[10px] p-4 bg-accent-gray;
-}
-
-.button:hover {
-  scale: 105%;
 }
