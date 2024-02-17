@@ -2,16 +2,14 @@ import { NextRequest, NextResponse } from "next/server";
 
 import { sha256 } from "js-sha256";
 import {
-  PrismaClient,
   User,
   SecurityQuestions,
   SecurityQuestionsAnswer,
 } from "@prisma/client";
-
+import prisma from "@/utils/prisma";
 import { createAccountData } from "@/types";
 import { signIn } from "next-auth/react";
 
-const prisma = new PrismaClient();
 export async function GET(request: NextRequest) {
   const userCount = await prisma.user.count();
   const securityQuestion = await prisma.securityQuestions.findMany();

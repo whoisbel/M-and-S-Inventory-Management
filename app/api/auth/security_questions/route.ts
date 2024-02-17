@@ -1,36 +1,35 @@
 import { NextResponse, NextRequest } from "next/server";
-import { PrismaClient } from "@prisma/client";
+import prisma from "@/utils/prisma";
 
-const prisma = new PrismaClient();
-
-export async function GET(request: NextRequest){
-  const question = await prisma.securityQuestions.findMany()
-  console.log(question)
-  return NextResponse.json(question)
+export async function GET(request: NextRequest) {
+  const question = await prisma.securityQuestions.findMany();
+  console.log(question);
+  return NextResponse.json(question);
 }
 
 export async function POST(request: NextRequest) {
   try {
-    const {username} = await request.json();
+    const { username } = await request.json();
     const users = await prisma.user.findFirst({
       where: {
-        userName: username
+        userName: username,
       },
       select: {
-        id: true
-      }
+        id: true,
+      },
     });
     if (users) {
-      const securityQuestionAnswer = await prisma.securityQuestionsAnswer.findMany({
-        where: {
-          userId: users.id
-        },
-        select:{
-          questionId: true,
-          answer: true
-        }
-      });
-      console.log(securityQuestionAnswer)
+      const securityQuestionAnswer =
+        await prisma.securityQuestionsAnswer.findMany({
+          where: {
+            userId: users.id,
+          },
+          select: {
+            questionId: true,
+            answer: true,
+          },
+        });
+      console.log(securityQuestionAnswer);
       return NextResponse.json(securityQuestionAnswer);
     } else {
       return NextResponse.json({ error: "User not found" });

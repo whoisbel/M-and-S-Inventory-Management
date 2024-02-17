@@ -1,12 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
-import { PrismaClient } from "@prisma/client";
+import prisma from "@/utils/prisma";
 import { HarvestLog } from "@prisma/client";
 import {
   harvestLogsCategoryDict,
   harvestLogCategoryData,
   gradeCategoryDict,
 } from "@/types";
-const prisma = new PrismaClient();
+
 export async function GET(request: NextRequest) {
   //returns  id | quantity | areaId | areaName | quantityOnHand  | gradeId | gradeName
   const results = await prisma.$queryRaw`SELECT 

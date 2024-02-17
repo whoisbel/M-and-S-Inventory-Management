@@ -30,10 +30,6 @@ BEGIN
     INSERT INTO Stock (grade_id, quantity_on_hand) 
     VALUES (ungraded_grade_id, 0);
     SET matching_stock_id = LAST_INSERT_ID();
-  ELSE
-    UPDATE Stock 
-    SET quantity_on_hand = quantity_on_hand + inserted_quantity
-    WHERE id = matching_stock_id;
   END IF;
 
   INSERT INTO INVENTORY (grade_id, log_id, quantity, stock_id) 

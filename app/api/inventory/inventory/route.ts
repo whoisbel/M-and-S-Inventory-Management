@@ -1,8 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
-import { PrismaClient, Prisma } from "@prisma/client";
+import prisma from "@/utils/prisma";
+import { Prisma } from "@prisma/client";
 import { categoryFormData } from "@/types";
-
-const prisma = new PrismaClient();
 
 export async function GET(request: NextRequest) {
   const data =
@@ -224,7 +223,7 @@ export async function PATCH(request: NextRequest) {
         },
       },
     });
-    const difference = +inventory.quantity - +newQuantity;
+    const difference = +newQuantity - +inventory.quantity;
     console.log({
       invetoryQuantity: inventory.quantity,
       newQuantity: newQuantity,
@@ -238,13 +237,15 @@ export async function PATCH(request: NextRequest) {
         quantity: newQuantity,
       },
     });
+
+    //update ungraded inventory
     await prisma.inventory.update({
       where: {
         id: ungradedInventory.id,
       },
       data: {
         quantity: {
-          increment: difference,
+          decrement: difference,
         },
       },
     });
@@ -256,7 +257,7 @@ export async function PATCH(request: NextRequest) {
       },
       data: {
         quantityOnHand: {
-          decrement: difference,
+          increment: difference,
         },
       },
     });
@@ -266,7 +267,7 @@ export async function PATCH(request: NextRequest) {
       },
       data: {
         quantityOnHand: {
-          increment: difference,
+          decrement: difference,
         },
       },
     });

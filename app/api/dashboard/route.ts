@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
-import { PrismaClient } from "@prisma/client";
+
 import { DashboardData } from "@/types";
-const prisma = new PrismaClient();
+
+import prisma from "@/utils/prisma";
 
 /* 
   Get the required dashboard data
