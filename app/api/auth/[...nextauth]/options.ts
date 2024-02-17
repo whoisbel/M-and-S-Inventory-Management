@@ -48,7 +48,8 @@ export const options: NextAuthOptions = {
       return session;
     },
     async signIn({ user }) {
-      return true;
+      console.log({ user });
+      return false;
     },
   },
 };

@@ -25,7 +25,7 @@ export default async function RootLayout({
     <html lang="en">
       <body className={sansation.className}>
         <Provider>
-          {session && <Sidepanel user={session.user} />}
+          {session && session.user && <Sidepanel user={session.user} />}
           <div className="bg-main-background w-full  max-h-full rounded-lg ml-2 flex flex-col">
             {children}
           </div>

@@ -24,11 +24,11 @@ BEGIN
   SELECT id
   INTO matching_stock_id
   FROM stock
-  WHERE area_id = inserted_area_id AND grade_id = ungraded_grade_id;
+  WHERE  grade_id = ungraded_grade_id;
 
   IF matching_stock_id IS NULL THEN 
-    INSERT INTO Stock (grade_id, area_id, quantity_on_hand) 
-    VALUES (ungraded_grade_id, inserted_area_id, 0);
+    INSERT INTO Stock (grade_id, quantity_on_hand) 
+    VALUES (ungraded_grade_id, 0);
     SET matching_stock_id = LAST_INSERT_ID();
   ELSE
     UPDATE Stock 
@@ -39,14 +39,14 @@ BEGIN
   INSERT INTO INVENTORY (grade_id, log_id, quantity, stock_id) 
   VALUES (ungraded_grade_id, inserted_log_id, inserted_quantity, matching_stock_id);
 END;
-
+//
 
 CREATE TRIGGER before_inventory_insert
 BEFORE INSERT ON Inventory
 FOR EACH ROW
 BEGIN
   DECLARE inserted_grade_id INT;
-  DECLARE inserted_area_id INT;
+
   DECLARE inserted_quantity DECIMAL;
   DECLARE matching_stock_id INT;
   DECLARE updated_quantity DECIMAL;
@@ -60,26 +60,21 @@ BEGIN
   WHERE
   description = "Ungraded";
 
-  SELECT area.id INTO inserted_area_id FROM harvestlog 
-  JOIN area  
-  ON  area.id = harvestlog.area_id
-  WHERE harvestlog.id = NEW.log_id;
 
 
 
   SELECT id, quantity_on_hand
   INTO matching_stock_id, updated_quantity
   FROM Stock
-WHERE grade_id = inserted_grade_id AND area_id = inserted_area_id AND is_washed = NEW.is_washed;
+  WHERE grade_id = inserted_grade_id  AND is_washed = NEW.is_washed;
 
   
   IF matching_stock_id IS NULL AND inserted_grade_id != ungraded_grade_id THEN
  
-    INSERT INTO Stock (grade_id, area_id, quantity_on_hand, is_washed)
-    VALUES (inserted_grade_id, inserted_area_id, inserted_quantity, NEW.is_washed);
+    INSERT INTO Stock (grade_id, quantity_on_hand, is_washed)
+    VALUES (inserted_grade_id, inserted_quantity, NEW.is_washed);
     SET matching_stock_id = LAST_INSERT_ID();
   ELSE
-
     UPDATE Stock
     SET quantity_on_hand = quantity_on_hand + inserted_quantity
     WHERE stock.id = matching_stock_id;

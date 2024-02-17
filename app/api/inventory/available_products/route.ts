@@ -11,11 +11,6 @@ export async function GET(request: NextRequest) {
           price: true,
         },
       },
-      area: {
-        select: {
-          description: true,
-        },
-      },
     },
   });
 

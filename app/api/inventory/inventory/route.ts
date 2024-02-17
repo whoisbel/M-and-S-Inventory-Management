@@ -71,6 +71,7 @@ export async function POST(request: NextRequest) {
       };
     }
   });
+
   const insertData: Prisma.InventoryCreateManyInput[] = [];
 
   Object.keys(sortedData).map((gradeString) => {
@@ -208,11 +209,18 @@ export async function PATCH(request: NextRequest) {
       },
       include: {
         stock: true,
+        harvestLog: {
+          select: {
+            area: true,
+          },
+        },
       },
     });
     const ungradedInventory = await prisma.inventory.findFirst({
       where: {
-        stockId: inventory.stockId,
+        harvestLog: {
+          id: inventory.harvestLog.id,
+        },
         grade: {
           description: "ungraded",
         },

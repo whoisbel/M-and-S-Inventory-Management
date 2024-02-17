@@ -284,30 +284,6 @@ export default function Dashboard() {
                       />
                     </>
                   )}
-                  {sortOption == "area" && dashboardData?.areaSummary && (
-                    <>
-                      <div className="w-full h-full pt-[20px]">
-                        <GradePage
-                          page={
-                            generateGradeElements(dashboardData.areaSummary)[
-                              currentPage
-                            ]
-                          }
-                          generateRandomPastelColor={generateRandomPastelColor}
-                        />
-                      </div>
-                      <Pagination
-                        numPages={
-                          dashboardData.areaSummary
-                            ? generateGradeElements(dashboardData.areaSummary)
-                                .length
-                            : 0
-                        }
-                        currentPage={currentPage}
-                        onPageChange={setCurrentPage}
-                      />
-                    </>
-                  )}
                 </div>
               </div>
             </div>

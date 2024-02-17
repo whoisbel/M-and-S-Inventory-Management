@@ -42,7 +42,6 @@ CREATE TABLE `Stock` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `quantity_on_hand` DECIMAL(65, 30) NOT NULL,
     `grade_id` INTEGER NOT NULL,
-    `area_id` INTEGER NOT NULL,
     `is_washed` BOOLEAN NOT NULL DEFAULT false,
 
     PRIMARY KEY (`id`)
@@ -145,16 +144,13 @@ CREATE TABLE `ActionLog` (
 ALTER TABLE `HarvestLog` ADD CONSTRAINT `HarvestLog_area_id_fkey` FOREIGN KEY (`area_id`) REFERENCES `Area`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `Inventory` ADD CONSTRAINT `Inventory_log_id_fkey` FOREIGN KEY (`log_id`) REFERENCES `HarvestLog`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE `Inventory` ADD CONSTRAINT `Inventory_log_id_fkey` FOREIGN KEY (`log_id`) REFERENCES `HarvestLog`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `Inventory` ADD CONSTRAINT `Inventory_grade_id_fkey` FOREIGN KEY (`grade_id`) REFERENCES `Grade`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `Inventory` ADD CONSTRAINT `Inventory_stock_id_fkey` FOREIGN KEY (`stock_id`) REFERENCES `Stock`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE `Stock` ADD CONSTRAINT `Stock_area_id_fkey` FOREIGN KEY (`area_id`) REFERENCES `Area`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `Stock` ADD CONSTRAINT `Stock_grade_id_fkey` FOREIGN KEY (`grade_id`) REFERENCES `Grade`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
