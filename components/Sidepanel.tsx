@@ -12,7 +12,7 @@ import { BiUserCircle } from "react-icons/bi";
 import { User } from "@prisma/client";
 const Sidepanel = ({ user }: User) => {
   const pathname = usePathname();
-  console.log(user);
+
   // active:bg-main-background active:text-letters-color
   //h-[calc(100vh-1em)] 1em paras padding top (.5em) and bottom (.5em)
 
