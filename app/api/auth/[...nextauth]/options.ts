@@ -14,17 +14,23 @@ export const options: NextAuthOptions = {
         password: { label: "password", type: "password" },
       },
       async authorize(credentials, req) {
-        const user: UserType = await prisma.user.findFirst({
-          where: {
-            userName: credentials?.username,
-            password: sha256(credentials!.password),
-          },
-        });
+        try {
+          const user: UserType = await prisma.user.findFirst({
+            where: {
+              userName: credentials?.username,
+              password: sha256(credentials!.password),
+            },
+          });
 
-        if (user.hasAccess) {
-          return user;
+          if (user.hasAccess) {
+            return user;
+          } else {
+            return null;
+          }
+        } catch (error) {
+          console.log({ error });
+          return null;
         }
-        return null;
       },
     }),
   ],
@@ -39,16 +45,18 @@ export const options: NextAuthOptions = {
     },
     async session({ session, token }) {
       //get the user in database and add id in the new session.
-      session.user = await prisma.user.findUnique({
-        where: {
-          id: Number(token.sub),
-        },
-      });
+
+      try {
+        session.user = await prisma.user.findUnique({
+          where: {
+            id: Number(token.sub),
+          },
+        });
+      } catch (error) {
+        console.log(error);
+      }
 
       return session;
-    },
-    async signIn({ user }) {
-      return true;
     },
   },
 };

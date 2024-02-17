@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { BiErrorAlt, BiSearch } from "react-icons/bi";
 import { CgAdd } from "react-icons/cg";
-import { BiError } from "react-icons/bi";
+import { GrClose } from "react-icons/gr";
 import { CustomTable, InventoryInputForm } from "@/components";
 import { Area, Grade } from "@prisma/client";
 import Swal from "sweetalert2";
@@ -117,8 +117,8 @@ const Inventory = () => {
       didClose: () => setGradedAlertShown(false),
       showConfirmButton: false,
       customClass: {
-        popup: "m-0 flex !w-auto !rounded !p-0",
-        htmlContainer: "!m-0 !rounded p-0",
+        popup: "m-0 flex !w-auto !rounded-lg !p-0",
+        htmlContainer: "!m-0 !rounded-lg p-0",
       },
     });
   }
@@ -136,7 +136,7 @@ const Inventory = () => {
     const swal = withReactContent(Swal);
     swal
       .fire({
-        title: "Are you sure you want to delete (To be edited ang prompt)",
+        title: "Are you sure you want to delete?",
         icon: "warning",
         iconColor: "red",
         showCancelButton: true,
@@ -466,26 +466,85 @@ const InventoryUpdateForm = ({
   setSwalShown: (val: boolean) => void;
 }) => {
   const [quantity, setQuantity] = useState(inventoryData[3]);
+  const onSubmit = async () => {
+    const response = await fetch("/api/inventory/inventory", {
+      method: "PATCH",
+      body: JSON.stringify({
+        inventoryId: inventoryId,
+        quantity: quantity,
+      }),
+    });
+    if (response.ok) {
+      swal
+        .fire({
+          title: "Success",
+          icon: "success",
+          text: "Inventory Updated",
+        })
+        .then(() => {
+          location.reload();
+        });
+    } else {
+      swal.fire({
+        title: "error",
+      });
+    }
+    setSwalShown(false);
+  };
   return (
-    <div className="min-h-[500px] min-w-[500px] flex flex-col p-5 gap-3 items-center">
-      <label htmlFor="">Quantity</label>
-      <input
-        className="w-[300px] "
-        type="range"
-        value={quantity}
-        onChange={(e) => {
-          setQuantity(e.target.value);
-        }}
-      />
-      <input type="number" value={quantity} readOnly />
-      <button
-        className="mt-auto bg-primary-color text-white rounded-full px-4 py-2 w-[100px]"
-        onClick={() => {
-          setSwalShown(false);
-          swal.close();
-        }}
-      >
-        Click
+    <div className="min-h-[400px] min-w-[400px] flex flex-col rounded-lg">
+      <div className="bg-accent-gray text-black flex justify-between  p-5 gap-3 items-center">
+        <p className="font-bold ">Create Stockout</p>
+        <p>X</p>
+      </div>
+      <div className="grid grid-cols-2 gap-5 justify-center py-5 px-10 ">
+        <label className="text-start" htmlFor="date">
+          Date
+        </label>
+        <input
+          type="text"
+          name="date"
+          id="date"
+          value={inventoryData[0]}
+          readOnly
+          className="border-2 border-add-minus"
+        />
+        <label className="text-start" htmlFor="area">
+          Area
+        </label>
+        <input
+          type="text"
+          name="area"
+          id="area"
+          value={inventoryData[1]}
+          readOnly
+          className="border-2 border-add-minus"
+        />
+        <label className="text-start" htmlFor="grade">
+          Grade
+        </label>
+        <input
+          type="text"
+          name="grade"
+          id="grade"
+          value={inventoryData[2]}
+          readOnly
+          className="border-2 border-add-minus"
+        />
+        <label htmlFor="quantity" className="text-start">
+          Quantity:
+        </label>
+        <input
+          type="number"
+          name="quantity"
+          id="quantity"
+          value={quantity}
+          onChange={(e) => setQuantity(e.target.value)}
+          className="border-2 border-add-minus"
+        />
+      </div>
+      <button className="rounded-full bg-primary-color text-white w-[150px] ">
+        Close
       </button>
     </div>
   );

@@ -3,7 +3,7 @@ import Link from "next/link";
 import { Chart, ArcElement } from "chart.js/auto";
 import { useEffect, useRef, useState } from "react";
 import { Doughnut, Bar, Line } from "react-chartjs-2";
-import { plugin } from "postcss";
+
 import { getSession } from "next-auth/react";
 import { Pagination, GradePage } from "@/components";
 import { generateRandomPastelColor } from "../utils/generatePastelColor";
@@ -276,30 +276,6 @@ export default function Dashboard() {
                         numPages={
                           dashboardData.gradeSummary
                             ? generateGradeElements(dashboardData.gradeSummary)
-                                .length
-                            : 0
-                        }
-                        currentPage={currentPage}
-                        onPageChange={setCurrentPage}
-                      />
-                    </>
-                  )}
-                  {sortOption == "area" && dashboardData?.areaSummary && (
-                    <>
-                      <div className="w-full h-full pt-[20px]">
-                        <GradePage
-                          page={
-                            generateGradeElements(dashboardData.areaSummary)[
-                              currentPage
-                            ]
-                          }
-                          generateRandomPastelColor={generateRandomPastelColor}
-                        />
-                      </div>
-                      <Pagination
-                        numPages={
-                          dashboardData.areaSummary
-                            ? generateGradeElements(dashboardData.areaSummary)
                                 .length
                             : 0
                         }

@@ -175,7 +175,7 @@ const HarvestLogs = () => {
     const swal = withReactContent(Swal);
     swal
       .fire({
-        title: "Are you sure you want to delete (To be edited ang prompt)",
+        title: "Are you sure you want to delete ?",
         icon: "warning",
         iconColor: "red",
         showCancelButton: true,

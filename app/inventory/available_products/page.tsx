@@ -23,18 +23,17 @@ const AvailableProducts = () => {
 
   const [isLoading, setIsLoading] = useState(true);
 
-  const [area, setArea] = useState<Area[]>([]);
   const [grade, setGrade] = useState<Grade[]>([]);
   const [tableData, setTableData] = useState<customTableDataType>({});
   const [selectedUpdateData, setSelectedUpdateData] = useState<string[]>([]);
-  const headers = ["Area", "Grade", "Quantity", "Washed", "Price"];
+  const headers = ["Grade", "Quantity", "Washed", "Price"];
 
   useEffect(() => {
     const fetchData = async () => {
       const response = await fetch("/api/inventory/available_products");
       const { availableProducts, area, grade } = await response.json();
       setAvailableProducts(availableProducts);
-      setArea(area);
+
       setGrade(grade);
     };
 
@@ -53,7 +52,6 @@ const AvailableProducts = () => {
     const data: customTableDataType = {};
     availableProducts.forEach((product) => {
       data[product.id] = [
-        product.area.description,
         product.grade.description,
         product.quantityOnHand.toString(),
         product.isWashed.toString(),
@@ -66,10 +64,8 @@ const AvailableProducts = () => {
     const defaultTableData = getDefaultTableData();
     const newTableData = Object.keys(defaultTableData).filter((key) => {
       return (
-        (filter.areaFilter === "" ||
-          defaultTableData[Number(key)][0] === filter.areaFilter) &&
-        (filter.gradeFilter === "" ||
-          defaultTableData[Number(key)][1] === filter.gradeFilter)
+        filter.gradeFilter === "" ||
+        defaultTableData[Number(key)][1] === filter.gradeFilter
       );
     });
 
@@ -110,21 +106,6 @@ const AvailableProducts = () => {
                 {grade.map((g, ind) => (
                   <option key={ind} value={g.description}>
                     {g.description}
-                  </option>
-                ))}
-              </select>
-              <select
-                className="w min-w-[150px]"
-                onChange={(e) => {
-                  {
-                    setFilter({ ...filter, areaFilter: e.target.value });
-                  }
-                }}
-              >
-                <option value="">Area</option>
-                {area.map((area, ind) => (
-                  <option key={ind} value={area.description}>
-                    {area.description}
                   </option>
                 ))}
               </select>

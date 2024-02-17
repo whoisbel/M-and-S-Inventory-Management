@@ -36,14 +36,6 @@ export async function GET(request: NextRequest) {
     GROUP BY grade_id;
   `;
 
-  const areaSummary = await prisma.$queryRaw`
-    SELECT SUM(quantity_on_hand) AS quantity,
-          area.description AS name
-    FROM stock
-    INNER JOIN area ON area.id = stock.area_id
-    GROUP BY area_id;
-  `;
-
   const monthSummary = await prisma.$queryRaw`
   SELECT SUM(quantity) AS quantity, MONTH(harvest_date) AS month  FROM HarvestLog
   WHERE YEAR(harvest_date) = YEAR(CURDATE()) 
@@ -58,7 +50,7 @@ export async function GET(request: NextRequest) {
   console.log({ yearSummary });
   return NextResponse.json({
     gradeSummary,
-    areaSummary,
+
     monthSummary,
     yearSummary,
   });

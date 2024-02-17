@@ -25,7 +25,8 @@ const Sidepanel = ({ user }: User) => {
           </div>
           <div className="grid justify-items-start">
             <h3 className="text-[20px] font-bold ">
-              {user.firstName &&
+              {user &&
+                user.firstName &&
                 `${user.firstName
                   .substring(0, 1)
                   .toUpperCase()}${user.firstName.substring(1)} ${user.lastName

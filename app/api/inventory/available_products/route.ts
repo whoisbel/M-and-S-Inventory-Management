@@ -11,17 +11,11 @@ export async function GET(request: NextRequest) {
           price: true,
         },
       },
-      area: {
-        select: {
-          description: true,
-        },
-      },
     },
   });
 
   const area = await prisma.area.findMany();
   const grade = await prisma.grade.findMany();
 
-  console.log({ availableProducts });
   return NextResponse.json({ availableProducts, area, grade });
 }

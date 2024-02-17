@@ -24,7 +24,7 @@ model Area {
   id Int @id @default(autoincrement())
   description String
   harvestLog HarvestLog[]
-  stock Stock[]
+  
 }
 model Grade{
   id Int @id @default(autoincrement()) 
@@ -51,8 +51,6 @@ model Stock{
   id Int @id @default(autoincrement()) 
   quantityOnHand Decimal @map("quantity_on_hand")
   gradeId Int @map("grade_id")
-  areaId Int @map("area_id")
-  area Area @relation(fields:[areaId], references: [id])
   grade Grade @relation(fields: [gradeId], references: [id])
   isWashed Boolean @map("is_washed") @default(false)
   stockOut Stockout[]
@@ -106,13 +104,12 @@ model User{
   userName String @map("username")
   firstName String @map("first_name")
   lastName  String @map("last_name")
- 
   password String
   actions ActionLog[]
   hasAccess Boolean @map("has_access") @default(false)
   isAdmin Boolean @map("is_admin")
   dateCreated DateTime @map("date_created") @default(now())
-  securityQuestionsAnswer SecurityQuestionsAnswer[]
+  securitQuestionsAnswer SecurityQuestionsAnswer[]
 }
 
 model SecurityQuestions {

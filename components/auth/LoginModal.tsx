@@ -2,6 +2,9 @@
 import { useState } from "react";
 import { signIn } from "next-auth/react";
 import { loginAccountData } from "@/types";
+import { redirect, useRouter } from "next/navigation";
+
+import { BiError } from "react-icons/bi";
 
 const LoginModal = ({
   setShowRegisterModal,
@@ -14,6 +17,27 @@ const LoginModal = ({
   loginData: loginAccountData;
   setLoginData: (val: loginAccountData) => void;
 }) => {
+  const [wrongCredentials, setWrongCredentials] = useState(false);
+  const router = useRouter();
+  async function handleSignIn() {
+    const res = await signIn("credentials", {
+      username: loginData.username,
+      password: loginData.password,
+      redirect: false,
+    });
+
+    if (res?.ok) {
+      location.href = "/";
+    } else {
+      setWrongCredentials(true);
+    }
+  }
+
+  function setLoginData2(val: loginAccountData) {
+    setLoginData(val);
+    setWrongCredentials(false); // reset wrong credentials
+  }
+
   return (
     <div>
       <div className="relative bg-main-background rounded-[20px] w-[300px] h-[46px] mb-[18px] shadow-lg border-2 group">
@@ -25,7 +49,7 @@ const LoginModal = ({
           placeholder="Username"
           value={loginData.username}
           onChange={(e) => {
-            setLoginData({ ...loginData, username: e.target.value });
+            setLoginData2({ ...loginData, username: e.target.value });
           }}
         />
         <label
@@ -45,7 +69,7 @@ const LoginModal = ({
           placeholder="Password"
           value={loginData.password}
           onChange={(e) => {
-            setLoginData({ ...loginData, password: e.target.value });
+            setLoginData2({ ...loginData, password: e.target.value });
           }}
         />
         <label
@@ -56,6 +80,11 @@ const LoginModal = ({
           Password
         </label>
       </div>
+      {wrongCredentials && (
+        <span className="text-red-500 text-[15px] flex items-center justify-center">
+          <BiError /> Wrong username or password
+        </span>
+      )}
       <p
         className="text-right pr-4 mb-2 text-[#0094FF] text-[15px] underline cursor-pointer"
         onClick={(e) => {
@@ -65,12 +94,8 @@ const LoginModal = ({
         Forgot password?
       </p>
       <button
-        onClick={() => {
-          signIn("credentials", {
-            username: loginData.username,
-            password: loginData.password,
-            callbackUrl: "/",
-          });
+        onClick={(e) => {
+          handleSignIn();
         }}
         className="w-[300px] h-[46px] text-custom-white bg-primary-color rounded-3xl font-bold text-[20px]"
       >
