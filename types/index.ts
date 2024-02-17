@@ -97,5 +97,11 @@ export type inventoryDataType = {
 
   [key: string]: number | boolean | Date | string;
 };
-
+export type forgotPasswordData = {
+  firstName: string;
+  lastName: string;
+  username: string;
+  securityQuestions: string[];
+  [key: string]: string | boolean | string[];
+};
 export type customTableDataType = { [key: number]: string[] };
