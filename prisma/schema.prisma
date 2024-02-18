@@ -53,17 +53,19 @@ model Stock{
   gradeId Int @map("grade_id")
   grade Grade @relation(fields: [gradeId], references: [id])
   isWashed Boolean @map("is_washed") @default(false)
-  stockOut Stockout[]
   orderDetail OrderDetail[]
   inventory Inventory[]
+  stockout Stockout[]
 }
 model Stockout {
   id Int @id @default(autoincrement())
-  stockId Int @map("stock_id")
   quantity Decimal
-  stockoutType String @map("stock_out_type")
+  stockoutType StockOutType @map("stockout_type")
   dateOut DateTime @default(now()) @map("date_out")
+  orderDetailId Int? @map("order_detail_id")
+  stockId Int @map("stock_id")
   stock Stock @relation(fields: [stockId], references: [id])
+  orderDetail OrderDetail? @relation(fields: [orderDetailId], references: [id])
 }
 
 model OrderDetail{
@@ -77,6 +79,7 @@ model OrderDetail{
   status StatusEnum @default(processing)
   stock Stock @relation(fields: [stockId], references: [id])
   order Order @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  stockout Stockout[]
 }
 
 model Order {
@@ -142,7 +145,7 @@ enum Event {
   delete
 }
 
-enum Venue{
+enum Venue {
   add_inventory
   category
   records
@@ -154,4 +157,8 @@ enum StatusEnum {
   packed
   scheduled_for_loading
   fullfilled
+}
+enum StockOutType {
+  disposed
+  sold
 }

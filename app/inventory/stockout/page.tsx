@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import { useState, useEffect } from "react";
 import { BiSearch } from "react-icons/bi";
 import {
   categoryFormData,
@@ -7,32 +7,39 @@ import {
   customTableProps,
   inventoryDataType,
 } from "@/types";
-import { CustomTable } from "@/components";
-import { Area, Grade } from "@prisma/client";
+import { CustomTable, StockOutModal } from "@/components";
+import { Grade, Stockout } from "@prisma/client";
 import withReactContent from "sweetalert2-react-content";
 import Swal from "sweetalert2";
+import { createPortal } from "react-dom";
 
 const Stockout = () => {
-  const [swalShown, setSwalShown] = useState(false);
+  const [createStockOutModalShown, setCreateStockOutModalShown] =
+    useState(false);
+  const [stockout, setStockout] = useState<Stockout[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  const [area, setArea] = useState<Area[]>([]);
   const [grade, setGrade] = useState<Grade[]>([]);
   const [tableData, setTableData] = useState<customTableDataType>({});
   const [selectedUpdateData, setSelectedUpdateData] = useState<string[]>([]);
-  const headers = [
-    "Stockout Date",
-    "Area",
-    "Grade",
-    "Quantity",
-    "Type",
-    "Actions",
-  ];
+  const headers = ["Stockout Date", "Grade", "Quantity", "Type", "Actions"];
   const swal = withReactContent(Swal);
-  const handleUpdate = (index: number) => {
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const res = await fetch("/api/inventory/stockout");
+      const { stockout, grade } = await res.json();
+      console.log(stockout);
+      setStockout(stockout);
+      setGrade(grade);
+    };
+    fetchData();
+  }, []);
+
+  function handleUpdate(index: number) {
     swal.fire({
-      didOpen: () => setSwalShown(true),
-      didClose: () => setSwalShown(false),
+      didOpen: () => setCreateStockOutModalShown(true),
+      didClose: () => setCreateStockOutModalShown(false),
       showConfirmButton: false,
       customClass: {
         popup: "m-0 flex !w-auto !rounded !p-0",
@@ -41,20 +48,50 @@ const Stockout = () => {
     });
     setSelectedUpdateData(tableData[index]);
     console.log(swal.getHtmlContainer());
-  };
+  }
+
+  function handleCreateStockOut() {
+    swal.fire({
+      didOpen: () => setCreateStockOutModalShown(true),
+      didClose: () => setCreateStockOutModalShown(false),
+      showConfirmButton: false,
+      customClass: {
+        popup: "m-0 flex !w-auto !rounded !p-0",
+        htmlContainer: "!m-0 !rounded p-0",
+      },
+    });
+  }
+  function getDefaultTableData() {
+    const data: customTableDataType = {};
+    stockout.map((stock) => {
+      data[stock.id] = [
+        String(stock.dateOut),
+        stock.stock.grade.description,
+        stock.quantity.toString(),
+        stock.stockoutType,
+        "Update",
+      ];
+    });
+    return data;
+  }
+  useEffect(() => {
+    setTableData(getDefaultTableData());
+    console.log({ tableData });
+    setIsLoading(false);
+  }, [stockout]);
   return (
     <div className="h-full w-full bg-custom-white">
       <div className="bg-accent-gray w-full gap-2 flex items-center text-letters-color">
         <div className="h-full w-full bg-white text-black">
-          {/* {swalShown &&
-  createPortal(
-    <InventoryModal
-      inventoryData={selectedUpdateData}
-      swal={swal}
-      grade={grade}
-    />,
-    swal.getHtmlContainer()!
-  )} */}
+          {createStockOutModalShown &&
+            createPortal(
+              <StockOutModal
+                swal={swal}
+                setModalOpen={setCreateStockOutModalShown}
+                grade={grade}
+              />,
+              swal.getHtmlContainer()!
+            )}
           <div className="bg-accent-gray py-2  px-3 flex gap-2 w-full h-max">
             <div className="flex gap-3">
               <label>Sort by:</label>
@@ -98,21 +135,6 @@ const Stockout = () => {
                   </option>
                 ))}
               </select>
-              <select
-                className="w min-w-[150px]"
-                onChange={(e) => {
-                  {
-                    /*setFilter({ ...filter, dateFilter: e.target.value });*/
-                  }
-                }}
-              >
-                <option value="">Area</option>
-                {area.map((area, ind) => (
-                  <option key={ind} value={area.description}>
-                    {area.description}
-                  </option>
-                ))}
-              </select>
             </div>
             <div className="flex-1 flex justify-end items-center ">
               <input
@@ -126,7 +148,12 @@ const Stockout = () => {
             </div>
           </div>
           <div className="w-full flex justify-end p-4 self-end">
-            <button className="generate-report-button mr-8">
+            <button
+              className="generate-report-button mr-8"
+              onClick={() => {
+                handleCreateStockOut();
+              }}
+            >
               Create Stockout +
             </button>
             <button className="generate-report-button">
@@ -136,16 +163,7 @@ const Stockout = () => {
           <div className="flex flex-col p-3 bg-custom-white">
             <CustomTable
               headers={headers}
-              data={{
-                0: [
-                  "06/02/2024",
-                  "Charles",
-                  "grade a",
-                  "quantity",
-                  "unit price",
-                  "Update",
-                ],
-              }}
+              data={tableData}
               isLoading={isLoading}
               handleUpdate={handleUpdate}
             />

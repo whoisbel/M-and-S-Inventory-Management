@@ -4,6 +4,7 @@ import CredentialsProvider from "next-auth/providers/credentials";
 
 import { sha256 } from "js-sha256";
 import { User as UserType } from "@prisma/client";
+import signOut from "next-auth/next";
 
 export const options: NextAuthOptions = {
   providers: [
@@ -36,6 +37,7 @@ export const options: NextAuthOptions = {
   ],
   pages: {
     signIn: "/auth",
+    signOut: "/auth",
   },
 
   session: { strategy: "jwt" },
