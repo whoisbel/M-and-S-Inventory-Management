@@ -63,7 +63,11 @@ const CustomTable = ({
               return (
                 <tr key={key}>
                   {row.map((data, index) => {
-                    if (data.includes("update") && data.includes("delete")) {
+                    if (
+                      data &&
+                      data.includes("update") &&
+                      data.includes("delete")
+                    ) {
                       return (
                         <td key={index}>
                           <button
@@ -84,7 +88,7 @@ const CustomTable = ({
                           </button>
                         </td>
                       );
-                    } else if (data.includes("update")) {
+                    } else if (data && data.includes("update")) {
                       return (
                         <td key={index}>
                           <button
@@ -97,7 +101,7 @@ const CustomTable = ({
                           </button>{" "}
                         </td>
                       );
-                    } else if (data.includes("delete")) {
+                    } else if (data && data.includes("delete")) {
                       return (
                         <td key={index}>
                           <button

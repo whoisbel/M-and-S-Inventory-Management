@@ -4,10 +4,10 @@ import { Chart, ArcElement } from "chart.js/auto";
 import { useEffect, useRef, useState } from "react";
 import { Doughnut, Bar, Line } from "react-chartjs-2";
 
-import { getSession } from "next-auth/react";
+import { getSession, signOut } from "next-auth/react";
 import { Pagination, GradePage } from "@/components";
 import { generateRandomPastelColor } from "../utils/generatePastelColor";
-
+import { usePathname } from "next/navigation";
 type dashboardDataType = {
   areaSummary: { quantity: number; name: string }[];
   gradeSummary: { quantity: number; name: string }[];
@@ -16,6 +16,16 @@ type dashboardDataType = {
 };
 
 export default function Dashboard() {
+  useEffect(() => {
+    const fetchSession = async () => {
+      const session = await getSession();
+      if (session && !session.user) {
+        signOut({ callbackUrl: "/auth" });
+      }
+    };
+    fetchSession();
+  }, []);
+
   const [dashboardData, setDashboardData] = useState<dashboardDataType>();
   const months = [
     "January",
