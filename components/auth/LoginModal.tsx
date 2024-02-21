@@ -39,8 +39,9 @@ const LoginModal = ({
   }
 
   return (
-    <div>
-      <div className="relative bg-main-background rounded-[20px] w-[300px] h-[46px] mb-[18px] shadow-lg border-2 group">
+    <div className="">
+      <div className=" pb-2">
+      <div className=" relative bg-main-background rounded-[20px] w-[300px] h-[46px] mb-[18px] shadow-lg border-2 group">
         <input
           type="text"
           className={`w-full h-full px-4 pt-2 text-[20px] bg-transparent border-none focus:outline-none relative z-1 ${
@@ -60,7 +61,9 @@ const LoginModal = ({
           Username
         </label>
       </div>
-      <div className="relative bg-main-background rounded-[20px] w-[300px] h-[46px] mb-[10px] shadow-lg border-2 group">
+      </div>
+      <div className=" pb-2">
+      <div className=" relative bg-main-background rounded-[20px] w-[300px] h-[46px] mb-[10px] shadow-lg border-2 group">
         <input
           type="password"
           className={`w-full h-full px-4 pt-2 text-[20px] bg-transparent border-none focus:outline-none relative z-1 ${
@@ -80,13 +83,14 @@ const LoginModal = ({
           Password
         </label>
       </div>
+      </div>
       {wrongCredentials && (
         <span className="text-red-500 text-[15px] flex items-center justify-center">
           <BiError /> Wrong username or password
         </span>
       )}
       <p
-        className="text-right pr-4 mb-2 text-[#0094FF] text-[15px] underline cursor-pointer"
+        className="text-right pb-2 pr-4 mb-2 text-[#0094FF] text-[15px] underline cursor-pointer"
         onClick={(e) => {
           setShowForgotPasswordModal(true);
         }}
@@ -102,7 +106,7 @@ const LoginModal = ({
         Login
       </button>
       <p
-        className="self-start pl-4 mt-1 text-[#0094FF] text-[15px] underline cursor-pointer"
+        className="self-start pt-2 pl-4 mt-1 text-[#0094FF] text-[15px] underline cursor-pointer"
         onClick={(e) => {
           setShowRegisterModal(true);
         }}

@@ -39,7 +39,7 @@ const Sidepanel = ({ user }: User) => {
         <Link
           className={`${
             pathname == "/"
-              ? " bg-main-background text-letters-color"
+              ? " bg-main-background "
               : " bg-primary-color"
           } sidepanel_link h-[75px]`}
           href="/"
