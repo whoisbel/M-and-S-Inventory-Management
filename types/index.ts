@@ -67,6 +67,7 @@ export type customTableProps = {
   isLoading?: boolean;
   handleUpdate?: (index: number) => void;
   handleDelete?: (index: number) => void;
+  handleStockout?: (index: number) => void; //for the ungraded stockout
 };
 
 export type createAccountData = {

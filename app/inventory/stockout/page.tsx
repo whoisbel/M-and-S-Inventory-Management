@@ -166,6 +166,7 @@ const Stockout = () => {
               data={tableData}
               isLoading={isLoading}
               handleUpdate={handleUpdate}
+              handleStockout={() => {}}
             />
           </div>
         </div>
