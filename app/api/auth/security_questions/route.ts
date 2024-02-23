@@ -16,6 +16,9 @@ export async function POST(request: NextRequest) {
       },
       select: {
         id: true,
+        securityQuestionAnswer: {
+          
+        }
       },
     });
     if (users) {
