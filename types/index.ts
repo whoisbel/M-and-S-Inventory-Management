@@ -103,6 +103,9 @@ export type forgotPasswordData = {
   lastName: string;
   username: string;
   securityQuestions: string[];
+  securityQuestionsAnswers: string[]
+  newPassword: string
+  confNewPassword: string
   [key: string]: string | boolean | string[];
 };
 export type customTableDataType = { [key: number]: string[] };
