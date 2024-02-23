@@ -115,13 +115,13 @@ const CustomTable = ({
                       return (
                         <td key={index}>
                           {data.includes("update") && (
-                            <UpdateButton keyNo={index} />
+                            <UpdateButton keyNo={+key} />
                           )}{" "}
                           {data.includes("stockout") && (
-                            <StockoutButton keyNo={index} />
+                            <StockoutButton keyNo={+key} />
                           )}{" "}
                           {data.includes("delete") && (
-                            <DeleteButton keyNo={index} />
+                            <DeleteButton keyNo={+key} />
                           )}
                         </td>
                       );

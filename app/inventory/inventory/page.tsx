@@ -2,18 +2,13 @@
 "use client";
 import { useEffect, useState } from "react";
 import { SortModal, StockoutModal, InventoryUpdateForm } from "@/components";
-import { Inventory } from "@prisma/client";
-
-import { CustomTable, InventoryInputForm } from "@/components";
+import { CustomTable } from "@/components";
 import { Area, Grade } from "@prisma/client";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import { createPortal } from "react-dom";
-import {
-  categoryFormData,
-  customTableDataType,
-  inventoryDataType,
-} from "@/types";
+import { customTableDataType, inventoryDataType } from "@/types";
+import { BiSearch } from "react-icons/bi";
 
 const Inventory = () => {
   const [inventoryData, setInventoryData] = useState<inventoryDataType[]>([]);
@@ -21,7 +16,7 @@ const Inventory = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [ungradedAlertShown, setUngradedAlertShown] = useState(false);
   const [gradedAlertShown, setGradedAlertShown] = useState(false);
-  const [stockoutAlertShow, setStockoutAlertShown] = useState(false);
+  const [stockoutAlertShown, setStockoutAlertShown] = useState(false);
   const [selectedUpdateData, setSelectedUpdateData] = useState<string[]>([]);
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [filter, setFilter] = useState({
@@ -158,7 +153,17 @@ const Inventory = () => {
   }
 
   function handleStockout(index: number) {
-    const selectedInventory = tableData[index];
+    console.log(index);
+    setSelectedIndex(index);
+    swal.fire({
+      didOpen: () => setStockoutAlertShown(true),
+      didClose: () => setStockoutAlertShown(false),
+      showConfirmButton: false,
+      customClass: {
+        popup: "m-0 flex !w-auto !rounded-lg !p-0",
+        htmlContainer: "!m-0 !rounded-lg p-0",
+      },
+    });
   }
   return (
     <div className="h-full w-full bg-white text-black">
@@ -180,6 +185,16 @@ const Inventory = () => {
             inventoryId={selectedIndex}
             swal={swal}
             setSwalShown={setGradedAlertShown}
+          />,
+          swal.getHtmlContainer()!
+        )}
+      {stockoutAlertShown &&
+        createPortal(
+          <StockoutModal
+            swal={swal}
+            inventory={tableData[selectedIndex]}
+            inventoryId={selectedIndex}
+            setSwalShown={setStockoutAlertShown}
           />,
           swal.getHtmlContainer()!
         )}
