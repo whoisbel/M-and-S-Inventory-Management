@@ -13,6 +13,7 @@ export async function POST(request: NextRequest) {
       id: true,
     },
   });
+
   await prisma.stock.update({
     where: {
       id: stock.id,

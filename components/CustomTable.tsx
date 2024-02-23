@@ -1,5 +1,8 @@
 import { customTableProps } from "@/types";
 import { BiEdit, BiTrash } from "react-icons/bi";
+import { BsBagXFill } from "react-icons/bs";
+import { LuSendToBack } from "react-icons/lu";
+import { GiStockpiles } from "react-icons/gi";
 import { LoadingRing } from ".";
 /* 
   Custom Table 
@@ -23,7 +26,48 @@ const CustomTable = ({
   handleDelete,
   handleUpdate,
   isLoading = false,
+  handleStockout,
 }: customTableProps) => {
+  let UpdateButton = ({ keyNo }: { keyNo: number }) => <></>;
+  let DeleteButton = ({ keyNo }: { keyNo: number }) => <></>;
+  let StockoutButton = ({ keyNo }: { keyNo: number }) => <></>;
+  if (handleUpdate) {
+    UpdateButton = ({ keyNo }: { keyNo: number }) => (
+      <button
+        onClick={(e) => {
+          handleUpdate!(+keyNo);
+        }}
+        className="bg-primary-color hover:bg-green-700 text-white px-2 py-2 rounded shadow hover:scale-105"
+      >
+        <BiEdit className="w-7 h-7" />
+      </button>
+    );
+  }
+  if (handleDelete) {
+    DeleteButton = ({ keyNo }: { keyNo: number }) => (
+      <button
+        onClick={(e) => {
+          handleDelete!(+keyNo);
+        }}
+        className="bg-red-500  text-white px-2 py-2 rounded shadow hover:bg-red-700 hover:scale-105"
+      >
+        <BiTrash className="w-7 h-7" />
+      </button>
+    );
+  }
+  if (handleStockout) {
+    StockoutButton = ({ keyNo }: { keyNo: number }) => (
+      <button
+        onClick={(e) => {
+          handleStockout(+keyNo);
+        }}
+        className="bg-add-minus hover:bg-slate-400 text-white px-2 py-2 rounded shadow hover:scale-105"
+      >
+        <BsBagXFill className="w-7 h-7" />
+      </button>
+    );
+  }
+
   return (
     <table
       border={1}
@@ -64,54 +108,21 @@ const CustomTable = ({
                 <tr key={key}>
                   {row.map((data, index) => {
                     if (
-                      data &&
-                      data.includes("update") &&
-                      data.includes("delete")
+                      (data && data.includes("update")) ||
+                      data.includes("delete") ||
+                      data.includes("stockout")
                     ) {
                       return (
                         <td key={index}>
-                          <button
-                            onClick={(e) => {
-                              handleUpdate!(Number(key));
-                            }}
-                            className="bg-primary-color hover:bg-green-700 text-white px-2 py-2 rounded shadow"
-                          >
-                            <BiEdit className="w-7 h-7" />
-                          </button>{" "}
-                          <button
-                            onClick={(e) => {
-                              handleDelete!(Number(key));
-                            }}
-                            className="bg-red-500 hover:bg-red-700 text-white px-2 py-2 rounded shadow"
-                          >
-                            <BiTrash className="w-7 h-7" />
-                          </button>
-                        </td>
-                      );
-                    } else if (data && data.includes("update")) {
-                      return (
-                        <td key={index}>
-                          <button
-                            onClick={(e) => {
-                              handleUpdate!(Number(key));
-                            }}
-                            className="bg-primary-color hover:bg-green-700 text-white px-2 py-2 rounded shadow hover:scale-105"
-                          >
-                            <BiEdit className="w-7 h-7" />
-                          </button>{" "}
-                        </td>
-                      );
-                    } else if (data && data.includes("delete")) {
-                      return (
-                        <td key={index}>
-                          <button
-                            onClick={(e) => {
-                              handleDelete!(Number(key));
-                            }}
-                            className="bg-red-500  text-white px-2 py-2 rounded shadow hover:bg-red-700 hover:scale-105"
-                          >
-                            <BiTrash className="w-7 h-7" />
-                          </button>
+                          {data.includes("update") && (
+                            <UpdateButton keyNo={+key} />
+                          )}{" "}
+                          {data.includes("stockout") && (
+                            <StockoutButton keyNo={+key} />
+                          )}{" "}
+                          {data.includes("delete") && (
+                            <DeleteButton keyNo={+key} />
+                          )}
                         </td>
                       );
                     } else {
