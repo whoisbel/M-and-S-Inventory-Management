@@ -129,20 +129,20 @@ const RegistrationModal = ({
           </p>
           <button onClick={closeModal}>X</button>
         </div>
-      <div className="w-[650px] h-1/2 overflow-y-auto rounded-lg bg-custom-white">
+      <div className="w-[650px] h-2/3 overflow-y-auto rounded-lg bg-custom-white">
         <div className="w-full flex justify-center items-center">
-          <div className="w-max h-max flex flex-col justify-center">
-            <h1 className="text-[40px] font-bold text-letters-color self-center">
+          <div className=" w-max h-max flex flex-col justify-center">
+            <h1 className=" text-[40px] pt-8 font-bold text-letters-color self-center">
               M&S Company
             </h1>
-            <h1 className="text-[20px] font-bold text-letters-color mb-1">
+            <h1 className=" pt-8 pb-4 text-[20px] font-bold text-letters-colors">
               User Information
             </h1>
-            <div className="flex w-full">
+            <div className=" pb-4 flex w-full">
               <div className="relative bg-main-background rounded-[20px] w-full h-[46px] mb-[18px] shadow-lg border-2 group">
                 <input
                   type="text"
-                  className={`w-full h-full px-4 pt-2 text-[20px] bg-transparent border-none focus:outline-none relative z-1 ${
+                  className={`w-full h-full px-4 pt-2 text-[20px] bg-transparent border-none focus:line-none relative z-1 ${
                     accountData.firstName ? "pt-4" : ""
                   } group`}
                   placeholder="First name"
@@ -165,7 +165,7 @@ const RegistrationModal = ({
               <div className="relative bg-main-background rounded-[20px] w-full h-[46px] mb-[18px] shadow-lg border-2 group ml-4">
                 <input
                   type="text"
-                  className={`w-full h-full px-4 pt-2 text-[20px] bg-transparent border-none focus:outline-none relative z-1 ${
+                  className={`w-full h-full px-4 pt-2 text-[20px] bg-transparent border-none focus:line-none relative z-1 ${
                     accountData.lastName ? "pt-4" : ""
                   } group`}
                   placeholder="Last name"
@@ -186,10 +186,11 @@ const RegistrationModal = ({
                 </label>
               </div>
             </div>
-            <div className="relative bg-main-background rounded-[20px] w-full h-[46px] mb-[18px] shadow-lg border-2 group">
+            <div className=" pb-4">
+            <div className=" relative bg-main-background rounded-[20px] w-full h-[46px] mb-[18px] shadow-lg border-2 group">
               <input
                 type="text"
-                className={`w-full h-full px-4 pt-2 text-[20px] bg-transparent border-none focus:outline-none relative z-1 ${
+                className={`w-full h-full px-4 pt-2 text-[20px] bg-transparent border-none focus:line-none relative z-1 ${
                   accountData.username ? "pt-4" : ""
                 } group`}
                 placeholder="Username"
@@ -209,10 +210,12 @@ const RegistrationModal = ({
                 Username
               </label>
             </div>
+            </div>
+            <div className=" pb-4">
             <div className="relative bg-main-background rounded-[20px] w-full h-[46px] mb-[18px] shadow-lg border-2 group">
               <input
                 type="password"
-                className={`w-full h-full px-4 pt-2 text-[20px] bg-transparent border-none focus:outline-none relative z-1 ${
+                className={`w-full h-full px-4 pt-2 text-[20px] bg-transparent border-none focus:line-none relative z-1 ${
                   accountData.password1 ? "pt-4" : ""
                 } group`}
                 placeholder="Enter password"
@@ -232,10 +235,12 @@ const RegistrationModal = ({
                 Password
               </label>
             </div>
+            </div>
+            <div className=" pb-4">
             <div className="relative bg-main-background rounded-[20px] w-full h-[46px] mb-[18px] shadow-lg border-2 group">
               <input
                 type="password"
-                className={`w-full h-full px-4 pt-2 text-[20px] bg-transparent border-none focus:outline-none relative z-1 ${
+                className={`w-full h-full px-4 pt-2 text-[20px] bg-transparent border-none focus:line-none relative z-1 ${
                   accountData.password2 ? "pt-4" : ""
                 } group`}
                 placeholder="Confirm password"
@@ -255,7 +260,8 @@ const RegistrationModal = ({
                 Confirm password
               </label>
             </div>
-            <h1 className="text-[20px] font-bold text-letters-color pb-1">
+            </div>
+            <h1 className=" py-8 pb-4 text-[20px] font-bold text-letters-color">
               Recovery Questions
             </h1>
             {securityQuestionAnswers.map((answer, index) => (
@@ -263,7 +269,7 @@ const RegistrationModal = ({
                 <select
                   value={answer.id}
                   onChange={(event) => handleSelectChange(event, index)}
-                  className="w-full px-4 text-[20px] border-2 flex items-center text-add-minus bg-main-background rounded-[20px] shadow-lg h-[46px] mb-[18px]"
+                  className=" w-full px-4 text-[20px] border-2 flex items-center text-add-minus bg-main-background rounded-[20px] shadow-lg h-[46px] mb-[18px]"
                 >
                   <option value={0} disabled hidden>
                     {`Question ${index + 1}`}
@@ -286,17 +292,19 @@ const RegistrationModal = ({
                       </option>
                     ))}
                 </select>
+                <div className=" py-4">
                 <input
                   type="text"
-                  className="w-full px-4 text-[20px] border-2 flex items-center text-letters-color bg-main-background rounded-[20px] shadow-lg h-[46px] mb-[18px]"
+                  className=" w-full px-4 text-[20px] border-2 flex items-center text-letters-color bg-main-background rounded-[20px] shadow-lg h-[46px] mb-[18px]"
                   onChange={(event) => handleAnswerChange(event, index)}
                 />
+                </div>
               </div>
             ))}
             <h3>{!isSetup && "Company Role:"}</h3>
             {!isSetup &&
               options.map((option) => (
-                <div key={option.value} className="pl-8">
+                <div key={option.value} className=" pl-8">
                   <input
                     type="radio"
                     id={option.value}
@@ -311,17 +319,17 @@ const RegistrationModal = ({
                     }
                     className=" accent-primary-color"
                   />
-                  <label htmlFor={option.value}>{option.label}</label>
+                  <label className="pl-5" htmlFor={option.value}>{option.label}</label>
                 </div>
               ))}
-            <h3 className="text-[20px] font-bold text-letters-color mb-1">
+            <h3 className=" py-4 text-[20px] font-bold text-letters-color">
               {isSetup && "Access Code:"}
             </h3>
             {isSetup && (
-              <div className="relative bg-main-background rounded-[20px] w-full h-[46px] shadow-lg border-2 mb-4 group">
+              <div className=" relative bg-main-background rounded-[20px] w-full h-[46px] shadow-lg border-2 mb-4 group">
                 <input
                   type="text"
-                  className={`w-full h-full px-4 pt-2 text-[20px] bg-transparent border-none focus:outline-none relative z-1 ${
+                  className={`w-full h-full px-4 pt-2 text-[20px] bg-transparent border-none focus:line-none relative z-1 ${
                     accountData.code ? "pt-4" : ""
                   } group`}
                   placeholder="Enter code"
@@ -342,12 +350,14 @@ const RegistrationModal = ({
                 </label>
               </div>
             )}
+            <div className=" pt-4 pb-8">
             <button
               onClick={handleSubmit}
               className="bg-primary-color text-custom-white rounded-[20px] w-full h-[46px] mt-2 mb-4 self-center"
             >
               {isSetup ? "Create" : "Request"}
             </button>
+            </div>
           </div>
         </div>
       </div>
