@@ -124,7 +124,7 @@ const RegistrationModal = ({
   return (
     <div className="w-full h-full flex justify-center flex-col items-center fixed bg-main-background/90">
       <div className="flex w-[650px] justify-between items-center bg-accent-gray py-3 px-4 rounded-t-lg">
-          <p className="text-[20px] font-bold text-letters-color">
+          <p className="text-[20px] font-bold text-letters-color top-text">
             {isSetup ? "Setup Account" : "Create Account"}
           </p>
           <button onClick={closeModal}>X</button>
