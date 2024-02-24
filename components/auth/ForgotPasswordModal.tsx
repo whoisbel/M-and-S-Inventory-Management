@@ -101,11 +101,10 @@ const ForgotPasswordModal = ({
                 </div>
             </div>
 
-            <div className="flex flex-col justify-center items-center bg-custom-white w-[400px]">
+            <div className="flex flex-col justify-center items-center bg-custom-white w-[400px] user-information-modal">
                 <h1 className="text-[30px] text-letters-color font-bold my-4 self-start pl-9">
                     User Information
                 </h1>
-
                 {['firstName', 'lastName', 'username'].map((inputName, index) => (
                     <div key={index} className="relative bg-main-background rounded-[20px] w-3/4 h-[46px] mb-[21px] shadow-lg border-2 group">
                         <input
@@ -151,7 +150,7 @@ const ForgotPasswordModal = ({
                         </div>
 
                         {securityQuestionAnswers.map((answer, index) => (
-                            <div key={index} className="flex flex-col justify-center items-center bg-custom-white w-[435px]">
+                            <div key={index} className="flex flex-col justify-center items-center bg-custom-white w-[435px] security-questions-modal">
                                 {index === currentQuestionIndex && (
                                     <div className="modal">
                                         <div className="modal-content mt-4 p-4">
@@ -200,7 +199,7 @@ const ForgotPasswordModal = ({
 
                         {currentQuestionIndex === securityQuestionAnswers.length - 1 && showChangePasswordModal && (
                             <div className="modal w-full h-full flex justify-center flex-col items-center fixed bg-main-background/90">
-                                <div className="flex justify-between items-center bg-accent-gray py-2 px-3 rounded-t-lg w-[435px]">
+                                <div className="flex justify-between items-center bg-accent-gray py-2 px-3 rounded-t-lg w-[435px] change-password-modal">
                                     <div className="flex w-full justify-between items-center bg-accent-gray py-2 px-3 rounded-t-lg">
                                         <p className="text-[20px] font-bold text-letters-color">
                                             Change Password
