@@ -28,7 +28,7 @@ export {
   ForgotPasswordModal,
   StockOutModal,
   SubSidepanel,
-  Panel
+  Panel,
   InventoryUpdateForm,
   SortModal,
   StockoutModal,
