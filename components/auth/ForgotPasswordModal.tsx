@@ -115,6 +115,16 @@ const ForgotPasswordModal = ({
         });
         return;
       }
+
+      if(!forgotPasswordData.username){
+        Swal.fire({
+            title: "Error",
+            text: "Please enter a valid username",
+            icon: "error",
+            customClass: swalCustomClass,
+          });
+          return;
+      }
     setQuestionsModal(true);
   };
   const closeRecoryQuestions = () => setQuestionsModal(false);
