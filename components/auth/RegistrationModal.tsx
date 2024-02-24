@@ -292,7 +292,7 @@ const RegistrationModal = ({
                       </option>
                     ))}
                 </select>
-                <div className=" py-4">
+                <div className="py-4 questions-input">
                 <input
                   type="text"
                   className=" w-full px-4 text-[20px] border-2 flex items-center text-letters-color bg-main-background rounded-[20px] shadow-lg h-[46px] mb-[18px]"
