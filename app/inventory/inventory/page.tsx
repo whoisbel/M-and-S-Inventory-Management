@@ -1,21 +1,14 @@
 "use client";
 "use client";
 import { useEffect, useState } from "react";
-import { BiError, BiSearch } from "react-icons/bi";
-import { CgAdd } from "react-icons/cg";
-import { Inventory } from "@prisma/client";
-import { BiX } from "react-icons/bi";
-
-import { CustomTable, InventoryInputForm } from "@/components";
+import { SortModal, StockoutModal, InventoryUpdateForm } from "@/components";
+import { CustomTable } from "@/components";
 import { Area, Grade } from "@prisma/client";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import { createPortal } from "react-dom";
-import {
-  categoryFormData,
-  customTableDataType,
-  inventoryDataType,
-} from "@/types";
+import { customTableDataType, inventoryDataType } from "@/types";
+import { BiSearch } from "react-icons/bi";
 
 const Inventory = () => {
   const [inventoryData, setInventoryData] = useState<inventoryDataType[]>([]);
@@ -23,6 +16,7 @@ const Inventory = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [ungradedAlertShown, setUngradedAlertShown] = useState(false);
   const [gradedAlertShown, setGradedAlertShown] = useState(false);
+  const [stockoutAlertShown, setStockoutAlertShown] = useState(false);
   const [selectedUpdateData, setSelectedUpdateData] = useState<string[]>([]);
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [filter, setFilter] = useState({
@@ -72,7 +66,7 @@ const Inventory = () => {
         data.gradeName,
         String(data.quantity),
         data.isWashed ? "True" : "False",
-        "update delete",
+        `update delete ${data.gradeName == "Ungraded" ? "stockout" : ""}`,
       ];
       return acc;
     }, {} as customTableDataType);
@@ -158,6 +152,19 @@ const Inventory = () => {
       });
   }
 
+  function handleStockout(index: number) {
+    console.log(index);
+    setSelectedIndex(index);
+    swal.fire({
+      didOpen: () => setStockoutAlertShown(true),
+      didClose: () => setStockoutAlertShown(false),
+      showConfirmButton: false,
+      customClass: {
+        popup: "m-0 flex !w-auto !rounded-lg !p-0",
+        htmlContainer: "!m-0 !rounded-lg p-0",
+      },
+    });
+  }
   return (
     <div className="h-full w-full bg-white text-black">
       {ungradedAlertShown &&
@@ -178,6 +185,16 @@ const Inventory = () => {
             inventoryId={selectedIndex}
             swal={swal}
             setSwalShown={setGradedAlertShown}
+          />,
+          swal.getHtmlContainer()!
+        )}
+      {stockoutAlertShown &&
+        createPortal(
+          <StockoutModal
+            swal={swal}
+            inventory={tableData[selectedIndex]}
+            inventoryId={selectedIndex}
+            setSwalShown={setStockoutAlertShown}
           />,
           swal.getHtmlContainer()!
         )}
@@ -260,6 +277,7 @@ const Inventory = () => {
           isLoading={isLoading}
           handleUpdate={handleUpdate}
           handleDelete={handleDelete}
+          handleStockout={handleStockout}
         />
       </div>
     </div>
@@ -267,339 +285,3 @@ const Inventory = () => {
 };
 
 export default Inventory;
-
-const SortModal = ({
-  inventoryData,
-  swal,
-  grade,
-  setSwalShown,
-  inventoryId,
-}: {
-  inventoryData: string[];
-  swal: typeof Swal;
-  grade: Grade[];
-  setSwalShown: (val: boolean) => void;
-  inventoryId?: number;
-}) => {
-  const [categoryFormData, setCategoryFormData] = useState<categoryFormData[]>(
-    []
-  );
-  const [ungradedQuantity, setUngradedQuantity] = useState(
-    Number(inventoryData[3])
-  );
-  const [isQuantityError, setIsQuantityError] = useState(false);
-  const [isError, setIsError] = useState(false);
-
-  const createInventoryForm = () => {
-    const newData: categoryFormData = {
-      grade: grade[0].id,
-      quantity: 0,
-      isWashed: false,
-    };
-    setCategoryFormData([...categoryFormData, newData]);
-  };
-
-  useEffect(() => {
-    computeUngradedQuantity();
-  }, [categoryFormData]);
-
-  const handleInventoryFormChange = (
-    e:
-      | React.ChangeEvent<HTMLInputElement>
-      | React.ChangeEvent<HTMLSelectElement>,
-    index: number
-  ) => {
-    const newCategoryFormData = [...categoryFormData];
-    const field = e.target.name;
-    console.log(e.target.name);
-    if (e.target.name === "isWashed") {
-      newCategoryFormData[index][field] = !newCategoryFormData[index][field];
-    } else {
-      newCategoryFormData[index][field] = Number(e.target.value);
-      setCategoryFormData(newCategoryFormData);
-    }
-  };
-
-  const handleRemoveForm = (index: number) => {
-    const newCategoryFormData = [...categoryFormData];
-    newCategoryFormData.splice(index, 1);
-    setCategoryFormData(newCategoryFormData);
-  };
-
-  const computeUngradedQuantity = () => {
-    let sortedQuantity = 0;
-    categoryFormData.map((data) => {
-      sortedQuantity += Number(data.quantity);
-    });
-    const ungradedQuantity = Number(inventoryData[3]) - sortedQuantity;
-    setUngradedQuantity(ungradedQuantity);
-    if (ungradedQuantity < 0) {
-      setIsQuantityError(true);
-    } else {
-      setIsQuantityError(false);
-      setIsError(false);
-    }
-  };
-
-  const saveForm = async () => {
-    if (isQuantityError) {
-      setIsError(true);
-    } else {
-      const response = await fetch("/api/inventory/inventory", {
-        method: "POST",
-        body: JSON.stringify({
-          categoryFormData: categoryFormData,
-          inventoryId: inventoryId,
-        }),
-      });
-      if (response.ok) {
-        swal
-          .fire({
-            title: "Success",
-            icon: "success",
-            text: "Inventory Saved",
-          })
-          .then(() => {
-            location.reload();
-          });
-      } else {
-        swal.fire({
-          title: "error",
-        });
-      }
-      setSwalShown(false);
-    }
-  };
-  return (
-    <div className="flex bg-white min-w-[900px] min-h-[400px] flex-col text-black rounded">
-      <div className=" bg-accent-gray flex items-center p-3">
-        <b>Inventory</b>
-      </div>
-      <div className="px-3 flex flex-col gap-3">
-        <div className="flex gap-3 items-center  py-1 text-[20px]">
-          <label>Date:</label>
-          <input
-            type="text"
-            name="date"
-            className="h-[20px] py-3 px-1 border-2 border-add-minus"
-            value={inventoryData[0]}
-            readOnly
-          />
-          <label>Area</label>
-          <input
-            type="text"
-            name="area"
-            className="h-[20px] py-3 px-1 border-2 border-add-minus"
-            value={inventoryData[1]}
-            readOnly
-          />
-          <label>Quantity</label>
-          <input
-            type="text"
-            name="quantity"
-            className={`h-[20px] py-3 px-1 border-2 border-add-minus ${
-              isQuantityError && "text-red-600"
-            }`}
-            value={ungradedQuantity}
-            readOnly
-          />
-          <button
-            className="px-3 py-2 shadow-neutral-600 border-add-minus shadow button hover:bg-neutral-500 bg-accent-gray border-[1px] rounded flex"
-            onClick={() => {
-              createInventoryForm();
-            }}
-          >
-            Add New
-            <CgAdd />
-          </button>
-        </div>
-        <div className="py-2 h-[500px] overflow-y-auto flex  flex-col gap-3">
-          {categoryFormData.map((data, index) => (
-            <InventoryInputForm
-              handleChange={handleInventoryFormChange}
-              handleDelete={handleRemoveForm}
-              inventoryFormData={data}
-              grade={grade}
-              index={index}
-              key={index}
-            />
-          ))}
-        </div>
-        {isError && (
-          <p className="flex justify-center items-center text-red-500">
-            <BiError className=" h-[40px] w-[40px] mr-4" /> Sorted Quantity does
-            not match the ungraded quantity.
-          </p>
-        )}
-        <div className="py-4 flex gap-3 justify-center">
-          <button
-            className="bg-red-500 text-white float-right min-w-[100px] rounded-full px-4 py-2"
-            onClick={() => {
-              swal.close();
-            }}
-          >
-            Cancel
-          </button>
-          <button
-            className="bg-primary-color text-white float-right min-w-[100px] rounded-full px-4 py-2"
-            onClick={() => {
-              saveForm();
-
-              console.log(categoryFormData);
-            }}
-          >
-            Save
-          </button>
-        </div>
-      </div>
-    </div>
-  );
-};
-
-const InventoryUpdateForm = ({
-  inventoryData,
-  inventoryId,
-  swal,
-  setSwalShown,
-}: {
-  inventoryData: string[];
-  inventoryId: number;
-  swal: typeof Swal;
-  setSwalShown: (val: boolean) => void;
-}) => {
-  const [quantity, setQuantity] = useState(inventoryData[3]);
-  const [ungradedInventory, setUngradedInventory] = useState<Inventory>();
-  const [remainingUngraded, setRemainingUngraded] = useState(0);
-  const startingQuantity = +inventoryData[3];
-  const [isError, setIsError] = useState(false);
-  useEffect(() => {
-    console.log("hello");
-    const remainingUngraded =
-      +((ungradedInventory && ungradedInventory.quantity) || 0) +
-      startingQuantity -
-      +quantity;
-    setRemainingUngraded(remainingUngraded);
-  }, [quantity, ungradedInventory]);
-
-  useEffect(() => {
-    const getUngradedInventory = async () => {
-      const response = await fetch(`/api/inventory/inventory/${inventoryId}`);
-      const { ungradedInventory } = await response.json();
-      console.log(ungradedInventory.quantity, "ungraded");
-      setUngradedInventory(ungradedInventory);
-    };
-    getUngradedInventory();
-  }, []);
-  const onSubmit = async () => {
-    if (remainingUngraded < 0) {
-      setIsError(true);
-      return;
-    }
-    const response = await fetch("/api/inventory/inventory", {
-      method: "PATCH",
-      body: JSON.stringify({
-        inventoryId: inventoryId,
-        newQuantity: quantity,
-      }),
-    });
-    if (response.ok) {
-      swal
-        .fire({
-          title: "Success",
-          icon: "success",
-          text: "Inventory Updated",
-        })
-        .then(() => {
-          location.reload();
-        });
-    } else {
-      swal.fire({
-        title: "error",
-      });
-    }
-    setSwalShown(false);
-  };
-  return (
-    <div className="min-h-[450px] min-w-[400px] flex flex-col rounded-lg">
-      <div className="bg-accent-gray text-black flex justify-between  h-[50px] gap-3 items-center">
-        <p className="font-bold px-2">Update Inventory</p>
-
-        <button
-          onClick={() => {
-            swal.close();
-          }}
-        >
-          <BiX className="text-[40px] hover:text-[42px]  font-thin" />
-        </button>
-      </div>
-      <div className="grid grid-cols-2 gap-5 justify-center py-5 px-10 ">
-        <label className="text-start" htmlFor="date">
-          Date
-        </label>
-        <input
-          type="text"
-          name="date"
-          id="date"
-          value={inventoryData[0]}
-          readOnly
-          className="border-2 border-add-minus"
-        />
-        <label className="text-start" htmlFor="area">
-          Area
-        </label>
-        <input
-          type="text"
-          name="area"
-          id="area"
-          value={inventoryData[1]}
-          readOnly
-          className="border-2 border-add-minus"
-        />
-        <label className="text-start" htmlFor="grade">
-          Grade
-        </label>
-        <input
-          type="text"
-          name="grade"
-          id="grade"
-          value={inventoryData[2]}
-          readOnly
-          className="border-2 border-add-minus"
-        />
-        <label htmlFor="quantity" className="text-start">
-          Quantity:
-        </label>
-        <input
-          type="number"
-          name="quantity"
-          id="quantity"
-          value={quantity}
-          onChange={(e) => setQuantity(e.target.value)}
-          className="border-2 border-add-minus"
-        />
-        <label htmlFor="ungraded_quantity" className="text-start">
-          Ungraded Remaining:
-        </label>
-        <input
-          type="number"
-          name="ungraded_quantity"
-          value={remainingUngraded}
-          className={remainingUngraded < 0 ? "text-red-500" : ""}
-          readOnly
-        />
-      </div>
-      {isError && (
-        <p className="flex justify-center items-center text-red-500 mt-auto">
-          <BiError className=" h-[40px] w-[40px] mr-4" /> Quantity exceeds the
-          remaining ungraded quantity.
-        </p>
-      )}
-      <button
-        onClick={() => onSubmit()}
-        className="rounded-full bg-primary-color text-white hover:scale-105 w-[150px] mx-auto mt-auto py-2 px-5 mb-5 "
-      >
-        Save
-      </button>
-    </div>
-  );
-};
