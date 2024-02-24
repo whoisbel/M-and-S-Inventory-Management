@@ -54,26 +54,32 @@ const Sidepanel = ({ user }: User) => {
             />
           </div>
 
-          <span className="lg:inline hidden">Dashboard</span>
+          <span className={pathname == "/"
+            ? "text-letters-color lg:inline hidden"
+            : "text-main-background lg:inline hidden"}
+            >Dashboard</span>
         </Link>
         <Link
           className={`${
-            pathname == "/admin_mngt"
-              ? " bg-main-background text-letters-color"
+            pathname.includes("/admin_mngt/")
+              ? " bg-main-background"
               : " bg-primary-color"
           } sidepanel_link h-[75px]`}
-          href="/admin_mngt/"
+          href="/admin_mngt/inventory-mngt/area_list/"
         >
           <div className="set_icon">
             <RiAdminLine
               className={
-                pathname == "/admin"
+                pathname.includes("/admin_mngt/")
                   ? "text-primary-color w-[35px] h-[35px]"
                   : "text-main-background w-[35px] h-[35px]"
               }
             />
           </div>
-          <span className="lg:inline hidden">Admin Management</span>
+          <span className={pathname.includes("/admin_mngt/")
+            ? "text-letters-color lg:inline hidden"
+            : "text-main-background lg:inline hidden"}
+            >Admin Management</span>
         </Link>
         <Link
           className={`${
@@ -93,12 +99,15 @@ const Sidepanel = ({ user }: User) => {
             />
           </div>
 
-          <span className="lg:inline hidden">Inventory Input</span>
+          <span className={pathname.includes("/inventory_input/")
+            ? "text-letters-color lg:inline hidden"
+            : "text-main-background lg:inline hidden"}
+            >Inventory Input</span>
         </Link>
         <Link
           className={`${
             pathname.includes("/inventory/")
-              ? " bg-main-background text-letters-color"
+              ? " bg-main-background "
               : " bg-primary-color"
           } sidepanel_link h-[75px]`}
           href="/inventory/inventory"
@@ -113,7 +122,10 @@ const Sidepanel = ({ user }: User) => {
             />
           </div>
 
-          <span className="lg:inline hidden">Inventory</span>
+          <span className={pathname.includes("/inventory/")
+            ? "text-letters-color lg:inline hidden"
+            : "text-main-background lg:inline hidden"}
+            >Inventory</span>
         </Link>
         <Link
           className={`${
@@ -133,7 +145,10 @@ const Sidepanel = ({ user }: User) => {
             />
           </div>
 
-          <span className="lg:inline hidden">Order Details</span>
+          <span className={pathname == "/order_details"
+            ? "text-letters-color lg:inline hidden"
+            : "text-main-background lg:inline hidden"}
+            >Order Details</span>
         </Link>
         <Link
           className={`${
@@ -153,7 +168,10 @@ const Sidepanel = ({ user }: User) => {
             />
           </div>
 
-          <span className="lg:inline hidden">History</span>
+          <span className={pathname == "/history"
+            ? "text-letters-color lg:inline hidden"
+            : "text-main-background lg:inline hidden"}
+            >History</span>
         </Link>
         <Link
           className={`${
@@ -173,7 +191,10 @@ const Sidepanel = ({ user }: User) => {
             />
           </div>
 
-          <span className="lg:inline hidden">User Settings</span>
+          <span className={pathname == "/user_settings"
+            ? "text-letters-color lg:inline hidden"
+            : "text-main-background lg:inline hidden"}
+            >User Settings</span>
         </Link>
         <li
           className="sidepanel_link bg-primary-color border-b-[3px] h-[75px]"
@@ -182,10 +203,10 @@ const Sidepanel = ({ user }: User) => {
           }}
         >
           <div className="set_icon">
-            <TbLogout className="w-[35px] h-[35px]" />
+            <TbLogout className="w-[35px] h-[35px] text-main-background " />
           </div>
 
-          <span className="lg:inline hidden">Sign Out</span>
+          <span className="lg:inline hidden text-main-background">Sign Out</span>
         </li>
       </ul>
     </div>

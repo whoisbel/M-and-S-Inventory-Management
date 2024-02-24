@@ -129,7 +129,7 @@ const RegistrationModal = ({
           </p>
           <button onClick={closeModal}>X</button>
         </div>
-      <div className="w-[650px] h-2/3 overflow-y-auto rounded-lg bg-custom-white">
+      <div className="w-[650px] h-2/3 overflow-y-auto rounded-b-lg bg-custom-white">
         <div className="w-full flex justify-center items-center">
           <div className=" w-max h-max flex flex-col justify-center">
             <h1 className=" text-[40px] pt-8 font-bold text-letters-color self-center">

@@ -10,6 +10,8 @@ import Pagination from "./dashboard/Pagination";
 import GradePage from "./dashboard/GradePage";
 import ForgotPasswordModal from "./auth/ForgotPasswordModal";
 import StockOutModal from "./inventory/stockout/StockOutModal";
+import SubSidepanel from "./SubSidepanel";
+import Panel from "./admin_mngt/Panel";
 export {
   Sidepanel,
   InventoryInputForm,
@@ -22,4 +24,6 @@ export {
   GradePage,
   ForgotPasswordModal,
   StockOutModal,
+  SubSidepanel,
+  Panel
 };

@@ -1,9 +1,9 @@
-"use client";
-
+  "use client";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
+import { SubSidepanel } from "@/components";
 
-export default function RootLayout({
+export default function AdminLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
@@ -13,37 +13,32 @@ export default function RootLayout({
     <div className="flex flex-col h-full bg-accent-green p-3 rounded-lg">
       <div className="tab_buttons">
         <Link
-          href="/inventory/inventory"
+          href="/admin_mngt/inventory-mngt/area_list"
           className={`${
-            pathName == "/inventory/inventory"
+            pathName.includes("/admin_mngt/inventory-mngt") 
               ? "bg-neutral-300 border-b-2 border-primary-color text-black"
               : "bg-neutral-200 text-neutral-800 "
           }`}
         >
-          Inventory
+          Inventory Management
         </Link>
         <Link
-          href="/inventory/available_products"
+          href="/admin_mngt/users-mngt"
           className={`${
-            pathName == "/inventory/available_products"
+            pathName.includes("/admin_mngt/users-mngt") 
               ? "bg-neutral-300 border-b-2 border-primary-color text-black"
               : "bg-neutral-200 text-neutral-800 "
           } `}
         >
-          Available Products
-        </Link>
-        <Link
-          href="/inventory/stockout"
-          className={`${
-            pathName == "/inventory/stockout"
-              ? "bg-neutral-300 border-b-2 border-primary-color text-black"
-              : "bg-neutral-200 text-neutral-800 "
-          }`}
-        >
-          Stockout
+          Users Management
         </Link>
       </div>
+      <div className="flex p-4 h-full bg-white">
+        <SubSidepanel />
       {children}
+      </div>
+      
     </div>
   );
 }
+
