@@ -11,10 +11,14 @@ import GradePage from "./dashboard/GradePage";
 import ForgotPasswordModal from "./auth/ForgotPasswordModal";
 import StockOutModal from "./inventory/stockout/StockOutModal";
 import SubSidepanel from "./SubSidepanel";
-import Panel from "./admin_mngt/Panel";
 import InventoryUpdateForm from "./inventory/inventory/InventoryUpdateForm";
 import SortModal from "./inventory/inventory/SortModal";
 import StockoutModal from "./inventory/inventory/StockoutModal";
+import SearchBar from "./SearchBar";
+import AddNewButton from "./buttons/AddNewButton";
+import CreateNewButton from "./buttons/CreateNewButton";
+import DownloadButton from "./buttons/DownloadButton";
+import SaveButton from "./buttons/SaveButton";
 export {
   Sidepanel,
   InventoryInputForm,
@@ -28,8 +32,12 @@ export {
   ForgotPasswordModal,
   StockOutModal,
   SubSidepanel,
-  Panel,
   InventoryUpdateForm,
   SortModal,
   StockoutModal,
+  SearchBar,
+  AddNewButton,
+  CreateNewButton,
+  DownloadButton,
+  SaveButton
 };

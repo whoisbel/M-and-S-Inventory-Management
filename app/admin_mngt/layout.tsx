@@ -23,7 +23,7 @@ export default function AdminLayout({
           Inventory Management
         </Link>
         <Link
-          href="/admin_mngt/users-mngt"
+          href="/admin_mngt/users-mngt/requests"
           className={`${
             pathName.includes("/admin_mngt/users-mngt") 
               ? "bg-neutral-300 border-b-2 border-primary-color text-black"
