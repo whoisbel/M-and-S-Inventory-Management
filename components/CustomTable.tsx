@@ -32,7 +32,8 @@ const CustomTable = ({
   let DeleteButton = ({ keyNo }: { keyNo: number }) => <></>;
   let StockoutButton = ({ keyNo }: { keyNo: number }) => <></>;
   if (handleUpdate) {
-    UpdateButton = ({ keyNo }: { keyNo: number }) => (
+    // eslint-disable-next-line react/display-name
+    UpdateButton = function ({ keyNo }: { keyNo: number }){ return (
       <button
         onClick={(e) => {
           handleUpdate!(+keyNo);
@@ -41,9 +42,10 @@ const CustomTable = ({
       >
         <BiEdit className="w-7 h-7" />
       </button>
-    );
+    );}
   }
   if (handleDelete) {
+    // eslint-disable-next-line react/display-name
     DeleteButton = ({ keyNo }: { keyNo: number }) => (
       <button
         onClick={(e) => {
@@ -56,6 +58,7 @@ const CustomTable = ({
     );
   }
   if (handleStockout) {
+    // eslint-disable-next-line react/display-name
     StockoutButton = ({ keyNo }: { keyNo: number }) => (
       <button
         onClick={(e) => {

@@ -13,13 +13,13 @@ const pathname = usePathname();
   return (
     <div className="sticky top-2 left-2 bottom-2 lg:min-w-[230px] h-full flex-col rounded-lg lg:block bg-main-background ">
       <ul className="text-[20px] flex flex-col h-full w-full px-4">
-        {/* admin management here*/}
+        {/* inventory management here*/}
         {pathname.includes("/admin_mngt/inventory-mngt") && <>
         <Link
             className={`${
               pathname == "/admin_mngt/inventory-mngt/area_list" 
               ? " border-b-primary-color" 
-              : "border-b-gray-400 "
+              : "border-b-accent-gray "
             } h-[50px] border-b-2 pb-0 flex items-end `}
             href="/admin_mngt/inventory-mngt/area_list"
           >
@@ -27,21 +27,22 @@ const pathname = usePathname();
           </Link>
           <Link
             className={`${
-              pathname == "/admin_mngt/inventory_mngt/grade_and_price" 
-              ? "border-b-primary-color" 
-              : "border-b-gray-400 "
-            } h-[50px] border-b-2 pb-0 flex items-end`}
-            href="/admin_mngt/inventory_mngt/grade_and_price" 
+              pathname == "/admin_mngt/inventory-mngt/grade_and_price" 
+              ? " border-b-primary-color" 
+              : "border-b-accent-gray "
+            } h-[50px] border-b-2 pb-0 flex items-end `}
+            href="/admin_mngt/inventory-mngt/grade_and_price"
           >
             Grade and Price List
           </Link>
         </>}
+        {/* users management here*/}
         {pathname.includes("/admin_mngt/users-mngt") && <>
         <Link
             className={`${
               pathname == "/admin_mngt/users-mngt/requests" 
               ? " border-b-primary-color" 
-              : "border-b-gray-400 "
+              : "border-b-accent-gray "
             } h-[50px] border-b-2 pb-0 flex items-end `}
             href= "/admin_mngt/users-mngt/requests"
           >
@@ -51,13 +52,14 @@ const pathname = usePathname();
             className={`${
               pathname == "/admin_mngt/users-mngt/manage_users"
               ? "border-b-primary-color" 
-              : "border-b-gray-400 "
+              : "border-b-accent-gray "
             } h-[50px] border-b-2 pb-0 flex items-end`}
             href="/admin_mngt/users-mngt/manage_users"
           >
             Manage Users
           </Link>
         </>}
+        {/* users settings here*/}
           
       </ul>
     </div>
