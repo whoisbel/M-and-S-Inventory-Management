@@ -1,5 +1,5 @@
-import ApproveButton from './buttons/ApproveButton';
-import DenyBUtton from "./buttons/DenyBUtton"
+import { GreenButton, RedButton } from "."
+
 
 
 const AdminTable = ({
@@ -14,10 +14,10 @@ const AdminTable = ({
           <td className="body_border">
             <div className="flex justify-end">
               <div className='mr-1'>
-              <ApproveButton/>
+              <GreenButton/>
               </div>
               <div>
-              <DenyBUtton/>
+              <RedButton/>
               </div>
             </div>
           </td>
