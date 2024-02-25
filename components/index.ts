@@ -18,8 +18,9 @@ import SearchBar from "./SearchBar";
 import AddNewButton from "./buttons/AddNewButton";
 import CreateNewButton from "./buttons/CreateNewButton";
 import DownloadButton from "./buttons/DownloadButton";
-import SaveButton from "./buttons/SaveButton";
+import RedButton from "./buttons/RedButton";
 import AdminTable from "./AdminTable";
+import GreenButton from "./buttons/GreenButton";
 export {
   Sidepanel,
   InventoryInputForm,
@@ -40,6 +41,7 @@ export {
   AddNewButton,
   CreateNewButton,
   DownloadButton,
-  SaveButton,
-  AdminTable
+  AdminTable,
+  GreenButton,
+  RedButton
 };

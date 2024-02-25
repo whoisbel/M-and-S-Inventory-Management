@@ -9,7 +9,7 @@ const AddNewButton = () => {
           bg-accent-gray border-[1px] 
           border-add-minus py-2 px-4 
           ml-auto rounded-lg shadow 
-          mb-5 gap-4 font-semibold w-[150px]"
+          font-semibold w-[150px]"
         >
           Add New <FaPlus className="text-[20px] fill-add-minus" />
       </button>
