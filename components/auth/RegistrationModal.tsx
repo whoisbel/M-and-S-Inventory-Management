@@ -53,7 +53,50 @@ const RegistrationModal = ({
   };
 
   const handleSubmit = async () => {
-    //password1 and password2 checking,
+    const nameRegex = /^[\w'\-,.][^0-9_!¡?÷?¿/\\+=@#$%ˆ&*(){}|~<>;:[\]]{2,}$/;
+    if (!nameRegex.test(accountData.firstName)) {
+      Swal.fire({
+        title: "Error",
+        text: "Please enter a valid first name",
+        icon: "error",
+        customClass: swalCustomClass,
+      });
+      return;
+    }
+  
+    if (!nameRegex.test(accountData.lastName)) {
+      Swal.fire({
+        title: "Error",
+        text: "Please enter a valid last name",
+        icon: "error",
+        customClass: swalCustomClass,
+      });
+      return;
+    }
+  
+    if (
+      !accountData.username ||
+      !accountData.password1 ||
+      !accountData.password2
+    ) {
+      Swal.fire({
+        title: "Error",
+        text: "Please fill in all fields",
+        icon: "error",
+        customClass: swalCustomClass,
+      });
+      return;
+    }
+  
+    if (accountData.password1 !== accountData.password2) {
+      Swal.fire({
+        title: "Error",
+        text: "Passwords do not match",
+        icon: "error",
+        customClass: swalCustomClass,
+      });
+      return;
+    }
     const response = await fetch("/api/auth/register", {
       method: "POST",
       body: JSON.stringify({
@@ -121,15 +164,17 @@ const RegistrationModal = ({
     newAnswers[index].answer = event.target.value;
     setSecurityQuestionAnswers([...newAnswers]);
   };
+  
+
   return (
     <div className="w-full h-full flex justify-center flex-col items-center fixed bg-main-background/90">
       <div className="flex w-[650px] justify-between items-center bg-accent-gray py-3 px-4 rounded-t-lg">
-          <p className="text-[20px] font-bold text-letters-color">
+          <p className="text-[20px] font-bold text-letters-color top-text">
             {isSetup ? "Setup Account" : "Create Account"}
           </p>
           <button onClick={closeModal}>X</button>
         </div>
-      <div className="w-[650px] h-2/3 overflow-y-auto rounded-b-lg bg-custom-white">
+      <div className="w-[650px] h-2/3 overflow-y-auto rounded-b-lg bg-custom-white register-modal">
         <div className="w-full flex justify-center items-center">
           <div className=" w-max h-max flex flex-col justify-center">
             <h1 className=" text-[40px] pt-8 font-bold text-letters-color self-center">
@@ -139,14 +184,15 @@ const RegistrationModal = ({
               User Information
             </h1>
             <div className=" pb-4 flex w-full">
-              <div className="relative bg-main-background rounded-[20px] w-full h-[46px] mb-[18px] shadow-lg border-2 group">
+              <div className="relative bg-main-background rounded-[20px] w-full h-[46px] mb-[18px] shadow-lg border-2 group focus:outline-none">
                 <input
                   type="text"
-                  className={`w-full h-full px-4 pt-2 text-[20px] bg-transparent border-none focus:line-none relative z-1 ${
+                  className={`w-full h-full px-4 pt-2 text-[20px] bg-transparent border-none focus:line-none relative z-1 focus:outline-none ${
                     accountData.firstName ? "pt-4" : ""
                   } group`}
                   placeholder="First name"
                   value={accountData.firstName}
+                  required
                   onChange={(e) => {
                     setAccountData({
                       ...accountData,
@@ -162,14 +208,15 @@ const RegistrationModal = ({
                   First name
                 </label>
               </div>
-              <div className="relative bg-main-background rounded-[20px] w-full h-[46px] mb-[18px] shadow-lg border-2 group ml-4">
+              <div className="relative bg-main-background rounded-[20px] w-full h-[46px] mb-[18px] shadow-lg border-2 group ml-4 ">
                 <input
                   type="text"
-                  className={`w-full h-full px-4 pt-2 text-[20px] bg-transparent border-none focus:line-none relative z-1 ${
+                  className={`w-full h-full px-4 pt-2 text-[20px] bg-transparent border-none focus:line-none relative z-1 focus:outline-none ${
                     accountData.lastName ? "pt-4" : ""
                   } group`}
                   placeholder="Last name"
                   value={accountData.lastName}
+                  required
                   onChange={(e) => {
                     setAccountData({
                       ...accountData,
@@ -187,14 +234,15 @@ const RegistrationModal = ({
               </div>
             </div>
             <div className=" pb-4">
-            <div className=" relative bg-main-background rounded-[20px] w-full h-[46px] mb-[18px] shadow-lg border-2 group">
+            <div className=" relative bg-main-background rounded-[20px] w-full h-[46px] mb-[18px] shadow-lg border-2 group focus:outline-none">
               <input
                 type="text"
-                className={`w-full h-full px-4 pt-2 text-[20px] bg-transparent border-none focus:line-none relative z-1 ${
+                className={`w-full h-full px-4 pt-2 text-[20px] bg-transparent border-none focus:outline-none relative z-1 ${
                   accountData.username ? "pt-4" : ""
                 } group`}
                 placeholder="Username"
                 value={accountData.username}
+                required
                 onChange={(e) => {
                   setAccountData({
                     ...accountData,
@@ -212,13 +260,14 @@ const RegistrationModal = ({
             </div>
             </div>
             <div className=" pb-4">
-            <div className="relative bg-main-background rounded-[20px] w-full h-[46px] mb-[18px] shadow-lg border-2 group">
+            <div className="relative bg-main-background rounded-[20px] w-full h-[46px] mb-[18px] shadow-lg border-2 group focus:outline-none">
               <input
                 type="password"
-                className={`w-full h-full px-4 pt-2 text-[20px] bg-transparent border-none focus:line-none relative z-1 ${
+                className={`w-full h-full px-4 pt-2 text-[20px] bg-transparent border-none focus:line-none relative z-1 focus:outline-none ${
                   accountData.password1 ? "pt-4" : ""
                 } group`}
                 placeholder="Enter password"
+                required
                 value={accountData.password1}
                 onChange={(e) => {
                   setAccountData({
@@ -237,14 +286,15 @@ const RegistrationModal = ({
             </div>
             </div>
             <div className=" pb-4">
-            <div className="relative bg-main-background rounded-[20px] w-full h-[46px] mb-[18px] shadow-lg border-2 group">
+            <div className="relative bg-main-background rounded-[20px] w-full h-[46px] mb-[18px] shadow-lg border-2 group focus:outline-none">
               <input
                 type="password"
-                className={`w-full h-full px-4 pt-2 text-[20px] bg-transparent border-none focus:line-none relative z-1 ${
+                className={`w-full h-full px-4 pt-2 text-[20px] bg-transparent border-none focus:line-none relative z-1 focus:outline-none ${
                   accountData.password2 ? "pt-4" : ""
                 } group`}
                 placeholder="Confirm password"
                 value={accountData.password2}
+                required
                 onChange={(e) => {
                   setAccountData({
                     ...accountData,
@@ -269,7 +319,7 @@ const RegistrationModal = ({
                 <select
                   value={answer.id}
                   onChange={(event) => handleSelectChange(event, index)}
-                  className=" w-full px-4 text-[20px] border-2 flex items-center text-add-minus bg-main-background rounded-[20px] shadow-lg h-[46px] mb-[18px]"
+                  className=" w-full px-4 text-[20px] border-2 flex items-center text-add-minus bg-main-background rounded-[20px] shadow-lg h-[46px] mb-[18px] focus:outline-none"
                 >
                   <option value={0} disabled hidden>
                     {`Question ${index + 1}`}
@@ -292,11 +342,12 @@ const RegistrationModal = ({
                       </option>
                     ))}
                 </select>
-                <div className=" py-4">
+                <div className="py-4 questions-input">
                 <input
                   type="text"
-                  className=" w-full px-4 text-[20px] border-2 flex items-center text-letters-color bg-main-background rounded-[20px] shadow-lg h-[46px] mb-[18px]"
+                  className=" w-full px-4 text-[20px]  flex items-center text-letters-color bg-main-background rounded-[20px] shadow-lg h-[46px] mb-[18px] focus:outline-none"
                   onChange={(event) => handleAnswerChange(event, index)}
+                  required
                 />
                 </div>
               </div>
@@ -317,6 +368,7 @@ const RegistrationModal = ({
                         companyRole: e.target.value,
                       })
                     }
+                    required
                     className=" accent-primary-color"
                   />
                   <label className="pl-5" htmlFor={option.value}>{option.label}</label>
@@ -340,6 +392,7 @@ const RegistrationModal = ({
                       code: e.target.value,
                     });
                   }}
+                  required
                 />
                 <label
                   className={`absolute -top-[0.80rem] left-4 text-[15px] text-add-minus ${
