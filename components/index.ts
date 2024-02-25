@@ -15,6 +15,8 @@ import Panel from "./admin_mngt/Panel";
 import InventoryUpdateForm from "./inventory/inventory/InventoryUpdateForm";
 import SortModal from "./inventory/inventory/SortModal";
 import StockoutModal from "./inventory/inventory/StockoutModal";
+import StockoutForm from "./inventory/stockout/StockoutForm";
+
 export {
   Sidepanel,
   InventoryInputForm,
@@ -32,4 +34,5 @@ export {
   InventoryUpdateForm,
   SortModal,
   StockoutModal,
+  StockoutForm,
 };
