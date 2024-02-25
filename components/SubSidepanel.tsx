@@ -19,7 +19,7 @@ const pathname = usePathname();
             className={`${
               pathname == "/admin_mngt/inventory-mngt/area_list" 
               ? " border-b-primary-color" 
-              : "border-b-gray-400 "
+              : "border-b-accent-gray "
             } h-[50px] border-b-2 pb-0 flex items-end `}
             href="/admin_mngt/inventory-mngt/area_list"
           >
@@ -29,7 +29,7 @@ const pathname = usePathname();
             className={`${
               pathname == "/admin_mngt/inventory_mngt/grade_and_price" 
               ? "border-b-primary-color" 
-              : "border-b-gray-400 "
+              : "border-b-accent-gray "
             } h-[50px] border-b-2 pb-0 flex items-end`}
             href="/admin_mngt/inventory_mngt/grade_and_price" 
           >
@@ -41,7 +41,7 @@ const pathname = usePathname();
             className={`${
               pathname == "/admin_mngt/users-mngt/requests" 
               ? " border-b-primary-color" 
-              : "border-b-gray-400 "
+              : "border-b-accent-gray "
             } h-[50px] border-b-2 pb-0 flex items-end `}
             href= "/admin_mngt/users-mngt/requests"
           >
@@ -51,7 +51,7 @@ const pathname = usePathname();
             className={`${
               pathname == "/admin_mngt/users-mngt/manage_users"
               ? "border-b-primary-color" 
-              : "border-b-gray-400 "
+              : "border-b-accent-gray "
             } h-[50px] border-b-2 pb-0 flex items-end`}
             href="/admin_mngt/users-mngt/manage_users"
           >
