@@ -19,6 +19,7 @@ import AddNewButton from "./buttons/AddNewButton";
 import CreateNewButton from "./buttons/CreateNewButton";
 import DownloadButton from "./buttons/DownloadButton";
 import SaveButton from "./buttons/SaveButton";
+import AdminTable from "./AdminTable";
 export {
   Sidepanel,
   InventoryInputForm,
@@ -39,5 +40,6 @@ export {
   AddNewButton,
   CreateNewButton,
   DownloadButton,
-  SaveButton
+  SaveButton,
+  AdminTable
 };

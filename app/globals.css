@@ -16,6 +16,13 @@
   }
 }
 
+.body_border {
+  @apply border-b-2 border-t-0 border-l-0 border-r-0 border-accent-gray
+}
+.admin_border {
+  @apply border-t-4 border-l-0 border-r-0 border-b-0 border-primary-color
+}
+
 .out {
   @apply border-2 border-indigo-600
 }

@@ -17,6 +17,7 @@ const config: Config = {
         "main-background": "#ECEAEA",
         "buttons-icon": "#F3F3F3",
         "letters-color": "#06162E",
+        "custom-red": "#D0422E"
       },
       backgroundImage: {
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
