@@ -54,6 +54,15 @@ const RegistrationModal = ({
 
   const handleSubmit = async () => {
     const nameRegex = /^[\w'\-,.][^0-9_!¡?÷?¿/\\+=@#$%ˆ&*(){}|~<>;:[\]]{2,}$/;
+    if (securityQuestionAnswersValidation()) {
+      Swal.fire({
+        title: "Error",
+        text: "Please enter a valid security question answer",
+        icon: "error",
+        customClass: swalCustomClass,
+      });
+      return;
+    }
     if (!nameRegex.test(accountData.firstName)) {
       Swal.fire({
         title: "Error",
@@ -63,7 +72,7 @@ const RegistrationModal = ({
       });
       return;
     }
-  
+
     if (!nameRegex.test(accountData.lastName)) {
       Swal.fire({
         title: "Error",
@@ -73,7 +82,7 @@ const RegistrationModal = ({
       });
       return;
     }
-  
+
     if (
       !accountData.username ||
       !accountData.password1 ||
@@ -87,7 +96,7 @@ const RegistrationModal = ({
       });
       return;
     }
-  
+
     if (accountData.password1 !== accountData.password2) {
       Swal.fire({
         title: "Error",
@@ -151,7 +160,13 @@ const RegistrationModal = ({
     { id: 0, answer: "" },
     { id: 0, answer: "" },
   ]);
-
+  const securityQuestionAnswersValidation = () => {
+    for (let i = 0; i < securityQuestionAnswers.length; i++) {
+      if (!securityQuestionAnswers[i].answer) {
+        return true;
+      }
+    }
+  };
   const handleSelectChange = (event: any, index: any) => {
     const selectedQuestion = event.target.value;
     const newAnswers = securityQuestionAnswers;
@@ -164,16 +179,15 @@ const RegistrationModal = ({
     newAnswers[index].answer = event.target.value;
     setSecurityQuestionAnswers([...newAnswers]);
   };
-  
 
   return (
     <div className="w-full h-full flex justify-center flex-col items-center fixed bg-main-background/90">
       <div className="flex w-[650px] justify-between items-center bg-accent-gray py-3 px-4 rounded-t-lg">
-          <p className="text-[20px] font-bold text-letters-color top-text">
-            {isSetup ? "Setup Account" : "Create Account"}
-          </p>
-          <button onClick={closeModal}>X</button>
-        </div>
+        <p className="text-[20px] font-bold text-letters-color top-text">
+          {isSetup ? "Setup Account" : "Create Account"}
+        </p>
+        <button onClick={closeModal}>X</button>
+      </div>
       <div className="w-[650px] h-2/3 overflow-y-auto rounded-b-lg bg-custom-white register-modal">
         <div className="w-full flex justify-center items-center">
           <div className=" w-max h-max flex flex-col justify-center">
@@ -234,82 +248,82 @@ const RegistrationModal = ({
               </div>
             </div>
             <div className=" pb-4">
-            <div className=" relative bg-main-background rounded-[20px] w-full h-[46px] mb-[18px] shadow-lg border-2 group focus:outline-none">
-              <input
-                type="text"
-                className={`w-full h-full px-4 pt-2 text-[20px] bg-transparent border-none focus:outline-none relative z-1 ${
-                  accountData.username ? "pt-4" : ""
-                } group`}
-                placeholder="Username"
-                value={accountData.username}
-                required
-                onChange={(e) => {
-                  setAccountData({
-                    ...accountData,
-                    username: e.target.value,
-                  });
-                }}
-              />
-              <label
-                className={`absolute -top-[0.80rem] left-4 text-[15px] text-add-minus ${
-                  accountData.username ? "opacity-100" : "opacity-0"
-                } transition-opacity bg-transparent group-active:inline-block`}
-              >
-                Username
-              </label>
-            </div>
-            </div>
-            <div className=" pb-4">
-            <div className="relative bg-main-background rounded-[20px] w-full h-[46px] mb-[18px] shadow-lg border-2 group focus:outline-none">
-              <input
-                type="password"
-                className={`w-full h-full px-4 pt-2 text-[20px] bg-transparent border-none focus:line-none relative z-1 focus:outline-none ${
-                  accountData.password1 ? "pt-4" : ""
-                } group`}
-                placeholder="Enter password"
-                required
-                value={accountData.password1}
-                onChange={(e) => {
-                  setAccountData({
-                    ...accountData,
-                    password1: e.target.value,
-                  });
-                }}
-              />
-              <label
-                className={`absolute -top-[0.80rem] left-4 text-[15px] text-add-minus ${
-                  accountData.password1 ? "opacity-100" : "opacity-0"
-                } transition-opacity bg-transparent group-active:inline-block`}
-              >
-                Password
-              </label>
-            </div>
+              <div className=" relative bg-main-background rounded-[20px] w-full h-[46px] mb-[18px] shadow-lg border-2 group focus:outline-none">
+                <input
+                  type="text"
+                  className={`w-full h-full px-4 pt-2 text-[20px] bg-transparent border-none focus:outline-none relative z-1 ${
+                    accountData.username ? "pt-4" : ""
+                  } group`}
+                  placeholder="Username"
+                  value={accountData.username}
+                  required
+                  onChange={(e) => {
+                    setAccountData({
+                      ...accountData,
+                      username: e.target.value,
+                    });
+                  }}
+                />
+                <label
+                  className={`absolute -top-[0.80rem] left-4 text-[15px] text-add-minus ${
+                    accountData.username ? "opacity-100" : "opacity-0"
+                  } transition-opacity bg-transparent group-active:inline-block`}
+                >
+                  Username
+                </label>
+              </div>
             </div>
             <div className=" pb-4">
-            <div className="relative bg-main-background rounded-[20px] w-full h-[46px] mb-[18px] shadow-lg border-2 group focus:outline-none">
-              <input
-                type="password"
-                className={`w-full h-full px-4 pt-2 text-[20px] bg-transparent border-none focus:line-none relative z-1 focus:outline-none ${
-                  accountData.password2 ? "pt-4" : ""
-                } group`}
-                placeholder="Confirm password"
-                value={accountData.password2}
-                required
-                onChange={(e) => {
-                  setAccountData({
-                    ...accountData,
-                    password2: e.target.value,
-                  });
-                }}
-              />
-              <label
-                className={`absolute -top-[0.80rem] left-4 text-[15px] text-add-minus ${
-                  accountData.password2 ? "opacity-100" : "opacity-0"
-                } transition-opacity bg-transparent group-active:inline-block`}
-              >
-                Confirm password
-              </label>
+              <div className="relative bg-main-background rounded-[20px] w-full h-[46px] mb-[18px] shadow-lg border-2 group focus:outline-none">
+                <input
+                  type="password"
+                  className={`w-full h-full px-4 pt-2 text-[20px] bg-transparent border-none focus:line-none relative z-1 focus:outline-none ${
+                    accountData.password1 ? "pt-4" : ""
+                  } group`}
+                  placeholder="Enter password"
+                  required
+                  value={accountData.password1}
+                  onChange={(e) => {
+                    setAccountData({
+                      ...accountData,
+                      password1: e.target.value,
+                    });
+                  }}
+                />
+                <label
+                  className={`absolute -top-[0.80rem] left-4 text-[15px] text-add-minus ${
+                    accountData.password1 ? "opacity-100" : "opacity-0"
+                  } transition-opacity bg-transparent group-active:inline-block`}
+                >
+                  Password
+                </label>
+              </div>
             </div>
+            <div className=" pb-4">
+              <div className="relative bg-main-background rounded-[20px] w-full h-[46px] mb-[18px] shadow-lg border-2 group focus:outline-none">
+                <input
+                  type="password"
+                  className={`w-full h-full px-4 pt-2 text-[20px] bg-transparent border-none focus:line-none relative z-1 focus:outline-none ${
+                    accountData.password2 ? "pt-4" : ""
+                  } group`}
+                  placeholder="Confirm password"
+                  value={accountData.password2}
+                  required
+                  onChange={(e) => {
+                    setAccountData({
+                      ...accountData,
+                      password2: e.target.value,
+                    });
+                  }}
+                />
+                <label
+                  className={`absolute -top-[0.80rem] left-4 text-[15px] text-add-minus ${
+                    accountData.password2 ? "opacity-100" : "opacity-0"
+                  } transition-opacity bg-transparent group-active:inline-block`}
+                >
+                  Confirm password
+                </label>
+              </div>
             </div>
             <h1 className=" py-8 pb-4 text-[20px] font-bold text-letters-color">
               Recovery Questions
@@ -343,12 +357,12 @@ const RegistrationModal = ({
                     ))}
                 </select>
                 <div className="py-4 questions-input">
-                <input
-                  type="text"
-                  className=" w-full px-4 text-[20px]  flex items-center text-letters-color bg-main-background rounded-[20px] shadow-lg h-[46px] mb-[18px] focus:outline-none"
-                  onChange={(event) => handleAnswerChange(event, index)}
-                  required
-                />
+                  <input
+                    type="text"
+                    className=" w-full px-4 text-[20px]  flex items-center text-letters-color bg-main-background rounded-[20px] shadow-lg h-[46px] mb-[18px] focus:outline-none"
+                    onChange={(event) => handleAnswerChange(event, index)}
+                    required
+                  />
                 </div>
               </div>
             ))}
@@ -371,7 +385,9 @@ const RegistrationModal = ({
                     required
                     className=" accent-primary-color"
                   />
-                  <label className="pl-5" htmlFor={option.value}>{option.label}</label>
+                  <label className="pl-5" htmlFor={option.value}>
+                    {option.label}
+                  </label>
                 </div>
               ))}
             <h3 className=" py-4 text-[20px] font-bold text-letters-color">
@@ -404,12 +420,12 @@ const RegistrationModal = ({
               </div>
             )}
             <div className=" pt-4 pb-8">
-            <button
-              onClick={handleSubmit}
-              className="bg-primary-color text-custom-white rounded-[20px] w-full h-[46px] mt-2 mb-4 self-center"
-            >
-              {isSetup ? "Create" : "Request"}
-            </button>
+              <button
+                onClick={handleSubmit}
+                className="bg-primary-color text-custom-white rounded-[20px] w-full h-[46px] mt-2 mb-4 self-center"
+              >
+                {isSetup ? "Create" : "Request"}
+              </button>
             </div>
           </div>
         </div>
