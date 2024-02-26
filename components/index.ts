@@ -14,6 +14,8 @@ import SubSidepanel from "./SubSidepanel";
 import InventoryUpdateForm from "./inventory/inventory/InventoryUpdateForm";
 import SortModal from "./inventory/inventory/SortModal";
 import StockoutModal from "./inventory/inventory/StockoutModal";
+import StockoutForm from "./inventory/stockout/StockoutForm";
+
 import SearchBar from "./SearchBar";
 import AddNewButton from "./buttons/AddNewButton";
 import CreateNewButton from "./buttons/CreateNewButton";
@@ -37,11 +39,12 @@ export {
   InventoryUpdateForm,
   SortModal,
   StockoutModal,
+  StockoutForm,
   SearchBar,
   AddNewButton,
   CreateNewButton,
   DownloadButton,
+  RedButton,
   AdminTable,
   GreenButton,
-  RedButton
 };

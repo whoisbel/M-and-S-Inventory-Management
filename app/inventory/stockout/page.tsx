@@ -13,7 +13,7 @@ import withReactContent from "sweetalert2-react-content";
 import Swal from "sweetalert2";
 import { createPortal } from "react-dom";
 
-const Stockout = () => {
+const StockoutPage = () => {
   const [createStockOutModalShown, setCreateStockOutModalShown] =
     useState(false);
   const [stockout, setStockout] = useState<Stockout[]>([]);
@@ -65,7 +65,7 @@ const Stockout = () => {
     const data: customTableDataType = {};
     stockout.map((stock) => {
       data[stock.id] = [
-        String(stock.dateOut),
+        new Date(stock.dateOut).toLocaleDateString(),
         stock.stock.grade.description,
         stock.quantity.toString(),
         stock.stockoutType,
@@ -174,4 +174,4 @@ const Stockout = () => {
   );
 };
 
-export default Stockout;
+export default StockoutPage;

@@ -55,6 +55,7 @@ const StockoutModal = ({
         })
         .then(() => {
           setSwalShown(false);
+          location.reload();
         });
     }
   };

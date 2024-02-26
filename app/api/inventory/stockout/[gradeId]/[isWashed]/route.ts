@@ -12,10 +12,11 @@ export async function GET(
     where: {
       gradeId: +gradeId,
       isWashed: isWashed === "true",
+      quantityOnHand: {
+        gt: 0,
+      },
     },
   });
-
-  console.log({ gradeId, isWashed, stock }, Boolean(isWashed));
 
   return NextResponse.json(stock);
 }
