@@ -13,24 +13,25 @@ export async function POST(request: NextRequest) {
       id: true,
     },
   });
-
-  await prisma.stock.update({
-    where: {
-      id: stock.id,
-    },
-    data: {
-      quantityOnHand: {
-        decrement: quantity,
+  await prisma.$transaction([
+    await prisma.stock.update({
+      where: {
+        id: stock.id,
       },
-    },
-  });
-  await prisma.stockout.create({
-    data: {
-      quantity,
-      stockId: stock.id,
-      stockoutType: StockOutType.disposed,
-    },
-  });
+      data: {
+        quantityOnHand: {
+          decrement: quantity,
+        },
+      },
+    }),
+    await prisma.stockout.create({
+      data: {
+        quantity,
+        stockId: stock.id,
+        stockoutType: StockOutType.disposed,
+      },
+    }),
+  ]);
 
   return NextResponse.json({ status: 200 });
 }
