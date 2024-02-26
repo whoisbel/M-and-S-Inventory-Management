@@ -1,6 +1,7 @@
 "use client";
 import { forgotPasswordData } from "@/types";
 import { useState, useEffect } from "react";
+import { SecurityQuestions, SecurityQuestionsAnswer } from "@prisma/client";
 import Swal from "sweetalert2";
 import { swalCustomClass } from "@/utils/swalConfig";
 interface SecurityQuestion {
@@ -18,35 +19,36 @@ const ForgotPasswordModal = ({
   setShowForgotPasswordData: (data: forgotPasswordData) => void;
 }) => {
   const closeModal = () => setShowForgotPasswordModal(false);
-  const [securityQuestionAnswers, setSecurityQuestionAnswers] = useState([
-    { id: 0, answer: "" },
-    { id: 0, answer: "" },
-    { id: 0, answer: "" },
+  const [securityQuestionAnswers, setSecurityQuestionAnswers] = useState<
+    SecurityQuestionsAnswer[]
+  >([
+    { id: 0, answer: "", question: { id: 0, question: "" } },
+    { id: 0, answer: "", question: { id: 0, question: "" } },
+    { id: 0, answer: "", question: { id: 0, question: "" } },
   ]);
+  const [userId, setUserId] = useState<number>(0);
   const [questionsModal, setQuestionsModal] = useState(false);
   const [showChangePasswordModal, setShowChangePasswordModal] = useState(false);
-  const [securityQuestions, setSecurityQuestions] = useState<
-    SecurityQuestion[]
-  >([]);
+
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const nameRegex = /^[\w'\-,.][^0-9_!¡?÷?¿/\\+=@#$%ˆ&*(){}|~<>;:[\]]{2,}$/;
-  useEffect(() => {
-    //TANGAL LANG PAG NA IMPLEMENT NA TUNG PAG KUHA SA 3 KA QUESTION NA DAPAT SA USER JUD
-    //TESTING PURPOSE RA NI DIRI
-    const fetchQuestions = async () => {
-      try {
-        const response = await fetch("/api/auth/security_questions");
-        if (!response.ok) {
-          throw new Error("Failed to fetch security questions.");
-        }
-        const questions = await response.json();
-        setSecurityQuestions(questions);
-      } catch (error: any) {
-        console.error(error);
-      }
-    };
-    fetchQuestions();
-  }, []);
+  //useEffect(() => {
+  //  //TANGAL LANG PAG NA IMPLEMENT NA TUNG PAG KUHA SA 3 KA QUESTION NA DAPAT SA USER JUD
+  //  //TESTING PURPOSE RA NI DIRI
+  //  const fetchQuestions = async () => {
+  //    try {
+  //      const response = await fetch("/api/auth/security_questions");
+  //      if (!response.ok) {
+  //        throw new Error("Failed to fetch security questions.");
+  //      }
+  //      const questions = await response.json();
+  //      setSecurityQuestions(questions);
+  //    } catch (error: any) {
+  //      console.error(error);
+  //    }
+  //  };
+  //  fetchQuestions();
+  //}, []);
 
   const handleSelectChange = (event: any, index: any) => {
     const { value } = event.target;
@@ -57,7 +59,7 @@ const ForgotPasswordModal = ({
     });
   };
 
-  const handleAnswerChange = (event: any, index: any) => {
+  const handleAnswerChange = (event: any, index: number) => {
     const { value } = event.target;
     setSecurityQuestionAnswers((prevState) => {
       const updatedAnswers = [...prevState];
@@ -66,9 +68,27 @@ const ForgotPasswordModal = ({
     });
   };
 
-  const handleNextQuestion = (index: number) => {
+  const handleNextQuestion = async (index: number) => {
+    const response = await fetch("api/auth/forgot_password/check_question", {
+      method: "POST",
+      body: JSON.stringify({
+        securityQuestionsAnswerId: securityQuestionAnswers[index].id,
+        answer: securityQuestionAnswers[index].answer,
+      }),
+    });
+    if (!response.ok) {
+      Swal.fire({
+        title: "Error",
+        text: "Answer is incorrect",
+        icon: "error",
+        customClass: swalCustomClass,
+      });
+      return;
+    }
+
     if (currentQuestionIndex < securityQuestionAnswers.length - 1) {
       if (!securityQuestionAnswers[index].answer.trim()) {
+        //if user has no answer
         Swal.fire({
           title: "Error",
           text: "Please enter an answer",
@@ -77,12 +97,13 @@ const ForgotPasswordModal = ({
         });
         return;
       }
+
       setCurrentQuestionIndex(currentQuestionIndex + 1);
     } else {
       setShowChangePasswordModal(true);
     }
   };
-  
+
   const handleBackQuestion = () => {
     if (showChangePasswordModal) {
       setShowChangePasswordModal(false);
@@ -94,51 +115,87 @@ const ForgotPasswordModal = ({
   };
 
   const handleClosePasswordModal = () => setShowChangePasswordModal(false);
-  const recoverAccount = () => {
-    // DIRI IBUTANG ANG CALL API PARA MAKUHA TUNG SECURITY QUESTION SA USER
+  const recoverAccount = async () => {
+    // DIRI IBUTANG ANG CALL API PARA MAKUHA TUNG SECURITY QUESTION SA USER.. mana
     if (!nameRegex.test(forgotPasswordData.firstName)) {
-        Swal.fire({
-          title: "Error",
-          text: "Please enter a valid first name",
-          icon: "error",
-          customClass: swalCustomClass,
-        });
-        return;
-      }
-    
-      if (!nameRegex.test(forgotPasswordData.lastName)) {
-        Swal.fire({
-          title: "Error",
-          text: "Please enter a valid last name",
-          icon: "error",
-          customClass: swalCustomClass,
-        });
-        return;
-      }
+      Swal.fire({
+        title: "Error",
+        text: "Please enter a valid first name",
+        icon: "error",
+        customClass: swalCustomClass,
+      });
+      return;
+    }
 
-      if(!forgotPasswordData.username){
-        Swal.fire({
-            title: "Error",
-            text: "Please enter a valid username",
-            icon: "error",
-            customClass: swalCustomClass,
-          });
-          return;
-      }
-    setQuestionsModal(true);
+    if (!nameRegex.test(forgotPasswordData.lastName)) {
+      Swal.fire({
+        title: "Error",
+        text: "Please enter a valid last name",
+        icon: "error",
+        customClass: swalCustomClass,
+      });
+      return;
+    }
+
+    if (!forgotPasswordData.username) {
+      Swal.fire({
+        title: "Error",
+        text: "Please enter a valid username",
+        icon: "error",
+        customClass: swalCustomClass,
+      });
+      return;
+    }
+    console.log(forgotPasswordData);
+    const response = await fetch("api/auth/forgot_password", {
+      method: "POST",
+      body: JSON.stringify({
+        firstName: forgotPasswordData.firstName,
+        lastName: forgotPasswordData.lastName,
+        userName: forgotPasswordData.username,
+      }),
+    });
+    if (response.ok) {
+      const data = await response.json();
+      setUserId(data.user.id);
+      const newSQA = securityQuestionAnswers.map((answer, index) => {
+        answer.id = data.securityQuestionsAnswers[index].id;
+        answer.question = data.securityQuestionsAnswers[index].question;
+        return answer;
+      });
+      setSecurityQuestionAnswers(newSQA);
+      setQuestionsModal(true);
+    }
   };
   const closeRecoryQuestions = () => setQuestionsModal(false);
-  const handleSubmitPassword = () => {
+  const handleSubmitPassword = async () => {
     // DIRI IBUTANG ANG CALL SA API PARA MACHANGE ANG PASSWORD SA USER
-      if (forgotPasswordData.newPassword !== forgotPasswordData.confNewPassword) {
-        Swal.fire({
-          title: "Error",
-          text: "Passwords do not match",
-          icon: "error",
-          customClass: swalCustomClass,
-        });
-        return;
-      }
+    if (forgotPasswordData.newPassword !== forgotPasswordData.confNewPassword) {
+      Swal.fire({
+        title: "Error",
+        text: "Passwords do not match",
+        icon: "error",
+        customClass: swalCustomClass,
+      });
+      return;
+    }
+    const response = await fetch("api/auth/forgot_password", {
+      method: "PATCH",
+      body: JSON.stringify({
+        userId: userId,
+        newPassword: forgotPasswordData.newPassword,
+      }),
+    });
+    if (response.ok) {
+      Swal.fire({
+        title: "Success",
+        text: "Password has been changed",
+        icon: "success",
+        customClass: swalCustomClass,
+      }).then(() => {
+        location.reload();
+      });
+    }
   };
 
   return (
@@ -228,18 +285,18 @@ const ForgotPasswordModal = ({
                       </p>
 
                       <select
-                        value={answer.id}
+                        value={securityQuestionAnswers[index].question.id}
                         onChange={(event) => handleSelectChange(event, index)}
                         className="w-full px-4 text-[20px] border-2 flex items-center text-add-minus bg-main-background rounded-[20px] shadow-lg h-[46px] mb-[18px]"
                       >
                         <option value={0} disabled hidden>
                           {`Question ${index + 1}`}
                         </option>
-                        {securityQuestions.map((question) => (
-                          <option key={question.id} value={question.id}>
-                            {question.question}
-                          </option>
-                        ))}
+                        <option
+                          value={securityQuestionAnswers[index].question.id}
+                        >
+                          {securityQuestionAnswers[index].question.question}
+                        </option>
                       </select>
 
                       <input
@@ -250,7 +307,9 @@ const ForgotPasswordModal = ({
                       />
 
                       <button
-                        onClick={() => {handleNextQuestion(currentQuestionIndex)}}
+                        onClick={() => {
+                          handleNextQuestion(currentQuestionIndex);
+                        }}
                         className="w-full bg-primary-color rounded-[20px] h-[46px] text-main-background"
                       >
                         Next
