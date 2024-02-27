@@ -184,14 +184,14 @@ const Sidepanel = ({ user }: User) => {
           <div className="set_icon">
             <IoMdSettings
               className={
-                pathname == "/user_settings"
+                pathname == "/user_settings/"
                   ? "text-primary-color w-[35px] h-[35px]"
                   : "text-main-background w-[35px] h-[35px]"
               }
             />
           </div>
 
-          <span className={pathname == "/user_settings"
+          <span className={pathname == "/user_settings/"
             ? "text-letters-color lg:inline hidden"
             : "text-main-background lg:inline hidden"}
             >User Settings</span>

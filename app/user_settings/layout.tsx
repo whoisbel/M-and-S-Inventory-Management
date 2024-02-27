@@ -14,14 +14,14 @@ export default function RootLayout({
 <div className="flex flex-col h-full bg-accent-green p-3 rounded-lg">
       <div className="tab_buttons">
         <Link
-          href="/admin_mngt/inventory-mngt/area_list"
+          href="/user_settings/user_info"
           className={`${
-            pathName.includes("/admin_mngt/inventory-mngt") 
+            pathName.includes("/user_settings") 
               ? "bg-neutral-300 border-b-2 border-primary-color text-black"
               : "bg-neutral-200 text-neutral-800 "
           }`}
         >
-          Users Settings
+          User Settings
         </Link>
       </div>
       <div className="flex p-4 h-full bg-white">
