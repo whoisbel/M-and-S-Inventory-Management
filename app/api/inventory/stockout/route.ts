@@ -1,6 +1,7 @@
 import { NextResponse, NextRequest } from "next/server";
 import prisma from "@/utils/prisma";
-import { Grade, Stock, StockOutType } from "@prisma/client";
+import { Grade, Stock, StockOutType, Stockout } from "@prisma/client";
+import { createStockout } from "@/utils/stockoutTransaction";
 
 export async function GET(request: NextRequest) {
   const stocks = await prisma.stock.findMany({
@@ -32,49 +33,21 @@ export async function GET(request: NextRequest) {
   return NextResponse.json({ grade, stockout });
 }
 export async function POST(request: NextRequest) {
-  const {
-    inventoryId,
-    quantity,
-    date,
-  }: { inventoryId: number; quantity: number; date: string } =
-    await request.json();
-  const inventory = await prisma.inventory.findUnique({
-    where: {
-      id: inventoryId,
-    },
-  });
-
+  const stockouts = await request.json();
+  console.log(stockouts);
   //update ungraded stock
-  await prisma.stock.update({
-    where: {
-      id: inventory.stockId,
-    },
-    data: {
-      quantityOnHand: {
-        decrement: quantity,
-      },
-    },
-  });
-  //update inventory quantity
-  await prisma.inventory.update({
-    where: {
-      id: inventoryId,
-    },
-    data: {
-      quantity: {
-        decrement: quantity,
-      },
-    },
-  });
-  //create stockout
-  await prisma.stockout.create({
-    data: {
-      dateOut: new Date(date),
-      quantity: quantity,
-      stockId: inventory.stockId,
-      stockoutType: StockOutType.disposed,
-    },
+
+  const transaction = await prisma.$transaction(async (tx) => {
+    try {
+      await Promise.all(
+        stockouts.map((stockout: Stockout) => createStockout(tx, stockout))
+      );
+      return NextResponse.json({ status: 400 });
+    } catch (error) {
+      console.error("Error creating stockouts:", error);
+      return NextResponse.json({ status: 500 });
+    }
   });
 
-  return NextResponse.json("success");
+  return NextResponse.json({ status: 200 });
 }

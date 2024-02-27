@@ -1,80 +1,89 @@
-"use client"
+"use client";
 import { GreenButton, RedButton } from ".";
 import { usePathname } from "next/navigation";
+import { Area, Grade, User } from "@prisma/client";
 
-
-
-const AdminTable = () => {
+const AdminTable = ({
+  areas,
+  grades,
+  users,
+}: {
+  areas?: Area[];
+  grades?: Grade[];
+  users?: User[];
+}) => {
   const pathname = usePathname();
+
   return (
     <table align="left" className="admin_border rounded-none w-auto">
-      <tbody >
-        
-          {pathname == "/admin_mngt/inventory-mngt/area_list"
-          ? (
-          <tr>
-            <td className="body_border">Area Description</td>
-            <td className="body_border">
-              <div className="flex justify-end">
-                <div className='mr-1'>
-                <GreenButton/>
+      <tbody>
+        {pathname == "/admin_mngt/inventory_mngt/area_list" ? (
+          areas &&
+          areas?.map((area: Area) => (
+            <tr key={area.id}>
+              <td className="body_border">{area.description}</td>
+              <td className="body_border">
+                <div className="flex justify-end">
+                  <div className="mr-1">
+                    <GreenButton />
+                  </div>
+                  <div>
+                    <RedButton />
+                  </div>
                 </div>
-                <div>
-                <RedButton/>
+              </td>
+            </tr>
+          ))
+        ) : pathname == "/admin_mngt/inventory_mngt/grade_and_price" ? (
+          grades &&
+          grades?.map((grade: Grade) => (
+            <tr key={grade.id}>
+              <td className="body_border">{grade.description}</td>
+              <td className="body_border">{grade.price.toFixed(2)}</td>
+              <td className="body_border">
+                <div className="flex justify-end">
+                  <div className="mr-1">
+                    <GreenButton />
+                  </div>
+                  <div>
+                    <RedButton />
+                  </div>
                 </div>
-              </div>
-            </td>
-          </tr>
-          )
-        : pathname == "/admin_mngt/inventory-mngt/grade_and_price"
-        ? (
-          <tr>
-          <td className="body_border">Price Description</td>
-          <td className="body_border">Price</td>
-          <td className="body_border">
-            <div className="flex justify-end">
-              <div className='mr-1'>
-              <GreenButton/>
-              </div>
-              <div>
-              <RedButton/>
-              </div>
-            </div>
-          </td>
-        </tr>
-        )
-        : pathname.includes("/admin_mngt/users-mngt")
-        ? (
-          <tr>
-          <td className="body_border">Name</td>
-          <td className="body_border">Description</td>
-          <td className="body_border">
-            {pathname == "/admin_mngt/users-mngt/requests"
-            ? (
-              <div className="flex justify-end">
-              <div className='mr-1'>
-              <GreenButton/>
-              </div>
-              <div>
-              <RedButton/>
-              </div>
-            </div>
-            )
-          : (
-            <div className="flex justify-end">
-              <RedButton/>
-            </div>
-          )}
-          </td>
-        </tr>
-        )
-    : (<span>no data</span>)}
-
-
-
+              </td>
+            </tr>
+          ))
+        ) : pathname.includes("/admin_mngt/users_mngt") ? (
+          users &&
+          users.map((user: User) => (
+            <tr key={user.id}>
+              <td className="body_border">{`${user.firstName} ${user.lastName}`}</td>
+              <td className="body_border">
+                {user.isAdmin ? "Admin" : "Employee"}
+              </td>
+              <td className="body_border">
+                {pathname == "/admin_mngt/users_mngt/requests" ? (
+                  <div className="flex justify-end">
+                    <div className="mr-1">
+                      <GreenButton />
+                    </div>
+                    <div>
+                      <RedButton />
+                    </div>
+                  </div>
+                ) : (
+                  <div className="flex justify-end">
+                    <RedButton />
+                  </div>
+                )}
+              </td>
+            </tr>
+          ))
+        ) : (
+          <span>no data</span>
+        )}
       </tbody>
     </table>
-  )
-}
+  );
+};
 
-export default AdminTable
+export default AdminTable;

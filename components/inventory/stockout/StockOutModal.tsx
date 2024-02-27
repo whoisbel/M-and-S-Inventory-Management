@@ -1,9 +1,12 @@
 "use client";
 import Swal from "sweetalert2";
-import { Grade, Stock } from "@prisma/client";
+import { Grade, Stock, Stockout } from "@prisma/client";
 import { BiX, BiError } from "react-icons/bi";
 import { useState, useEffect } from "react";
 import { swalCustomClass } from "@/utils/swalConfig";
+import { CgAdd } from "react-icons/cg";
+import { StockoutForm } from "@/components";
+
 const StockOutModal = ({
   swal,
   setModalOpen,
@@ -14,115 +17,172 @@ const StockOutModal = ({
   grade: Grade[];
 }) => {
   const [remainingStock, setRemainingStock] = useState<Stock>();
-  const [selectedGrade, setSelectedGrade] = useState(0);
-  const [washed, setWashed] = useState(false);
-  const [inputQuantity, setInputQuantity] = useState(0);
-  const [remainingQuantity, setRemainingQuantity] = useState(0); //The remaining stock after substacted by the input quantity
-  const [isError, setIsError] = useState(false);
-  useEffect(() => {
-    const fetchRemainingStock = async () => {
-      if (selectedGrade == 0) {
-        setRemainingStock(undefined);
-      }
-      const res = await fetch(
-        `/api/inventory/stockout/${selectedGrade}/${washed}`
-      );
-      const remainingStock = await res.json();
-      setRemainingStock(remainingStock);
+  const [stockoutData, setStockoutData] = useState<
+    {
+      stockout: Stockout;
+      error: {
+        quantity: boolean;
+        stock: boolean;
+        grade: boolean;
+        [key: string]: boolean;
+      };
+    }[]
+  >([]);
+
+  const [isError, setIsError] = useState({
+    quantity: false,
+    stock: false,
+    grade: false,
+  });
+
+  function addStockout() {
+    const newStockout: Stockout = {
+      gradeId: 0,
+      quantity: 0,
+      washed: false,
     };
-    fetchRemainingStock();
-  }, [selectedGrade, washed]);
+    const newError = { quantity: false, stock: false, grade: true };
+    const newData = { stockout: newStockout, error: newError };
+    setStockoutData([...stockoutData, newData]);
+  }
+  function removeStockout(index: number) {
+    const newStockoutData = [...stockoutData];
+    newStockoutData.splice(index, 1);
+    setStockoutData(newStockoutData);
+  }
+  const handleUpdate = (index: number, data: (typeof stockoutData)[0]) => {
+    console.log(data);
+    const newStockoutData = [...stockoutData];
+    newStockoutData[index] = data;
+    setStockoutData(newStockoutData);
+  };
 
-  useEffect(() => {
-    setRemainingQuantity(
-      ((remainingStock && remainingStock.quantityOnHand) || 0) - inputQuantity
-    );
-  }, [inputQuantity, remainingStock]);
+  function getError() {
+    let newError: {
+      quantity: boolean;
+      stock: boolean;
+      grade: boolean;
+      [key: string]: boolean;
+    } = { quantity: false, stock: false, grade: false };
+    stockoutData.forEach((data) => {
+      const { error } = data;
+      Object.keys(error).map((key) => {
+        console.log(newError);
+        if (error[key]) {
+          newError[key] = error[key];
+        }
+      });
+    });
+    console.log({ newError });
+    setIsError(newError);
+  }
 
-  function handleSubmit() {
-    if (remainingQuantity < 0) {
-      setIsError(true);
+  async function handleSubmit() {
+    getError();
+    if (isError.grade || isError.quantity || isError.stock) {
       return;
     }
-
-    fetch("/api/inventory/stockout/disposed", {
+    const stockouts = stockoutData.map((data) => data.stockout);
+    const response = await fetch("/api/inventory/stockout", {
       method: "POST",
-      body: JSON.stringify({
-        gradeId: selectedGrade,
-        isWashed: washed,
-        quantity: inputQuantity,
-      }),
+      body: JSON.stringify(stockouts),
     }).then((res) => {
-      if (res.status === 200) {
-        swal
-          .fire({
-            title: "Stockout Recorded",
-            icon: "success",
-            customClass: swalCustomClass,
-          })
-          .then(() => {
-            setModalOpen(false);
-            swal.close();
-          });
+      if (res.ok) {
+        swal.fire({
+          title: "Stockout added",
+          icon: "success",
+          customClass: swalCustomClass,
+        });
+        setModalOpen(false);
+        location.reload();
+      } else {
+        swal.fire({
+          title: "Error",
+          icon: "error",
+          customClass: swalCustomClass,
+        });
       }
     });
   }
   return (
-    <div className="w-[500px] h-[500px] flex flex-col items-center">
-      <div className="bg-accent-gray text-black flex w-full justify-between items-center px-2 h-[50px]">
-        <p className="text-[20px]">Create Stockout</p>
-
-        <BiX
-          className="text-[40px] hover:text-[42px] ease-in-out cursor-pointer transition-all duration-300"
-          onClick={() => {
-            swal.close();
-          }}
-        />
+    <div className="flex bg-white min-w-[900px] min-h-[400px] flex-col text-black rounded">
+      <div className=" bg-accent-gray flex items-center p-3">
+        <b>Stockout</b>
       </div>
-      <div className="grid grid-cols-2 gap-2 justify-between text-start px-10 py-5">
-        <label>Date: </label>
-        <input type="date" className="border-2 border-add-minus" />
+      <div className="px-3 flex flex-col gap-3">
+        <div className="flex gap-3 items-center  py-1 text-[20px]">
+          <label>Date:</label>
+          <input
+            type="date"
+            name=""
+            className="h-[20px] py-3 px-1 border-2 border-add-minus"
+            defaultValue={new Date().toISOString().split("T")[0]}
+          />
 
-        <label>Grade:</label>
-        <select
-          className="border-2 border-add-minus"
-          onChange={(e) => setSelectedGrade(+e.target.value)}
-        >
-          <option value={0}>Grade</option>
-          {grade.map((g, ind) => (
-            <option key={ind} value={g.id}>
-              {g.description}
-            </option>
-          ))}
-        </select>
-        <label>Washed</label>
-        <input type="checkbox" onChange={(e) => setWashed((prev) => !prev)} />
-        <label>Quantity:</label>
-        <input
-          type="number"
-          className="border-2 bg-add-minux"
-          onChange={(e) => setInputQuantity(+e.target.value)}
-        />
-        <label>Remaining Stocks:</label>
-        <input
-          type="text"
-          value={remainingQuantity}
-          className={remainingQuantity < 0 ? "text-red-500" : ""}
-          readOnly
-        />
+          <button
+            className="px-3 py-2 shadow-neutral-600 border-add-minus shadow button hover:bg-neutral-500 bg-accent-gray border-[1px] rounded flex ml-auto"
+            onClick={() => {
+              addStockout();
+            }}
+          >
+            Add New
+            <CgAdd />
+          </button>
+        </div>
+
+        <div className="py-2 h-[500px] overflow-y-auto flex  flex-col gap-3">
+          {stockoutData.map((data, index) => {
+            return (
+              <StockoutForm
+                grade={grade} // TODO: Check if this is the correct type,
+                key={index}
+                stockoutData={data}
+                index={index}
+                handleDelete={removeStockout}
+                handleUpdate={handleUpdate}
+              />
+            );
+          })}
+        </div>
+        <div className="">
+          {isError.grade && (
+            <p className="flex justify-center items-center text-red-500">
+              <BiError className=" h-[20px] w-[20px] mr-4" /> Please choose
+              grade or remove the form without grade.
+            </p>
+          )}
+          {isError.quantity && (
+            <p className="flex justify-center items-center text-red-500">
+              <BiError className=" h-[20px] w-[20px] mr-4" /> Stockout quantity
+              is greater than the stock quantity.
+            </p>
+          )}
+          {isError.stock && (
+            <p className="flex justify-center items-center text-red-500">
+              <BiError className=" h-[20px] w-[20px] mr-4" /> Stock doesn't
+              exist.
+            </p>
+          )}
+        </div>
+        <div className="py-4 flex gap-3 justify-center">
+          <button
+            className="bg-red-500 text-white float-right min-w-[100px] rounded-full px-4 py-2"
+            onClick={() => {
+              swal.close();
+            }}
+          >
+            Cancel
+          </button>
+          <button
+            className="bg-primary-color text-white float-right min-w-[100px] rounded-full px-4 py-2"
+            onClick={() => {
+              handleSubmit();
+            }}
+          >
+            Save
+          </button>
+        </div>
       </div>
-      {isError && (
-        <p className="text-red-500 flex items-center px-3 mt-auto text-center mx-auto">
-          <BiError className="text-[30px] mr-3" />
-          Remaining stocks is lower than the quantity
-        </p>
-      )}
-      <button
-        className="bg-primary-color text-white  px-10 py-2 rounded-full hover:scale-105 ease-in-out duration-300 mt-auto mb-10"
-        onClick={() => handleSubmit()}
-      >
-        Save
-      </button>
     </div>
   );
 };

@@ -38,9 +38,7 @@ const Sidepanel = ({ user }: User) => {
         </li>
         <Link
           className={`${
-            pathname == "/"
-              ? " bg-main-background "
-              : " bg-primary-color"
+            pathname == "/" ? " bg-main-background " : " bg-primary-color"
           } sidepanel_link h-[75px]`}
           href="/"
         >
@@ -54,10 +52,15 @@ const Sidepanel = ({ user }: User) => {
             />
           </div>
 
-          <span className={pathname == "/"
-            ? "text-letters-color lg:inline hidden"
-            : "text-main-background lg:inline hidden"}
-            >Dashboard</span>
+          <span
+            className={
+              pathname == "/"
+                ? "text-letters-color lg:inline hidden"
+                : "text-main-background lg:inline hidden"
+            }
+          >
+            Dashboard
+          </span>
         </Link>
         <Link
           className={`${
@@ -65,7 +68,7 @@ const Sidepanel = ({ user }: User) => {
               ? " bg-main-background"
               : " bg-primary-color"
           } sidepanel_link h-[75px]`}
-          href="/admin_mngt/inventory-mngt/area_list/"
+          href="/admin_mngt/inventory_mngt/area_list/"
         >
           <div className="set_icon">
             <RiAdminLine
@@ -76,10 +79,15 @@ const Sidepanel = ({ user }: User) => {
               }
             />
           </div>
-          <span className={pathname.includes("/admin_mngt/")
-            ? "text-letters-color lg:inline hidden"
-            : "text-main-background lg:inline hidden"}
-            >Admin Management</span>
+          <span
+            className={
+              pathname.includes("/admin_mngt/")
+                ? "text-letters-color lg:inline hidden"
+                : "text-main-background lg:inline hidden"
+            }
+          >
+            Admin Management
+          </span>
         </Link>
         <Link
           className={`${
@@ -99,10 +107,15 @@ const Sidepanel = ({ user }: User) => {
             />
           </div>
 
-          <span className={pathname.includes("/inventory_input/")
-            ? "text-letters-color lg:inline hidden"
-            : "text-main-background lg:inline hidden"}
-            >Inventory Input</span>
+          <span
+            className={
+              pathname.includes("/inventory_input/")
+                ? "text-letters-color lg:inline hidden"
+                : "text-main-background lg:inline hidden"
+            }
+          >
+            Inventory Input
+          </span>
         </Link>
         <Link
           className={`${
@@ -122,10 +135,15 @@ const Sidepanel = ({ user }: User) => {
             />
           </div>
 
-          <span className={pathname.includes("/inventory/")
-            ? "text-letters-color lg:inline hidden"
-            : "text-main-background lg:inline hidden"}
-            >Inventory</span>
+          <span
+            className={
+              pathname.includes("/inventory/")
+                ? "text-letters-color lg:inline hidden"
+                : "text-main-background lg:inline hidden"
+            }
+          >
+            Inventory
+          </span>
         </Link>
         <Link
           className={`${
@@ -145,10 +163,15 @@ const Sidepanel = ({ user }: User) => {
             />
           </div>
 
-          <span className={pathname == "/order_details"
-            ? "text-letters-color lg:inline hidden"
-            : "text-main-background lg:inline hidden"}
-            >Order Details</span>
+          <span
+            className={
+              pathname == "/order_details"
+                ? "text-letters-color lg:inline hidden"
+                : "text-main-background lg:inline hidden"
+            }
+          >
+            Order Details
+          </span>
         </Link>
         <Link
           className={`${
@@ -168,10 +191,15 @@ const Sidepanel = ({ user }: User) => {
             />
           </div>
 
-          <span className={pathname == "/history"
-            ? "text-letters-color lg:inline hidden"
-            : "text-main-background lg:inline hidden"}
-            >History</span>
+          <span
+            className={
+              pathname == "/history"
+                ? "text-letters-color lg:inline hidden"
+                : "text-main-background lg:inline hidden"
+            }
+          >
+            History
+          </span>
         </Link>
         <Link
           className={`${
@@ -191,10 +219,15 @@ const Sidepanel = ({ user }: User) => {
             />
           </div>
 
-          <span className={pathname == "/user_settings/"
-            ? "text-letters-color lg:inline hidden"
-            : "text-main-background lg:inline hidden"}
-            >User Settings</span>
+          <span
+            className={
+              pathname == "/user_settings"
+                ? "text-letters-color lg:inline hidden"
+                : "text-main-background lg:inline hidden"
+            }
+          >
+            User Settings
+          </span>
         </Link>
         <li
           className="sidepanel_link bg-primary-color border-b-[3px] h-[75px]"
@@ -206,7 +239,9 @@ const Sidepanel = ({ user }: User) => {
             <TbLogout className="w-[35px] h-[35px] text-main-background " />
           </div>
 
-          <span className="lg:inline hidden text-main-background">Sign Out</span>
+          <span className="lg:inline hidden text-main-background">
+            Sign Out
+          </span>
         </li>
       </ul>
     </div>
