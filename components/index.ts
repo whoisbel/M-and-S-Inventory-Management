@@ -23,6 +23,7 @@ import DownloadButton from "./buttons/DownloadButton";
 import RedButton from "./buttons/RedButton";
 import AdminTable from "./AdminTable";
 import GreenButton from "./buttons/GreenButton";
+import Selection from "./Selection";
 export {
   Sidepanel,
   InventoryInputForm,
@@ -47,5 +48,6 @@ export {
   RedButton,
   AdminTable,
   GreenButton,
-  Textfield
+  Textfield,
+  Selection
 };
