@@ -15,7 +15,7 @@ import InventoryUpdateForm from "./inventory/inventory/InventoryUpdateForm";
 import SortModal from "./inventory/inventory/SortModal";
 import StockoutModal from "./inventory/inventory/StockoutModal";
 import StockoutForm from "./inventory/stockout/StockoutForm";
-
+import Textfield from "./Textfield";
 import SearchBar from "./SearchBar";
 import AddNewButton from "./buttons/AddNewButton";
 import CreateNewButton from "./buttons/CreateNewButton";
@@ -47,4 +47,5 @@ export {
   RedButton,
   AdminTable,
   GreenButton,
+  Textfield
 };

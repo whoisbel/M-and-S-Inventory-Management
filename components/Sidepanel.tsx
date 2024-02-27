@@ -203,16 +203,16 @@ const Sidepanel = ({ user }: User) => {
         </Link>
         <Link
           className={`${
-            pathname == "/user_settings"
+            pathname.includes("/user_settings/")
               ? " bg-main-background text-letters-color"
               : " bg-primary-color"
           } sidepanel_link h-[75px]`}
-          href="/user_settings/"
+          href="/user_settings/settings/user_info/"
         >
           <div className="set_icon">
             <IoMdSettings
               className={
-                pathname == "/user_settings"
+                pathname.includes("/user_settings/")
                   ? "text-primary-color w-[35px] h-[35px]"
                   : "text-main-background w-[35px] h-[35px]"
               }
@@ -221,7 +221,7 @@ const Sidepanel = ({ user }: User) => {
 
           <span
             className={
-              pathname == "/user_settings"
+              pathname.includes("/user_settings/")
                 ? "text-letters-color lg:inline hidden"
                 : "text-main-background lg:inline hidden"
             }
