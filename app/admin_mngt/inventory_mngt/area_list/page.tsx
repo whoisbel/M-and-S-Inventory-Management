@@ -29,9 +29,12 @@ const AreaList = () => {
           <AddNewButton />
         </div>
       </div>
-      <div className=" flex flex-col">
-        <span className="text-[20px] bold">Area List</span>
+      <div className="flex flex-col">
+        <span className="text-[20px] bold border-b-4  border-primary-color">Area List</span>
+        <div className="overflow-auto max-h-[550px] w-full">
         <AdminTable areas={areas} />
+        </div>
+        
       </div>
     </div>
   );

@@ -20,7 +20,7 @@
   @apply border-b-2 border-t-0 border-l-0 border-r-0 border-accent-gray py-2
 }
 .admin_border {
-  @apply border-t-4 border-l-0 border-r-0 border-b-0 border-primary-color
+  @apply border-t-0 border-l-0 border-r-0 border-b-0
 }
 
 .out {

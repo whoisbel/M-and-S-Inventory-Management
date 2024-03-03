@@ -20,8 +20,11 @@ const Requests = () => {
         <SearchBar />
       </div>
       <div className=" flex flex-col">
-        <span className="text-[20px] bold">Requests for Approval</span>
+        <span className="text-[20px] boldborder-b-4 border-primary-color">Requests for Approval</span>
+        <div className="overflow-auto max-h-[550px] w-full">
         <AdminTable users={users} />
+        </div>
+        
       </div>
     </div>
   );
