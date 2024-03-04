@@ -61,7 +61,6 @@ const StockoutPage = () => {
       },
     });
   }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   function getDefaultTableData() {
     const data: customTableDataType = {};
     stockout.map((stock) => {
@@ -79,7 +78,7 @@ const StockoutPage = () => {
     setTableData(getDefaultTableData());
     console.log({ tableData });
     setIsLoading(false);
-  }, [getDefaultTableData, stockout, tableData]);
+  }, [stockout]);
   return (
     <div className="h-full w-full bg-custom-white">
       <div className="bg-accent-gray w-full gap-2 flex items-center text-letters-color">
