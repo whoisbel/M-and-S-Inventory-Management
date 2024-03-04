@@ -112,9 +112,13 @@ const AreaList = () => {
           <AddNewButton onClick={handleAddNewClick} />
         </div>
       </div>
-      <div className=" flex flex-col">
-        <span className="text-[20px] bold">Area List</span>
-        <AdminTable areas={areas} onGreenButtonClick={handleUpdateClick} />
+      <div className="flex flex-col">
+        <span className="text-[20px] bold border-b-4  border-primary-color">
+          Area List
+        </span>
+        <div className="overflow-auto max-h-[550px] w-full">
+          <AdminTable areas={areas} onGreenButtonClick={handleUpdateClick} />
+        </div>
       </div>
     </div>
   );

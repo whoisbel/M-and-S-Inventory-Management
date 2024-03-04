@@ -25,6 +25,7 @@ import AdminTable from "./AdminTable";
 import GreenButton from "./buttons/GreenButton";
 import Selection from "./Selection";
 import AreaModal from "./admin_mngt/inventory_mngt/area_list/AreaModal";
+import NewCustomTable from "./NewCustomTable";
 export {
   Sidepanel,
   InventoryInputForm,
@@ -51,5 +52,6 @@ export {
   GreenButton,
   Textfield,
   Selection,
+  NewCustomTable,
   AreaModal,
 };

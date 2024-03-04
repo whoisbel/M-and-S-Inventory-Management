@@ -19,7 +19,7 @@ const AdminTable = ({
   const pathname = usePathname();
 
   return (
-    <table align="left" className="admin_border rounded-none w-auto">
+    <table align="left" className="admin_border rounded-none w-full">
       <tbody>
         {pathname == "/admin_mngt/inventory_mngt/area_list" ? (
           areas &&

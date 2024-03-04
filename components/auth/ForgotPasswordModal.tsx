@@ -289,9 +289,6 @@ const ForgotPasswordModal = ({
                         onChange={(event) => handleSelectChange(event, index)}
                         className="w-full px-4 text-[20px] border-2 flex items-center text-add-minus bg-main-background rounded-[20px] shadow-lg h-[46px] mb-[18px]"
                       >
-                        <option value={0} disabled hidden>
-                          {`Question ${index + 1}`}
-                        </option>
                         <option
                           value={securityQuestionAnswers[index].question.id}
                         >
@@ -301,6 +298,7 @@ const ForgotPasswordModal = ({
 
                       <input
                         type="text"
+                        id={index.toString()}
                         value={answer.answer}
                         className="w-full px-4 text-[20px] border-2 flex items-center text-letters-color bg-main-background rounded-[20px] shadow-lg h-[46px] mb-[18px]"
                         onChange={(event) => handleAnswerChange(event, index)}
@@ -343,7 +341,7 @@ const ForgotPasswordModal = ({
                     </p>
                   </div>
 
-                  <div className="modal-content flex flex-col justify-center items-center bg-custom-white w-[435px] p-4">
+                  <div className="modal-password flex flex-col justify-center items-center bg-custom-white w-[435px] p-4">
                     <div className="relative bg-main-background rounded-[20px] w-full h-[46px] mb-[21px] shadow-lg border-2 group">
                       <input
                         type="password"

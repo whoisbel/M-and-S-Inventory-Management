@@ -5,7 +5,7 @@ import { useEffect, useRef, useState } from "react";
 import { Doughnut, Bar, Line } from "react-chartjs-2";
 
 import { getSession, signOut } from "next-auth/react";
-import { Pagination, GradePage } from "@/components";
+import { Pagination, GradePage, DownloadButton } from "@/components";
 import { generateRandomPastelColor } from "../utils/generatePastelColor";
 import { usePathname } from "next/navigation";
 type dashboardDataType = {
@@ -217,11 +217,11 @@ export default function Dashboard() {
     <div className="w-full h-full flex flex-col">
       {/* Inventory Summary container */}
       <div className="w-full h-max bg-accent-green rounded-3xl px-4 py-2 flex flex-col flex-1">
-        <div className="w-full h-max flex justify-between items-center p-2">
+        <div className="w-full h-max flex justify-between items-center pl-2">
           <h1 className="font-bold text-letters-color text-[30px]">
             Inventory Summary
           </h1>
-          <button className="generate-report-button">Generate Report +</button>
+          < DownloadButton />
         </div>
         <div className="w-full h-full flex">
           <div className="w-full flex flex-col">

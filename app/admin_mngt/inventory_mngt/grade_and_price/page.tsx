@@ -17,7 +17,7 @@ const GradeAndPrice = () => {
     fetchGrades();
   }, []);
   return (
-    <div className="ml-3 pt-4 px-4 max-h-[750px] h-full w-full border border-add-minus rounded-lg">
+    <div className="ml-3 pt-4 px-4 max-h-[750px] h-full w-full border border-add-minus rounded-lgzzzz">
       <div className="flex justify-between mb-2">
         <div>
           {" "}
@@ -29,8 +29,11 @@ const GradeAndPrice = () => {
         </div>
       </div>
       <div className=" flex flex-col">
-        <span className="text-[20px] bold">Grade and Price List</span>
+        <span className="text-[20px] bold border-b-4  border-primary-color">Grade and Price List</span>
+        <div className="overflow-auto max-h-[550px] w-full">
         <AdminTable grades={grades} />
+        </div>
+        
       </div>
     </div>
   );
