@@ -7,7 +7,7 @@ import {
   customTableProps,
   inventoryDataType,
 } from "@/types";
-import { CustomTable, StockOutModal } from "@/components";
+import { CustomTable, DownloadButton, StockOutModal } from "@/components";
 import { Grade, Stockout } from "@prisma/client";
 import withReactContent from "sweetalert2-react-content";
 import Swal from "sweetalert2";
@@ -156,11 +156,9 @@ const StockoutPage = () => {
             >
               Create Stockout +
             </button>
-            <button className="generate-report-button">
-              Generate Report +
-            </button>
+            <DownloadButton />
           </div>
-          <div className="flex flex-col p-3 bg-custom-white">
+      <div className=" mx-5 max-h-[550px] overflow-auto border border-add-minus">
             <CustomTable
               headers={headers}
               data={tableData}
