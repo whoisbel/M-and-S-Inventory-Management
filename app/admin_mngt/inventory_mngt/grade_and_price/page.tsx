@@ -25,7 +25,7 @@ const GradeAndPrice = () => {
         </div>
         <div>
           {" "}
-          <AddNewButton />
+          <AddNewButton onClick={() => {}} />
         </div>
       </div>
       <div className=" flex flex-col">

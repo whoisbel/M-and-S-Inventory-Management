@@ -1,5 +1,4 @@
-import { GreenButton, Textfield } from "@/components"
-
+import { GreenButton, Textfield } from "@/components";
 
 const ChangePassword = () => {
   return (
@@ -22,10 +21,10 @@ const ChangePassword = () => {
         </div>
       </div>
       <div className=" absolute bottom-5 right-5 out">
-          <GreenButton />
+        <GreenButton onClick={() => {}} />
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default ChangePassword
+export default ChangePassword;

@@ -5,3 +5,14 @@ export async function GET(req: NextRequest) {
   const areas = await prisma.area.findMany();
   return NextResponse.json(areas);
 }
+
+export async function POST(req: NextRequest) {
+  const area = await req.json();
+  console.log(area);
+  await prisma.area.create({
+    data: {
+      description: area.description,
+    },
+  });
+  return NextResponse.json({ status: 200 });
+}

@@ -7,10 +7,14 @@ const AdminTable = ({
   areas,
   grades,
   users,
+  onGreenButtonClick,
+  onRedButtonClick,
 }: {
   areas?: Area[];
   grades?: Grade[];
   users?: User[];
+  onGreenButtonClick?: (val: number) => void;
+  onRedButtonClick?: (val: number) => void;
 }) => {
   const pathname = usePathname();
 
@@ -25,10 +29,10 @@ const AdminTable = ({
               <td className="body_border">
                 <div className="flex justify-end">
                   <div className="mr-1">
-                    <GreenButton />
+                    <GreenButton onClick={() => onGreenButtonClick!(area.id)} />
                   </div>
                   <div>
-                    <RedButton />
+                    <RedButton onClick={() => onRedButtonClick!(area.id)} />
                   </div>
                 </div>
               </td>
@@ -43,10 +47,12 @@ const AdminTable = ({
               <td className="body_border">
                 <div className="flex justify-end">
                   <div className="mr-1">
-                    <GreenButton />
+                    <GreenButton
+                      onClick={() => onGreenButtonClick!(grade.id)}
+                    />
                   </div>
                   <div>
-                    <RedButton />
+                    <RedButton onClick={() => onRedButtonClick!(grade.id)} />
                   </div>
                 </div>
               </td>
@@ -64,15 +70,17 @@ const AdminTable = ({
                 {pathname == "/admin_mngt/users_mngt/requests" ? (
                   <div className="flex justify-end">
                     <div className="mr-1">
-                      <GreenButton />
+                      <GreenButton
+                        onClick={() => onGreenButtonClick!(user.id)}
+                      />
                     </div>
                     <div>
-                      <RedButton />
+                      <RedButton onClick={() => onRedButtonClick!(user.id)} />
                     </div>
                   </div>
                 ) : (
                   <div className="flex justify-end">
-                    <RedButton />
+                    <RedButton onClick={() => onRedButtonClick!(user.id)} />
                   </div>
                 )}
               </td>
