@@ -7,7 +7,7 @@ import {
   customTableProps,
   inventoryDataType,
 } from "@/types";
-import { CustomTable, StockOutModal } from "@/components";
+import { CustomTable, DownloadButton, StockOutModal } from "@/components";
 import { Grade, Stockout } from "@prisma/client";
 import withReactContent from "sweetalert2-react-content";
 import Swal from "sweetalert2";
@@ -61,6 +61,7 @@ const StockoutPage = () => {
       },
     });
   }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   function getDefaultTableData() {
     const data: customTableDataType = {};
     stockout.map((stock) => {
@@ -78,7 +79,7 @@ const StockoutPage = () => {
     setTableData(getDefaultTableData());
     console.log({ tableData });
     setIsLoading(false);
-  }, [stockout]);
+  }, [getDefaultTableData, stockout, tableData]);
   return (
     <div className="h-full w-full bg-custom-white">
       <div className="bg-accent-gray w-full gap-2 flex items-center text-letters-color">
@@ -156,11 +157,9 @@ const StockoutPage = () => {
             >
               Create Stockout +
             </button>
-            <button className="generate-report-button">
-              Generate Report +
-            </button>
+            <DownloadButton />
           </div>
-          <div className="flex flex-col p-3 bg-custom-white">
+      <div className=" mx-5 max-h-[550px] overflow-auto border border-add-minus">
             <CustomTable
               headers={headers}
               data={tableData}

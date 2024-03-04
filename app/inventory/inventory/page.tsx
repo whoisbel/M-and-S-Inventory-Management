@@ -1,7 +1,7 @@
 "use client";
 "use client";
 import { useEffect, useState } from "react";
-import { SortModal, StockoutModal, InventoryUpdateForm } from "@/components";
+import { SortModal, StockoutModal, InventoryUpdateForm, DownloadButton } from "@/components";
 import { CustomTable } from "@/components";
 import { Area, Grade } from "@prisma/client";
 import Swal from "sweetalert2";
@@ -269,8 +269,11 @@ const Inventory = () => {
           <BiSearch className="-ml-[1.25em] text-primary-color" />
         </div>
       </div>
+      <div className="flex justify-end">
+        <DownloadButton />
+      </div>
 
-      <div className="flex flex-col p-3 bg-white">
+      <div className="mx-5 mb-5 max-h-screen overflow-auto border border-add-minus">
         <CustomTable
           headers={headers}
           data={tableData}
