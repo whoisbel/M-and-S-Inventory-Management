@@ -3,22 +3,22 @@ import { table } from "console"
 
 const NewCustomTable = () => {
   return (
-    <table className="table-auto rounded-none w-full">
+    <table align="left" className="table-auto border-l-0 border-r-0 border-t-0 rounded-none w-full">
         <thead>
             <tr>
-                <th>
+                <th className="header-border">
                     Date
                 </th>
-                <th>
+                <th className="header-border">
                     Venue
                 </th>
-                <th>
+                <th className="header-border">
                     Event
                 </th>
-                <th>
+                <th className="header-border">
                     User
                 </th>
-                <th>
+                <th className="header-border">
                     Actions
                 </th>
             </tr>

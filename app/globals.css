@@ -16,11 +16,19 @@
   }
 }
 
+.header-border {
+  @apply border-b-4 border-t-0 border-l-0 border-r-0 text-left border-primary-color py-2
+}
+
 .body_border {
   @apply border-b-2 border-t-0 border-l-0 border-r-0 border-accent-gray py-2
 }
 .admin_border {
   @apply border-t-0 border-l-0 border-r-0 border-b-0
+}
+
+.icon-button {
+  @apply h-[45px] w-[45px] bg-accent-gray rounded-lg border border-add-minus flex justify-center p-2 m-5
 }
 
 .out {

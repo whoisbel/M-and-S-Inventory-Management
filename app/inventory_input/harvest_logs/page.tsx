@@ -5,7 +5,7 @@ import withReactContent from "sweetalert2-react-content";
 import { swalCustomClass } from "@/utils/swalConfig";
 import { categoryFormData, harvestLogsCategoryDict } from "@/types";
 import { Area, Grade } from "@prisma/client";
-import { CustomTable, LoadingRing } from "@/components";
+import { CustomTable, DownloadButton, LoadingRing } from "@/components";
 import { useRouter } from "next/navigation";
 const HarvestLogs = () => {
   const [harvestLogs, setHarvestLogs] = useState<harvestLogsCategoryDict>({});
@@ -241,7 +241,10 @@ const HarvestLogs = () => {
           ))}
         </select>
       </div>
-      <div className="h-full w-full  p-3 flex flex-col gap-3">
+      <div className=" flex justify-end">
+        <DownloadButton />
+      </div>
+      <div className=" mx-5 max-h-[550px] overflow-auto border border-add-minus">
         <CustomTable
           headers={headers}
           data={tableData}

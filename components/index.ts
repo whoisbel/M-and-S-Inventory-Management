@@ -24,6 +24,7 @@ import RedButton from "./buttons/RedButton";
 import AdminTable from "./AdminTable";
 import GreenButton from "./buttons/GreenButton";
 import Selection from "./Selection";
+import NewCustomTable from "./NewCustomTable";
 export {
   Sidepanel,
   InventoryInputForm,
@@ -49,5 +50,6 @@ export {
   AdminTable,
   GreenButton,
   Textfield,
-  Selection
+  Selection,
+  NewCustomTable
 };

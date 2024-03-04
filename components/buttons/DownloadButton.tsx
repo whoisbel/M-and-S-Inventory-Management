@@ -2,8 +2,8 @@ import { IoMdDownload } from "react-icons/io";
 
 const DownloadButton = () => {
   return (
-    <div className="set_icon out">
-      <IoMdDownload className="w-[35px] h-[35px]"/>
+    <div className="icon-button">
+      <IoMdDownload className=" w-[30px] h-[30px] text-add-minus"/>
     </div>
   )
 }

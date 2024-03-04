@@ -20,7 +20,7 @@ export default function RootLayout({
               : "bg-neutral-200 text-neutral-800 "
           }`}
         >
-          History
+          Action Log
         </Link>
       </div>
       {children}
