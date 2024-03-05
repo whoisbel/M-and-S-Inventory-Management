@@ -7,7 +7,7 @@ import {
   customTableProps,
   inventoryDataType,
 } from "@/types";
-import { CustomTable } from "@/components";
+import { CustomTable, DownloadButton } from "@/components";
 import { Area, Grade } from "@prisma/client";
 
 import { Stock } from "@prisma/client";
@@ -120,17 +120,10 @@ const AvailableProducts = () => {
               <BiSearch className="-ml-[1.25em] text-primary-color" />
             </div>
           </div>
-          <div className="w-full flex justify-end p-4 self-end">
-            <button
-              className="generate-report-button"
-              onClick={() => {
-                console.log(availableProducts[0].id);
-              }}
-            >
-              Generate Report +
-            </button>
+          <div className=" flex justify-end">
+            <DownloadButton />
           </div>
-          <div className="flex flex-col p-3 bg-custom-white">
+          <div className=" mx-5 max-h-[550px] overflow-auto border border-add-minus">
             <CustomTable
               headers={headers}
               data={tableData}

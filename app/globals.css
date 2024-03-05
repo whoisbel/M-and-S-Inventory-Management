@@ -16,6 +16,34 @@
   }
 }
 
+.title-bold {
+  @apply text-[50px] font-bold
+}
+
+.title-normal {
+  @apply text-[50px]
+}
+
+.subtitle-bold {
+  @apply text-[32px] font-bold
+}
+
+.subtitle-normal {
+  @apply text-[32px]
+}
+
+.small-normal {
+  @apply text-[20px]
+}
+
+.small-bold {
+  @apply text-[20px] font-bold
+}
+
+.vsmall-normal {
+  @apply text-[12px]
+}
+
 .header-border {
   @apply border-b-4 border-t-0 border-l-0 border-r-0 text-left border-primary-color py-2;
 }

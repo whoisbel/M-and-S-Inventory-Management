@@ -132,11 +132,11 @@ export default function Dashboard() {
         position: "left" as const,
         align: "start" as const,
         labels: {
-          boxWidth: 30,
-          boxHeight: 30,
+          boxWidth: 25,
+          boxHeight: 25,
           color: "#18191A" as const,
           font: {
-            size: 30,
+            size: 20,
             weight: "bold" as const,
           },
         },
@@ -216,124 +216,70 @@ export default function Dashboard() {
     // Parent container
     <div className="w-full h-full flex flex-col">
       {/* Inventory Summary container */}
-      <div className="w-full h-max bg-accent-green rounded-3xl px-4 py-2 flex flex-col flex-1">
-        <div className="w-full h-max flex justify-between items-center pl-2">
-          <h1 className="font-bold text-letters-color text-[30px]">
+      <div className="w-full h-1/2 bg-accent-green rounded-3xl px-4 flex flex-col flex-1">
+        <div className="w-full flex justify-between items-center">
+          <h1 className="subtitle-bold text-letters-color text-[15px]">
             Inventory Summary
           </h1>
-          < DownloadButton />
+          <DownloadButton />
         </div>
-        <div className="w-full h-full flex">
-          <div className="w-full flex flex-col">
-            <div className="w-full h-full pr-4 pb-4">
-              <div className="w-full h-full bg-custom-white rounded-3xl p-4 flex flex-col">
-                <div className="w-full h-full text-letters-color flex flex-col p-4">
-                  {/* TODO: By Grade/Area Regular A/B/C/D KG Pie Chart, Time series chart, and Yearly Chart */}
-                  <div className="flex w-full justify-evenly">
-                    {/* BY GRADE/AREA HERE*/}
-                    <button
-                      className={
-                        sortOption === "grade"
-                          ? "w-full h-[50px] rounded-xl bg-accent-green flex justify-center items-center"
-                          : "w-full h-[50px] rounded-xl bg-custom-white border-2 border-opacity-40 flex ju" +
-                            "stify-center items-center"
+        <div className="w-full h-[calc(100%-20px)] max-h-screen grid grid-cols-2 gap-5 ">
+          <div className=" bg-custom-white mb-5 rounded-3xl">
+            <div className=" text-letters-color h-full flex flex-col p-4">
+              {/* TODO: By Grade/Area Regular A/B/C/D KG Pie Chart, Time series chart, and Yearly Chart */}
+
+              {sortOption == "grade" && dashboardData?.gradeSummary && (
+                <>
+                  <div className="w-full h-full ">
+                    <GradePage
+                      page={
+                        generateGradeElements(dashboardData.gradeSummary)[
+                          currentPage
+                        ]
                       }
-                      onClick={() => setSortOption("grade")}
-                    >
-                      <h1
-                        className={
-                          sortOption === "grade"
-                            ? "font-bold text-[20px] text-letters-color"
-                            : "text-[20px] text-letters-color"
-                        }
-                      >
-                        By Grade
-                      </h1>
-                    </button>
-                    <button
-                      className={
-                        sortOption === "area"
-                          ? "w-full h-[50px] rounded-xl bg-accent-green flex justify-center items-center ml-[1rem] "
-                          : "w-full h-[50px] rounded-xl bg-custom-white border-2 border-opacity-40 flex  ml-[1rem] ju" +
-                            "stify-center items-center"
-                      }
-                      onClick={() => setSortOption("area")}
-                    >
-                      <h1
-                        className={
-                          sortOption === "area"
-                            ? "font-bold text-[20px] text-letters-color"
-                            : "text-[20px] text-letters-color"
-                        }
-                      >
-                        By Area
-                      </h1>
-                    </button>
+                      generateRandomPastelColor={generateRandomPastelColor}
+                    />
                   </div>
-                  {sortOption == "grade" && dashboardData?.gradeSummary && (
-                    <>
-                      <div className="w-full h-full pt-[20px]">
-                        <GradePage
-                          page={
-                            generateGradeElements(dashboardData.gradeSummary)[
-                              currentPage
-                            ]
-                          }
-                          generateRandomPastelColor={generateRandomPastelColor}
-                        />
-                      </div>
-                      <Pagination
-                        numPages={
-                          dashboardData.gradeSummary
-                            ? generateGradeElements(dashboardData.gradeSummary)
-                                .length
-                            : 0
-                        }
-                        currentPage={currentPage}
-                        onPageChange={setCurrentPage}
-                      />
-                    </>
-                  )}
-                </div>
-              </div>
+                  <Pagination
+                    numPages={
+                      dashboardData.gradeSummary
+                        ? generateGradeElements(dashboardData.gradeSummary)
+                            .length
+                        : 0
+                    }
+                    currentPage={currentPage}
+                    onPageChange={setCurrentPage}
+                  />
+                </>
+              )}
             </div>
           </div>
-          <div className="w-full h-full rounded-3xl ">
-            <div className="w-full h-full rounded-3xl pb-4 ">
-              <div className="bg-custom-white w-full h-full rounded-3xl text-letters-color">
-                {/* Pie Chart HERE */}
-                <div className="w-full h-full flex justify-center items-center">
-                  <Doughnut data={donutData} options={donutOptions} />
-                </div>
-              </div>
+          <div className=" bg-custom-white mb-5 rounded-3xl">
+            <div className="w-full h-full flex justify-center items-center">
+              <Doughnut data={donutData} options={donutOptions} />
             </div>
           </div>
         </div>
       </div>
-      {/* Seasonal and Yearly chart container */}
-      <div className="w-full h-full flex flex-1">
-        {/* Seasonal and Yearly chart container */}
-        <div className="w-full h-full flex">
-          {/* Seasonal chart container */}
-          <div className="w-full h-full rounded-3xl pr-4 pt-4">
-            <div className="w-full h-full rounded-3xl bg-custom-white p-4">
-              <h1 className="font-bold text-letters-color text-[30px]">
+      <div className="w-full h-1/2 ">
+        <div className="w-full h-[calc(100%-20px)] max-h-screen grid grid-cols-2 gap-5 ">
+          <div className=" bg-custom-white p-4 mt-4 rounded-3xl">
+          <h1 className="subtitle-bold text-letters-color">
                 Seasonal Chart
               </h1>
               <Line data={lineData} options={line_options} />
-            </div>
           </div>
-          {/* Yearly chart container */}
-          <div className="w-full h-full rounded-3xl pt-4">
-            <div className="w-full h-full rounded-3xl bg-custom-white p-4">
-              <h1 className="font-bold text-letters-color text-[30px]">
+          <div className=" bg-custom-white p-4 mt-4 rounded-3xl">
+          <h1 className="subtitle-bold text-letters-color">
                 Yearly Chart
               </h1>
               <Bar data={barData} options={bar_options} />
-            </div>
           </div>
+          
         </div>
       </div>
+      {/* Seasonal and Yearly chart container */}
+
     </div>
   );
 }
