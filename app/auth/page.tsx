@@ -2,10 +2,14 @@
 import React, { ChangeEvent, useEffect, useState } from "react";
 import { signIn } from "next-auth/react";
 
-import { createAccountData, loginAccountData, forgotPasswordData } from "@/types";
+import {
+  createAccountData,
+  loginAccountData,
+  forgotPasswordData,
+} from "@/types";
 import { RegistrationModal } from "@/components";
 import { LoginModal } from "@/components";
-import { ForgotPasswordModal } from "@/components"
+import { ForgotPasswordModal } from "@/components";
 const Auth = () => {
   const [isSetup, setIsSetup] = useState(false);
   const [securityQuestions, setSecurityQuestions] = useState([]);
@@ -22,12 +26,16 @@ const Auth = () => {
     username: "",
     code: "",
   });
-  const [forgotPasswordData, setShowForgotPasswordData] = useState<forgotPasswordData>({
-    firstName: "",
-    lastName: "",
-    username: "",
-    securityQuestions: []
-  })
+  const [forgotPasswordData, setShowForgotPasswordData] =
+    useState<forgotPasswordData>({
+      firstName: "",
+      lastName: "",
+      username: "",
+      securityQuestions: [],
+      newPassword: "",
+      confNewPassword: "",
+      securityQuestionsAnswers: [],
+    });
   const [loginData, setLoginData] = useState<loginAccountData>({
     username: "",
     password: "",
@@ -62,11 +70,12 @@ const Auth = () => {
           securityQuestions={securityQuestions}
         />
       )}
-      {(showForgotPasswordModal && !isSetup) && (
-        <ForgotPasswordModal 
-        setShowForgotPasswordModal={setShowForgotPasswordModal}
-        forgotPasswordData={forgotPasswordData} 
-        setShowForgotPasswordData={setShowForgotPasswordData}/>
+      {showForgotPasswordModal && !isSetup && (
+        <ForgotPasswordModal
+          setShowForgotPasswordModal={setShowForgotPasswordModal}
+          forgotPasswordData={forgotPasswordData}
+          setShowForgotPasswordData={setShowForgotPasswordData}
+        />
       )}
     </div>
   );

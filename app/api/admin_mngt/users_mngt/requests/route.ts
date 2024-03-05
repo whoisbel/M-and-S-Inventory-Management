@@ -8,7 +8,7 @@ export async function GET(req: NextRequest) {
     },
     select: {
       id: true,
-      email: true,
+      userName: true,
       firstName: true,
       lastName: true,
       hasAccess: true,

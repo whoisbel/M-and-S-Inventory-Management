@@ -159,8 +159,8 @@ const StockOutModal = ({
           )}
           {isError.stock && (
             <p className="flex justify-center items-center text-red-500">
-              <BiError className=" h-[20px] w-[20px] mr-4" /> Stock doesn't
-              exist.
+              <BiError className=" h-[20px] w-[20px] mr-4" />{" "}
+              {"Stock doesn't exist."}
             </p>
           )}
         </div>

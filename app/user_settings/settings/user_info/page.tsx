@@ -1,3 +1,4 @@
+"use client";
 import { GreenButton, RedButton, Textfield } from "@/components";
 
 const UserInfo = () => {
@@ -21,7 +22,7 @@ const UserInfo = () => {
         </div>
       </div>
       <div className=" absolute bottom-5 right-5 out">
-          <GreenButton />
+        <GreenButton onClick={() => {}} />
       </div>
     </div>
   );

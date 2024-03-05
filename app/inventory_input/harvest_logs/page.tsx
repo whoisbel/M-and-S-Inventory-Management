@@ -87,7 +87,7 @@ const HarvestLogs = () => {
 
     const onUpdate = async (event: FormEvent<HTMLFormElement>) => {
       event.preventDefault();
-      swal.showLoading();
+      swal.showLoading(null);
       const formData = new FormData(event.currentTarget);
 
       const response = await fetch("/api/inventory_input/harvest_log", {

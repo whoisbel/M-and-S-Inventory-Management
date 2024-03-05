@@ -10,7 +10,7 @@ export default function AdminLayout({
 }>) {
   const pathName = usePathname();
   return (
-    <div className="flex flex-col h-full text-black bg-accent-green p-3 rounded-lg">
+    <div className="flex flex-col h-full text-black bg-accent-green p-3 rounded-lg max-h-screen">
       <div className="tab_buttons">
         <Link
           href="/admin_mngt/inventory_mngt/area_list"
@@ -33,7 +33,7 @@ export default function AdminLayout({
           Users Management
         </Link>
       </div>
-      <div className="flex p-4 h-full bg-white">
+      <div className="flex p-4 h-full bg-white ">
         <SubSidepanel />
         {children}
       </div>
