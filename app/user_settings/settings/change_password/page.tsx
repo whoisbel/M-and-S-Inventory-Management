@@ -1,3 +1,4 @@
+"use client";
 import { GreenButton, Textfield } from "@/components";
 
 const ChangePassword = () => {

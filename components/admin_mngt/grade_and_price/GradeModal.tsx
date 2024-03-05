@@ -2,48 +2,65 @@
 import { useEffect, useState } from "react";
 import Swal from "sweetalert2";
 import { swalCustomClass } from "@/utils/swalConfig";
-import { Area } from "@prisma/client";
+import { Area, Grade } from "@prisma/client";
 
-const AreaModal = ({
+const GradeModal = ({
   showModal,
   swal,
   onSubmit,
   type,
-  area,
+  grade,
 }: {
   showModal: (val: boolean) => void;
   swal: typeof Swal;
-  onSubmit: (areaDescription: string) => {};
+  onSubmit: (val: Grade) => void;
   type: string;
-  area?: Area;
+  grade?: Grade;
 }) => {
-  const [inputArea, setInputArea] = useState<Area>({ description: "" });
+  const [inputGrade, setInputGrade] = useState<Grade>({
+    description: "",
+    price: 0,
+  });
   const [error, setError] = useState("");
 
   useEffect(() => {
-    if (area) {
-      setInputArea(area);
+    if (grade) {
+      setInputGrade(grade);
     }
   }, []);
-  async function handleSubmit() {
-    if (inputArea.description.trim() == "") {
-      setError("Please type the area description.");
+
+  function handleSubmit() {
+    if (inputGrade.description.trim() == "") {
+      setError("Please type the grade.");
       return;
     }
-    onSubmit(inputArea);
+    onSubmit(inputGrade);
   }
 
   return (
     <div className="flex flex-col gap-10 p-10">
-      <h1 className="text-[40px]">{type == "add" ? "Add" : "Update"} Area</h1>
-      <div className="flex gap-10 items-baseline">
-        <label>Area Description:</label>
+      <h1 className="text-[40px]">{type == "add" ? "Add" : "Update"} Grade</h1>
+      <div className="grid grid-cols-2 justify-start items-start gap-y-2">
+        <label>Description:</label>
         <input
-          value={inputArea.description}
+          value={inputGrade.description}
           onChange={(e) =>
-            setInputArea({ ...inputArea, description: e.target.value })
+            setInputGrade({ ...inputGrade, description: e.target.value })
           }
           type="text"
+          className="border-add-minus border-2 p-2 rounded outline-add-minus"
+        />
+
+        <label>Price: </label>
+        <input
+          type="number"
+          value={inputGrade.price == 0 ? "" : inputGrade.price}
+          onChange={(e) => {
+            setInputGrade({
+              ...inputGrade,
+              price: +e.target.value != 0 ? parseFloat(e.target.value) : 0,
+            });
+          }}
           className="border-add-minus border-2 p-2 rounded outline-add-minus"
         />
       </div>
@@ -69,4 +86,4 @@ const AreaModal = ({
   );
 };
 
-export default AreaModal;
+export default GradeModal;

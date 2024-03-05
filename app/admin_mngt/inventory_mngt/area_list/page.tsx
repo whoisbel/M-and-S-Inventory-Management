@@ -47,6 +47,51 @@ const AreaList = () => {
       },
     });
   }
+  async function handleDeleteArea(id: number) {
+    const res = await fetch("/api/admin_mngt/inventory_mngt/area_list", {
+      method: "DELETE",
+      body: JSON.stringify(id),
+    });
+    if (res.ok) {
+      swal
+        .fire({
+          title: "Area Deleted",
+          icon: "success",
+          customClass: swalCustomClass,
+        })
+        .then(() => {
+          swal.close();
+          location.reload();
+        });
+    } else {
+      swal.fire({
+        title: "Error",
+        text: "Area could not be deleted, it is probably in use",
+        icon: "error",
+        customClass: swalCustomClass,
+      });
+    }
+  }
+
+  async function handleUpdateAreaSubmit(area: Area) {
+    const res = await fetch("/api/admin_mngt/inventory_mngt/area_list", {
+      method: "PATCH",
+      body: JSON.stringify(area),
+    });
+    if (res.ok) {
+      setIsUpdateAlertShown(false);
+      swal
+        .fire({
+          title: "Area Updated",
+          icon: "success",
+          customClass: swalCustomClass,
+        })
+        .then(() => {
+          swal.close();
+          location.reload();
+        });
+    }
+  }
 
   useEffect(() => {
     async function fetchAreas() {
@@ -80,7 +125,7 @@ const AreaList = () => {
   }
 
   return (
-    <div className="ml-3 pt-4 px-4 max-h-[750px] overflow-y-scroll min-h-full w-full border border-add-minus rounded-lg">
+    <div className="ml-3 pt-4 px-4  w-full border border-add-minus rounded-lg">
       {isAddAlertShown &&
         createPortal(
           <AreaModal
@@ -95,7 +140,7 @@ const AreaList = () => {
         createPortal(
           <AreaModal
             type="update"
-            onSubmit={handleAddAreaSubmit}
+            onSubmit={handleUpdateAreaSubmit}
             swal={swal}
             showModal={setIsUpdateAlertShown}
             area={areaToUpdate}
@@ -116,8 +161,12 @@ const AreaList = () => {
         <span className="text-[20px] bold border-b-4  border-primary-color">
           Area List
         </span>
-        <div className="overflow-auto max-h-[550px] w-full">
-          <AdminTable areas={areas} onGreenButtonClick={handleUpdateClick} />
+        <div className="overflow-auto max-h-[calc(100vh-220px)] w-full">
+          <AdminTable
+            areas={areas}
+            onGreenButtonClick={handleUpdateClick}
+            onRedButtonClick={handleDeleteArea}
+          />
         </div>
       </div>
     </div>

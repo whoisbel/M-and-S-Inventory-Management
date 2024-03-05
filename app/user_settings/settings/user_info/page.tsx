@@ -1,3 +1,4 @@
+"use client";
 import { GreenButton, RedButton, Textfield } from "@/components";
 
 const UserInfo = () => {
