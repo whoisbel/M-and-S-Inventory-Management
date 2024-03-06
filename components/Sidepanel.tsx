@@ -207,7 +207,7 @@ const Sidepanel = ({ user }: User) => {
               ? " bg-main-background text-letters-color"
               : " bg-primary-color"
           } sidepanel_link h-[75px]`}
-          href="/user_settings/settings/user_info/"
+          href="/user_settings/user_info/"
         >
           <div className="set_icon">
             <IoMdSettings

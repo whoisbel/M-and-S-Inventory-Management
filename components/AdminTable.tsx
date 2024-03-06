@@ -29,10 +29,14 @@ const AdminTable = ({
               <td className="body_border">
                 <div className="flex justify-end">
                   <div className="mr-1">
-                    <GreenButton onClick={() => onGreenButtonClick!(area.id)} />
+                    <GreenButton onClick={() => onGreenButtonClick!(area.id)}>
+                      Update
+                    </GreenButton>
                   </div>
                   <div>
-                    <RedButton onClick={() => onRedButtonClick!(area.id)} />
+                    <RedButton onClick={() => onRedButtonClick!(area.id)}>
+                      Delete
+                    </RedButton>
                   </div>
                 </div>
               </td>
@@ -47,12 +51,14 @@ const AdminTable = ({
               <td className="body_border">
                 <div className="flex justify-end">
                   <div className="mr-1">
-                    <GreenButton
-                      onClick={() => onGreenButtonClick!(grade.id)}
-                    />
+                    <GreenButton onClick={() => onGreenButtonClick!(grade.id)}>
+                      Update
+                    </GreenButton>
                   </div>
                   <div>
-                    <RedButton onClick={() => onRedButtonClick!(grade.id)} />
+                    <RedButton onClick={() => onRedButtonClick!(grade.id)}>
+                      Delete
+                    </RedButton>
                   </div>
                 </div>
               </td>
@@ -70,17 +76,21 @@ const AdminTable = ({
                 {pathname == "/admin_mngt/users_mngt/requests" ? (
                   <div className="flex justify-end">
                     <div className="mr-1">
-                      <GreenButton
-                        onClick={() => onGreenButtonClick!(user.id)}
-                      />
+                      <GreenButton onClick={() => onGreenButtonClick!(user.id)}>
+                        Approve
+                      </GreenButton>
                     </div>
                     <div>
-                      <RedButton onClick={() => onRedButtonClick!(user.id)} />
+                      <RedButton onClick={() => onRedButtonClick!(user.id)}>
+                        Deny
+                      </RedButton>
                     </div>
                   </div>
                 ) : (
                   <div className="flex justify-end">
-                    <RedButton onClick={() => onRedButtonClick!(user.id)} />
+                    <RedButton onClick={() => onRedButtonClick!(user.id)}>
+                      Remove
+                    </RedButton>
                   </div>
                 )}
               </td>
@@ -95,3 +105,12 @@ const AdminTable = ({
 };
 
 export default AdminTable;
+/** {pathname.includes("/admin_mngt/inventory_mngt/") ? (
+          <span>Delete</span>
+        ) : pathname.includes("/admin_mngt/users-mngt/requests") ? (
+          <span>Deny</span>
+        ) : pathname.includes("/admin_mngt/users_mngt/manage_users") ? (
+          <span>Remove</span>
+        ) : (
+          <span>Cancel</span>
+        )} */
