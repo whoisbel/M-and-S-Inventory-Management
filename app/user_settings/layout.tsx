@@ -11,12 +11,12 @@ export default function RootLayout({
 }>) {
   const pathName = usePathname();
   return (
-<div className="flex flex-col h-full bg-accent-green p-3 rounded-lg">
+    <div className="flex flex-col h-full bg-accent-green p-3 rounded-lg text-black">
       <div className="tab_buttons">
         <Link
           href="/user_settings/user_info"
           className={`${
-            pathName.includes("/user_settings") 
+            pathName.includes("/user_settings")
               ? "bg-neutral-300 border-b-2 border-primary-color text-black"
               : "bg-neutral-200 text-neutral-800 "
           }`}
@@ -26,9 +26,8 @@ export default function RootLayout({
       </div>
       <div className="flex p-4 h-full bg-white">
         <SubSidepanel />
-      {children}
+        {children}
       </div>
-      
     </div>
   );
 }

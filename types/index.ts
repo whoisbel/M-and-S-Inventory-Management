@@ -108,4 +108,11 @@ export type forgotPasswordData = {
   confNewPassword: string;
   [key: string]: string | boolean | string[];
 };
+
+export type changePasswordType = {
+  oldPassword: string;
+  newPassword: string;
+  confNewPassword: string;
+  [key: string]: string;
+};
 export type customTableDataType = { [key: number]: string[] };

@@ -78,9 +78,10 @@ const GradeAndPrice = () => {
   }
   async function handleUpdateSubmit(grade: Grade) {
     const res = await fetch("/api/admin_mngt/inventory_mngt/grade_and_price", {
-      method: "UPDATE",
+      method: "PATCH",
       body: JSON.stringify(grade),
     });
+    console.log(await res.json());
     if (res.ok) {
       swal
         .fire({
@@ -91,8 +92,16 @@ const GradeAndPrice = () => {
         .then(() => {
           location.reload();
         });
+    } else {
+      const { error } = await res.json();
+      swal.fire({
+        title: error,
+        icon: "error",
+        customClass: swalCustomClass,
+      });
     }
   }
+
   async function handleDelete(id: number) {
     const res = await fetch("/api/admin_mngt/inventory_mngt/grade_and_price", {
       method: "DELETE",

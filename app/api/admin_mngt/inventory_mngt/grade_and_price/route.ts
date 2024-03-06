@@ -24,16 +24,22 @@ export async function POST(req: NextRequest) {
 
 export async function PATCH(req: NextRequest) {
   const grade = await req.json();
+  console.log({ grade });
 
   //if the new desription matches the existing descritpions of the different grade
   const doesExist = await prisma.grade.findFirst({
     where: {
-      description: grade.desription,
-      id: {
-        not: grade.id,
-      },
+      AND: [
+        {
+          id: {
+            not: grade.id,
+          },
+          description: grade.description,
+        },
+      ],
     },
   });
+  console.log({ doesExist });
   if (doesExist) {
     return NextResponse.json(
       { error: "Grade description already exist" },

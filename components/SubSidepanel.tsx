@@ -64,38 +64,40 @@ const SubSidepanel = () => {
           </>
         )}
         {/* users settings here*/}
-        {pathname.includes("/user_settings/settings") && <>
-        <Link
-            className={`${
-              pathname == "/user_settings/settings/user_info" 
-              ? " border-b-primary-color" 
-              : "border-b-accent-gray "
-            } h-[50px] border-b-2 pb-0 flex items-end `}
-            href= "/user_settings/settings/user_info"
-          >
-            User Information
-          </Link>
-          <Link
-            className={`${
-              pathname == "/user_settings/settings/change_password"
-              ? "border-b-primary-color" 
-              : "border-b-accent-gray "
-            } h-[50px] border-b-2 pb-0 flex items-end`}
-            href="/user_settings/settings/change_password"
-          >
-            Change Password
-          </Link>
-          <Link
-            className={`${
-              pathname == "/user_settings/settings/recovery"
-              ? "border-b-primary-color" 
-              : "border-b-accent-gray "
-            } h-[50px] border-b-2 pb-0 flex items-end`}
-            href="/user_settings/settings/recovery"
-          >
-            Recovery Settings
-          </Link>
-        </>}  
+        {pathname.includes("/user_settings") && (
+          <>
+            <Link
+              className={`${
+                pathname == "/user_settings/user_info"
+                  ? " border-b-primary-color"
+                  : "border-b-accent-gray "
+              } h-[50px] border-b-2 pb-0 flex items-end `}
+              href="/user_settings/user_info"
+            >
+              User Information
+            </Link>
+            <Link
+              className={`${
+                pathname == "/user_settings/change_password"
+                  ? "border-b-primary-color"
+                  : "border-b-accent-gray "
+              } h-[50px] border-b-2 pb-0 flex items-end`}
+              href="/user_settings/change_password"
+            >
+              Change Password
+            </Link>
+            <Link
+              className={`${
+                pathname == "/user_settings/recovery"
+                  ? "border-b-primary-color"
+                  : "border-b-accent-gray "
+              } h-[50px] border-b-2 pb-0 flex items-end`}
+              href="/user_settings/recovery"
+            >
+              Recovery Settings
+            </Link>
+          </>
+        )}
       </ul>
     </div>
   );
