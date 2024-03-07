@@ -2,7 +2,7 @@
 import { GreenButton, RedButton } from ".";
 import { usePathname } from "next/navigation";
 import { Area, Grade, User } from "@prisma/client";
-
+import { useSession } from "next-auth/react";
 const AdminTable = ({
   areas,
   grades,
@@ -17,7 +17,7 @@ const AdminTable = ({
   onRedButtonClick?: (val: number) => void;
 }) => {
   const pathname = usePathname();
-
+  const { data: session, status } = useSession();
   return (
     <table align="left" className="admin_border rounded-none w-full">
       <tbody>
@@ -68,7 +68,14 @@ const AdminTable = ({
           users &&
           users.map((user: User) => (
             <tr key={user.id}>
-              <td className="body_border">{`${user.firstName} ${user.lastName}`}</td>
+              <td className="body_border">{`${user.firstName} ${
+                user.lastName
+              } ${
+                user.firstName === session?.user.firstName &&
+                user.lastName === session?.user.lastName
+                  ? "(You)"
+                  : ""
+              }`}</td>
               <td className="body_border">
                 {user.isAdmin ? "Admin" : "Employee"}
               </td>
@@ -88,9 +95,14 @@ const AdminTable = ({
                   </div>
                 ) : (
                   <div className="flex justify-end">
-                    <RedButton onClick={() => onRedButtonClick!(user.id)}>
-                      Remove
-                    </RedButton>
+                    {user.firstName === session?.user.firstName &&
+                    user.lastName === session?.user.lastName ? (
+                      ""
+                    ) : (
+                      <RedButton onClick={() => onRedButtonClick!(user.id)}>
+                        Remove
+                      </RedButton>
+                    )}
                   </div>
                 )}
               </td>
@@ -103,7 +115,6 @@ const AdminTable = ({
     </table>
   );
 };
-
 export default AdminTable;
 /** {pathname.includes("/admin_mngt/inventory_mngt/") ? (
           <span>Delete</span>
