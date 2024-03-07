@@ -123,7 +123,14 @@ const AreaList = () => {
         });
     }
   }
+  const [searchTerm, setSearchTerm] = useState("");
+  const handleSearch = (searchTerm: string) => {
+    setSearchTerm(searchTerm);
+  };
 
+  const filteredAreas = areas.filter((area) =>
+    area.description.toLowerCase().includes(searchTerm.toLowerCase())
+  );
   return (
     <div className="ml-3 pt-4 px-4  w-full border border-add-minus rounded-lg">
       {isAddAlertShown &&
@@ -150,7 +157,7 @@ const AreaList = () => {
       <div className="flex justify-between mb-2">
         <div>
           {" "}
-          <SearchBar />{" "}
+          <SearchBar onSearch={handleSearch} />{" "}
         </div>
         <div>
           {" "}
@@ -163,7 +170,7 @@ const AreaList = () => {
         </span>
         <div className="overflow-auto max-h-[calc(100vh-220px)] w-full">
           <AdminTable
-            areas={areas}
+            areas={filteredAreas}
             onGreenButtonClick={handleUpdateClick}
             onRedButtonClick={handleDeleteArea}
           />
