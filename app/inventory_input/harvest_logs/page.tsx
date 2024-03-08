@@ -216,7 +216,7 @@ const HarvestLogs = () => {
     // Write the workbook and download it as an Excel file
     XLSX.writeFile(wb, "table_data.xlsx");
   }
-  const headers = ["Harvest Date", "Area", "Quantity", "Actions"];
+  const headers = ["Harvest Date", "Area", "Quantity", " "];
   return (
     <div className="h-full w-full bg-white text-black flex flex-col">
       <div className="bg-accent-gray py-2 px-3 flex">
@@ -268,7 +268,7 @@ const HarvestLogs = () => {
       <div className=" flex justify-end">
         <DownloadButton onClick={downloadTableAsExcel} />
       </div>
-      <div className=" mx-5 max-h-[550px] overflow-auto border border-add-minus">
+      <div className="overflow-auto mx-5 max-h-[calc(100vh-220px)]">
         <CustomTable
           headers={headers}
           data={tableData}

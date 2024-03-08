@@ -128,7 +128,7 @@ const AvailableProducts = () => {
           <div className=" flex justify-end">
             <DownloadButton onClick={downloadTableAsExcel} />
           </div>
-          <div className=" mx-5 max-h-[550px] overflow-auto border border-add-minus">
+          <div className="overflow-auto mx-5 max-h-[calc(100vh-220px)]">
             <CustomTable
               headers={headers}
               data={tableData}
