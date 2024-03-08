@@ -24,7 +24,7 @@ export async function POST(request: NextRequest) {
     harvestLogs.push(harvestLog);
   }
   await prisma.$transaction([
-    await prisma.harvestLog.createMany({
+    prisma.harvestLog.createMany({
       data: harvestLogs,
     }),
   ]);
