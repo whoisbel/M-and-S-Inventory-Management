@@ -124,16 +124,6 @@ const AvailableProducts = () => {
                 ))}
               </select>
             </div>
-            <div className="flex-1 flex justify-end items-center ">
-              <input
-                type="text"
-                name="search"
-                id="search"
-                className="rounded-lg placeholder:pl-2"
-                placeholder="Search"
-              />
-              <BiSearch className="-ml-[1.25em] text-primary-color" />
-            </div>
           </div>
           <div className=" flex justify-end">
             <DownloadButton onClick={downloadTableAsExcel} />
