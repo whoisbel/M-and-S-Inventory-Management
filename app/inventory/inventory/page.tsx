@@ -175,7 +175,7 @@ const Inventory = () => {
     );
 
     // Exclude the "actions" header
-    const headersWithoutActions = headers.slice(0, -1);
+    const headersWithoutActions = headers.slice(0, -1); // Exclude the last header ("actions")
 
     // Create a new worksheet
     const ws = XLSX.utils.aoa_to_sheet([
