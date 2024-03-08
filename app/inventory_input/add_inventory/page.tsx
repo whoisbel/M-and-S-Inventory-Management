@@ -1,6 +1,6 @@
 "use client";
 import { ChangeEvent, useState } from "react";
-import { InventoryInputForm } from "@/components";
+import { InventoryInputForm, GreenButton } from "@/components";
 import { FaPlus } from "react-icons/fa";
 import { addFormData } from "@/types";
 import { useEffect } from "react";
@@ -109,14 +109,15 @@ const AddInventory = () => {
             />
           ))}
         </div>
-        <button
-          className="bg-accent-gray py-2 px-7  border-2 font-semibold rounded-xl border-primary-color mt-auto ml-auto w-[150px]"
-          onClick={() => {
-            handleSaveForm();
-          }}
-        >
-          Save
-        </button>
+        <div className="mt-auto ml-auto w-[150px]">
+          <GreenButton
+            onClick={() => {
+              handleSaveForm();
+            }}
+          >
+            Save
+          </GreenButton>
+        </div>
       </div>
     </div>
   );
