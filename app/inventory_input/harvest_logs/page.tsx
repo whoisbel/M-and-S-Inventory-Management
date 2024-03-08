@@ -8,6 +8,7 @@ import { Area, Grade } from "@prisma/client";
 import { CustomTable, DownloadButton, LoadingRing } from "@/components";
 import { useRouter } from "next/navigation";
 import * as XLSX from "xlsx";
+import { use } from "chai";
 const HarvestLogs = () => {
   const [harvestLogs, setHarvestLogs] = useState<harvestLogsCategoryDict>({});
   const [areas, setAreas] = useState<{ description: string; id: number }[]>();
@@ -17,6 +18,7 @@ const HarvestLogs = () => {
   const [dateFilter, setDateFilter] = useState("");
   const [dateInput, setDateInput] = useState("");
   const [isLoading, setIsLoading] = useState(true);
+  const [sort, setSort] = useState("");
   useEffect(() => {
     const fetchHarvestLogs = async () => {
       const response = await fetch("/api/inventory_input/harvest_log ");
@@ -40,6 +42,11 @@ const HarvestLogs = () => {
     filterData();
   }, [areaFilter, dateFilter]);
 
+  useEffect(() => {
+    setTableData((prev) => {
+      return sortData(prev);
+    });
+  }, [sort]);
   //turn json to table json data
   function getDefaultData() {
     const defaultTableData: { [key: number]: string[] } = {};
@@ -80,6 +87,7 @@ const HarvestLogs = () => {
     setTableData(filteredData);
   };
 
+  //sort data function to sort the table data by date, area and quantity ascending or descending
   const handleUpdate = (index: number) => {
     const area = tableData[index][1];
     const harvestDate = tableData[index][0].split("-").reverse().join("-");
@@ -216,6 +224,41 @@ const HarvestLogs = () => {
     // Write the workbook and download it as an Excel file
     XLSX.writeFile(wb, "table_data.xlsx");
   }
+  const sortData = (data: {
+    [key: number]: string[];
+  }): { [key: number]: string[] } => {
+    //sort dating according to the option selected in my select sort below
+    const sortedKeys = Object.keys(data).sort((a, b) => {
+      if (sort == "date ascending") {
+        return (
+          new Date(data[Number(a)][0]).getTime() -
+          new Date(data[Number(b)][0]).getTime()
+        );
+      } else if (sort == "date descending") {
+        return (
+          new Date(data[Number(b)][0]).getTime() -
+          new Date(data[Number(a)][0]).getTime()
+        );
+      } else if (sort == "area ascending") {
+        return data[Number(a)][1].localeCompare(data[Number(b)][1]);
+      } else if (sort == "area descending") {
+        return data[Number(b)][1].localeCompare(data[Number(a)][1]);
+      } else if (sort == "quantity ascending") {
+        return Number(data[Number(a)][2]) - Number(data[Number(b)][2]);
+      } else if (sort == "quantity descending") {
+        return Number(data[Number(b)][2]) - Number(data[Number(a)][2]);
+      } else {
+        return 0;
+      }
+    });
+
+    const sortedData: { [key: number]: string[] } = {};
+    sortedKeys.forEach((key, index) => {
+      sortedData[index] = data[Number(key)];
+    });
+
+    return sortedData;
+  };
   const headers = ["Harvest Date", "Area", "Quantity", " "];
   return (
     <div className="h-full w-full bg-white text-black flex flex-col">
@@ -225,11 +268,17 @@ const HarvestLogs = () => {
           name="area"
           id="area"
           className="mx-2 border-[1px] bg-white border-add-minus w-[150px]"
-          onChange={(e) => {}}
+          onChange={(e) => setSort(e.target.value)}
         >
           <option value="Sort by" disabled>
             Sort
           </option>
+          <option value="date ascending">Date Ascending</option>
+          <option value="date descending">Date Descending</option>
+          <option value="area ascending">Area Ascending</option>
+          <option value="area descending">Area Descending</option>
+          <option value="quantity ascending">Quantity Ascending</option>
+          <option value="quantity descending">Quantity Descending</option>
         </select>
         <label>Filters:</label>
         <select
