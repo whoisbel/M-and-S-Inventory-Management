@@ -125,7 +125,14 @@ const GradeAndPrice = () => {
       });
     }
   }
+  const [searchTerm, setSearchTerm] = useState("");
+  const handleSearch = (searchTerm: string) => {
+    setSearchTerm(searchTerm);
+  };
 
+  const filteredGrades = grades.filter((grade) =>
+    grade.description.toLowerCase().includes(searchTerm.toLowerCase())
+  );
   return (
     <div className="ml-3 pt-4 px-4 max-h-[750px] h-full w-full border border-add-minus rounded-lg">
       {isAddAlertShown &&
@@ -153,7 +160,7 @@ const GradeAndPrice = () => {
       <div className="flex justify-between mb-2">
         <div>
           {" "}
-          <SearchBar />{" "}
+          <SearchBar onSearch={handleSearch} />{" "}
         </div>
         <div>
           {" "}
@@ -166,7 +173,7 @@ const GradeAndPrice = () => {
         </span>
         <div className="overflow-auto max-h-[550px] w-full">
           <AdminTable
-            grades={grades}
+            grades={filteredGrades}
             onGreenButtonClick={updateButtonClick}
             onRedButtonClick={handleDelete}
           />

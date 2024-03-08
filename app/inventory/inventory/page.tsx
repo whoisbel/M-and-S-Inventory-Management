@@ -1,7 +1,11 @@
 "use client";
-"use client";
 import { useEffect, useState } from "react";
-import { SortModal, StockoutModal, InventoryUpdateForm, DownloadButton } from "@/components";
+import {
+  SortModal,
+  StockoutModal,
+  InventoryUpdateForm,
+  DownloadButton,
+} from "@/components";
 import { CustomTable } from "@/components";
 import { Area, Grade } from "@prisma/client";
 import Swal from "sweetalert2";
@@ -9,7 +13,7 @@ import withReactContent from "sweetalert2-react-content";
 import { createPortal } from "react-dom";
 import { customTableDataType, inventoryDataType } from "@/types";
 import { BiSearch } from "react-icons/bi";
-
+import * as XLSX from "xlsx";
 const Inventory = () => {
   const [inventoryData, setInventoryData] = useState<inventoryDataType[]>([]);
   const [tableData, setTableData] = useState<customTableDataType>({});
@@ -165,6 +169,29 @@ const Inventory = () => {
       },
     });
   }
+  function downloadTableAsExcel() {
+    const tableDataArray = Object.values(tableData).map((row) =>
+      row.slice(0, -1)
+    );
+
+    // Exclude the "actions" header
+    const headersWithoutActions = headers.slice(0, -1);
+
+    // Create a new worksheet
+    const ws = XLSX.utils.aoa_to_sheet([
+      headersWithoutActions,
+      ...tableDataArray,
+    ]);
+
+    // Create a new workbook
+    const wb = XLSX.utils.book_new();
+
+    // Append the worksheet to the workbook
+    XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
+
+    // Write the workbook and download it as an Excel file
+    XLSX.writeFile(wb, "table_data.xlsx");
+  }
   return (
     <div className="h-full w-full bg-white text-black">
       {ungradedAlertShown &&
@@ -270,7 +297,7 @@ const Inventory = () => {
         </div>
       </div>
       <div className="flex justify-end">
-        <DownloadButton />
+        <DownloadButton onClick={downloadTableAsExcel} />
       </div>
 
       <div className="mx-5 mb-5 max-h-screen overflow-auto border border-add-minus">

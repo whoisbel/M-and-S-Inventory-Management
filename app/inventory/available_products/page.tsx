@@ -13,7 +13,7 @@ import { Area, Grade } from "@prisma/client";
 import { Stock } from "@prisma/client";
 
 import Swal from "sweetalert2";
-
+import * as XLSX from "xlsx";
 const AvailableProducts = () => {
   const [availableProducts, setAvailableProducts] = useState<Stock[]>([]);
   const [filter, setFilter] = useState({
@@ -75,7 +75,22 @@ const AvailableProducts = () => {
 
     setTableData(filteredData);
   };
+  function downloadTableAsExcel() {
+    // Convert the table data to an array of arrays
+    const tableDataArray = Object.values(tableData);
 
+    // Create a new worksheet
+    const ws = XLSX.utils.aoa_to_sheet([headers, ...tableDataArray]);
+
+    // Create a new workbook
+    const wb = XLSX.utils.book_new();
+
+    // Append the worksheet to the workbook
+    XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
+
+    // Write the workbook and download it as an Excel file
+    XLSX.writeFile(wb, "table_data.xlsx");
+  }
   return (
     <div className="h-full w-full bg-custom-white">
       <div className="bg-accent-gray w-full gap-2 flex items-center text-letters-color">
@@ -121,7 +136,7 @@ const AvailableProducts = () => {
             </div>
           </div>
           <div className=" flex justify-end">
-            <DownloadButton />
+            <DownloadButton onClick={downloadTableAsExcel} />
           </div>
           <div className=" mx-5 max-h-[550px] overflow-auto border border-add-minus">
             <CustomTable

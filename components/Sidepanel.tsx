@@ -62,33 +62,35 @@ const Sidepanel = ({ user }: User) => {
             Dashboard
           </span>
         </Link>
-        <Link
-          className={`${
-            pathname.includes("/admin_mngt/")
-              ? " bg-main-background"
-              : " bg-primary-color"
-          } sidepanel_link h-[75px]`}
-          href="/admin_mngt/inventory_mngt/area_list/"
-        >
-          <div className="set_icon">
-            <RiAdminLine
+        {user.isAdmin && (
+          <Link
+            className={`${
+              pathname.includes("/admin_mngt/")
+                ? " bg-main-background"
+                : " bg-primary-color"
+            } sidepanel_link h-[75px]`}
+            href="/admin_mngt/inventory_mngt/area_list/"
+          >
+            <div className="set_icon">
+              <RiAdminLine
+                className={
+                  pathname.includes("/admin_mngt/")
+                    ? "text-primary-color w-[35px] h-[35px]"
+                    : "text-main-background w-[35px] h-[35px]"
+                }
+              />
+            </div>
+            <span
               className={
                 pathname.includes("/admin_mngt/")
-                  ? "text-primary-color w-[35px] h-[35px]"
-                  : "text-main-background w-[35px] h-[35px]"
+                  ? "text-letters-color lg:inline hidden"
+                  : "text-main-background lg:inline hidden"
               }
-            />
-          </div>
-          <span
-            className={
-              pathname.includes("/admin_mngt/")
-                ? "text-letters-color lg:inline hidden"
-                : "text-main-background lg:inline hidden"
-            }
-          >
-            Admin Management
-          </span>
-        </Link>
+            >
+              Admin Management
+            </span>
+          </Link>
+        )}
         <Link
           className={`${
             pathname.includes("/inventory_input/")
