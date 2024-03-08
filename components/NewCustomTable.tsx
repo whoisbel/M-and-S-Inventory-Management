@@ -1,4 +1,4 @@
-import { table } from "console"
+
 
 
 const NewCustomTable = () => {

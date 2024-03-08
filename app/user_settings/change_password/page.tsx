@@ -34,7 +34,7 @@ const ChangePassword = () => {
     }
   }
   return (
-    <div className="relative ml-3 pt-4 px-4 max-h-[750px] h-full w-full border border-add-minus rounded-lg">
+    <div className="relative ml-3 pt-4 px-4 w-full border border-add-minus rounded-lg">
       <div className=" flex flex-col border-b-4 border-primary-color">
         <span className="text-[20px]">Change Password</span>
       </div>

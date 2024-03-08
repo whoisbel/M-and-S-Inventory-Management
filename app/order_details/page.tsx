@@ -1,5 +1,5 @@
 "use client";
-import { CustomTable } from "@/components";
+import { CustomTable, DownloadButton } from "@/components";
 import { OrderDetail } from "@prisma/client";
 import { useState, useEffect } from "react";
 import { createPortal } from "react-dom";
@@ -130,6 +130,11 @@ const OrderDetails = () => {
           </select>
         </div>
       </div>
+      <div className="flex justify-end">
+            <DownloadButton onClick={function (): void {
+        throw new Error("Function not implemented.");
+      } } />
+          </div>
       <div className="flex flex-col p-3 bg-white">
         <CustomTable
           headers={headers}

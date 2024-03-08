@@ -75,29 +75,27 @@ const CustomTable = ({
 
   return (
     <table
-      border={1}
-      align="center"
-      className="w-full rounded border-[1px] border-accent-green text-center"
+    align="left" className="table-auto border-0 rounded-none w-full"
     >
-      <thead className="bg-accent-gray rounded p-2">
+      <thead>
         <tr>
           {headers.map((header, ind) => (
-            <th key={ind}>{header}</th>
+            <th className="header-border" key={ind}>{header}</th>
           ))}
         </tr>
       </thead>
 
-      <tbody className="">
+      <tbody>
         {!isLoading && Object.keys(data).length == 0 && (
           <tr>
-            <td colSpan={headers.length} className="text-[20px]">
+            <td colSpan={headers.length} className="body_border" align="center">
               No data
             </td>
           </tr>
         )}
         {isLoading && (
           <tr>
-            <td colSpan={headers.length} className="text-[20px]">
+            <td colSpan={headers.length} className="body_border">
               <LoadingRing width={50} height={50} title="Getting data..." />
             </td>
           </tr>
@@ -119,7 +117,7 @@ const CustomTable = ({
                         data.includes("stockout"))
                     ) {
                       return (
-                        <td key={index}>
+                        <td className="body_border" align="right" key={index}>
                           {data.includes("update") && (
                             <UpdateButton keyNo={+key} />
                           )}{" "}
@@ -132,7 +130,7 @@ const CustomTable = ({
                         </td>
                       );
                     } else {
-                      return <td key={index}>{data}</td>;
+                      return <td className="body_border" key={index}>{data}</td>;
                     }
                   })}
                 </tr>
