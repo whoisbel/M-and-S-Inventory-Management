@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/utils/prisma";
-import { HarvestLog } from "@prisma/client";
+import { Event, HarvestLog, Venue } from "@prisma/client";
+import { getServerSession } from "next-auth";
+import { options } from "@/app/api/auth/[...nextauth]/options";
 import {
   harvestLogsCategoryDict,
   harvestLogCategoryData,
@@ -57,6 +59,7 @@ export async function GET(request: NextRequest) {
   return NextResponse.json({ harvestLogs, areas, dates });
 }
 export async function PATCH(request: NextRequest) {
+  const session = await getServerSession(options);
   const formData = await request.formData();
   const area = formData.get("area");
   console.log(formData);
@@ -76,6 +79,13 @@ export async function PATCH(request: NextRequest) {
         harvestDate: new Date(String(formData.get("harvestDate"))),
       },
     });
+    await prisma.actionLog.create({
+      data: {
+        venue: Venue.inventoryInput,
+        event: Event.update,
+        userId: session!.user.id!,
+      },
+    });
     return NextResponse.json("success");
   } catch (error) {
     return NextResponse.json("error");
@@ -83,13 +93,23 @@ export async function PATCH(request: NextRequest) {
 }
 
 export async function DELETE(request: NextRequest) {
+  const session = await getServerSession(options);
   const response = await request.json();
   try {
-    await prisma.harvestLog.delete({
-      where: {
-        id: response.id,
-      },
-    });
+    prisma.$transaction([
+      await prisma.harvestLog.delete({
+        where: {
+          id: response.id,
+        },
+      }),
+      await prisma.actionLog.create({
+        data: {
+          venue: Venue.inventoryInput,
+          event: Event.delete,
+          userId: session!.user.id!,
+        },
+      }),
+    ]);
     return NextResponse.json("success");
   } catch (error) {
     return NextResponse.json("error");

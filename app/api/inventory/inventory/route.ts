@@ -1,7 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/utils/prisma";
-import { Prisma } from "@prisma/client";
+import { Event, Prisma, Venue } from "@prisma/client";
 import { categoryFormData } from "@/types";
+import { options } from "../../auth/[...nextauth]/options";
+import { getServerSession } from "next-auth";
 
 export async function GET(request: NextRequest) {
   const data =
@@ -24,93 +26,80 @@ export async function GET(request: NextRequest) {
   return NextResponse.json({ data, area, grade, date });
 }
 
+/**
+ * Handles the POST request for inventory route.
+ *
+ * @param request - The NextRequest object containing the request data.
+ * @returns A NextResponse object with a JSON response.
+ */
 export async function POST(request: NextRequest) {
+  const session = await getServerSession(options);
   const { categoryFormData, inventoryId } = await request.json();
-  let totalAmount = 0; //this is the total amount to subtract from the ungraded inventory
-  const sortedData: { [key: number]: { [key: string]: { quantity: number } } } =
-    {}; //gamiton nato ang grade as ilhanan
 
-  const data = await prisma.inventory.findUnique({
+  //ang inventoryId kay ang ungraded inventory Id nga gina sort
+  const ungradedInventory = await prisma.inventory.findUnique({
     where: {
       id: inventoryId,
     },
-    select: {
-      stockId: true,
-      harvestLog: {
-        select: {
-          id: true,
-          area: {
-            select: {
-              id: true,
-            },
+  });
+  await prisma.$transaction(async (tx) => {
+    const prisma: any = tx;
+    for (const data of categoryFormData) {
+      //kwaon ang stock nga i-update or i-create
+      const stock = await prisma.stock.upsert({
+        where: {
+          gradeId: data.grade,
+          isWashed: data.isWashed,
+        },
+        update: {
+          quantityOnHand: {
+            increment: data.quantity,
           },
         },
-      },
-    },
-  });
-  const {
-    harvestLog: {
-      id: logId,
-      area: { id: areaId },
-    },
-  } = data;
-
-  categoryFormData.map((data: categoryFormData) => {
-    if (
-      sortedData[data.grade] &&
-      sortedData[data.grade][String(data.isWashed)]
-    ) {
-      sortedData[data.grade][String(data.isWashed)].quantity += data.quantity;
-    } else {
-      sortedData[data.grade] = {
-        ...sortedData[data.grade],
-        [String(data.isWashed)]: {
-          quantity: data.quantity,
+        create: {
+          quantityOnHand: data.quantity,
+          gradeId: data.grade,
+          isWashed: data.isWashed,
         },
-      };
-    }
-  });
-
-  const insertData: Prisma.InventoryCreateManyInput[] = [];
-
-  Object.keys(sortedData).map((gradeString) => {
-    const gradeId = Number(gradeString);
-    Object.keys(sortedData[gradeId]).map((isWashed) => {
-      totalAmount += sortedData[gradeId][isWashed].quantity;
-      insertData.push({
-        stockId: 0,
-        gradeId: gradeId,
-        isWashed: isWashed == "true",
-        quantity: sortedData[gradeId][isWashed].quantity,
-        logId: logId,
       });
+
+      await prisma.inventory.create({
+        data: {
+          gradeId: data.grade,
+          logId: ungradedInventory.logId,
+          quantity: data.quantity,
+          stockId: stock.id,
+        },
+      });
+      //paghuman ug add mag minus na sa ungraded inventory ug stock
+      await prisma.inventory.update({
+        where: {
+          id: ungradedInventory.id,
+        },
+        data: {
+          quantity: {
+            decrement: data.quantity,
+          },
+        },
+      });
+      await prisma.stock.update({
+        where: {
+          id: ungradedInventory.stockId,
+        },
+        data: {
+          quantityOnHand: {
+            decrement: data.quantity,
+          },
+        },
+      });
+    }
+    await prisma.actionLog.create({
+      data: {
+        venue: Venue.inventory,
+        event: Event.add,
+        userId: session!.user.id!,
+      },
     });
-  });
-  await prisma.inventory.createMany({
-    data: insertData,
-  });
-
-  //update the ungraded inventory
-  await prisma.inventory.update({
-    where: {
-      id: inventoryId,
-    },
-    data: {
-      quantity: {
-        decrement: totalAmount,
-      },
-    },
-  });
-
-  await prisma.stock.update({
-    where: {
-      id: data.stockId,
-    },
-    data: {
-      quantityOnHand: {
-        decrement: totalAmount,
-      },
-    },
   });
 
   return NextResponse.json("good");
@@ -118,6 +107,7 @@ export async function POST(request: NextRequest) {
 
 export async function DELETE(request: NextRequest) {
   const { inventoryId } = await request.json();
+  const session = await getServerSession(options);
 
   try {
     const inventoryForDeletion = await prisma.inventory.findUnique({
@@ -125,6 +115,7 @@ export async function DELETE(request: NextRequest) {
         id: inventoryId,
       },
       include: {
+        grade: true,
         harvestLog: {
           select: {
             area: true,
@@ -132,6 +123,38 @@ export async function DELETE(request: NextRequest) {
         },
       },
     });
+    console.log(inventoryForDeletion);
+    //if the inventory is ungraded
+    if (inventoryForDeletion.grade.description.toLowerCase() == "ungraded") {
+      console.log(inventoryForDeletion.stockId);
+      await prisma.$transaction(async (tx) => {
+        const prisma: any = tx;
+        await prisma.stock.update({
+          data: {
+            quantityOnHand: {
+              decrement: inventoryForDeletion.quantity,
+            },
+          },
+          where: {
+            id: inventoryForDeletion.stockId,
+          },
+        });
+        await prisma.inventory.delete({
+          where: {
+            id: inventoryForDeletion.id,
+          },
+        });
+        //add action log
+        await prisma.actionLog.create({
+          data: {
+            venue: Venue.inventory,
+            event: Event.delete,
+            userId: session!.user.id!,
+          },
+        });
+      });
+      return NextResponse.json({ message: "Inventory deleted successfuly" });
+    }
 
     const ungradedInventory = await prisma.inventory.findFirst({
       where: {
@@ -153,43 +176,53 @@ export async function DELETE(request: NextRequest) {
       },
     });
 
-    //The quantity that is being deleted is back to the ungraded quantity
-    await prisma.inventory.update({
-      where: {
-        id: ungradedInventory.id,
-      },
-      data: {
-        quantity: {
-          increment: inventoryForDeletion.quantity,
+    await prisma.$transaction([
+      //The quantity that is being deleted is back to the ungraded quantity
+      prisma.inventory.update({
+        where: {
+          id: ungradedInventory.id,
         },
-      },
-    });
-    await prisma.stock.update({
-      where: {
-        id: ungradedInventory.stockId,
-      },
-      data: {
-        quantityOnHand: {
-          increment: inventoryForDeletion.quantity,
+        data: {
+          quantity: {
+            increment: inventoryForDeletion.quantity,
+          },
         },
-      },
-    });
-    // Remove the quantity from stock
-    await prisma.stock.update({
-      where: {
-        id: inventoryForDeletion.stockId,
-      },
-      data: {
-        quantityOnHand: {
-          decrement: inventoryForDeletion.quantity,
+      }),
+      prisma.stock.update({
+        where: {
+          id: ungradedInventory.stockId,
         },
-      },
-    });
-    await prisma.inventory.delete({
-      where: {
-        id: inventoryId,
-      },
-    });
+        data: {
+          quantityOnHand: {
+            increment: inventoryForDeletion.quantity,
+          },
+        },
+      }),
+      // Remove the quantity from stock
+      prisma.stock.update({
+        where: {
+          id: inventoryForDeletion.stockId,
+        },
+        data: {
+          quantityOnHand: {
+            decrement: inventoryForDeletion.quantity,
+          },
+        },
+      }),
+      prisma.inventory.delete({
+        where: {
+          id: inventoryId,
+        },
+      }),
+      //add action log
+      prisma.actionLog.create({
+        data: {
+          venue: Venue.inventory,
+          event: Event.delete,
+          userId: session!.user.id!,
+        },
+      }),
+    ]);
     return NextResponse.json({ status: 200 });
   } catch (error) {
     console.log(error);
@@ -199,79 +232,94 @@ export async function DELETE(request: NextRequest) {
 
 export async function PATCH(request: NextRequest) {
   const { inventoryId, newQuantity } = await request.json();
+  const session = await getServerSession(options);
   try {
-    const inventory = await prisma.inventory.findUnique({
-      where: {
-        id: inventoryId,
-      },
-      include: {
-        stock: true,
-        harvestLog: {
-          select: {
-            area: true,
+    await prisma.$transaction(async (tx) => {
+      const prisma: any = tx;
+      const inventory = await prisma.inventory.findUnique({
+        where: {
+          id: inventoryId,
+        },
+        include: {
+          stock: true,
+          harvestLog: {
+            select: {
+              area: true,
+            },
           },
         },
-      },
-    });
-    const ungradedInventory = await prisma.inventory.findFirst({
-      where: {
-        harvestLog: {
-          id: inventory.harvestLog.id,
+      });
+      const ungradedInventory = await prisma.inventory.findFirst({
+        where: {
+          harvestLog: {
+            id: inventory.harvestLog.id,
+          },
+          grade: {
+            description: "ungraded",
+          },
         },
-        grade: {
-          description: "ungraded",
+      });
+      const difference = +newQuantity - +inventory.quantity;
+      console.log({
+        invetoryQuantity: inventory.quantity,
+        newQuantity: newQuantity,
+      });
+      //update inventory
+      await prisma.inventory.update({
+        where: {
+          id: inventoryId,
         },
-      },
-    });
-    const difference = +newQuantity - +inventory.quantity;
-    console.log({
-      invetoryQuantity: inventory.quantity,
-      newQuantity: newQuantity,
-    });
-    //update inventory
-    await prisma.inventory.update({
-      where: {
-        id: inventoryId,
-      },
-      data: {
-        quantity: newQuantity,
-      },
-    });
+        data: {
+          quantity: newQuantity,
+        },
+      });
 
-    //update ungraded inventory
-    await prisma.inventory.update({
-      where: {
-        id: ungradedInventory.id,
-      },
-      data: {
-        quantity: {
-          decrement: difference,
+      //update ungraded inventory
+      await prisma.inventory.update({
+        where: {
+          id: ungradedInventory.id,
         },
-      },
-    });
+        data: {
+          quantity: {
+            decrement: difference,
+          },
+        },
+      });
 
-    //update stock
-    await prisma.stock.update({
-      where: {
-        id: inventory.stockId,
-      },
-      data: {
-        quantityOnHand: {
-          increment: difference,
+      //update stock
+      await prisma.stock.update({
+        where: {
+          id: inventory.stockId,
         },
-      },
-    });
-    await prisma.stock.update({
-      where: {
-        id: ungradedInventory.stockId,
-      },
-      data: {
-        quantityOnHand: {
-          decrement: difference,
+        data: {
+          quantityOnHand: {
+            increment: difference,
+          },
         },
-      },
+      });
+      await prisma.stock.update({
+        where: {
+          id: ungradedInventory.stockId,
+        },
+        data: {
+          quantityOnHand: {
+            decrement: difference,
+          },
+        },
+      });
+      //add action log
+      await prisma.actionLog.create({
+        data: {
+          venue: Venue.inventory,
+          event: Event.update,
+          userId: session!.user.id!,
+        },
+      });
     });
-    return NextResponse.json({ status: 200 });
+    return NextResponse.json(
+      { message: "Inventory updated successfuly" },
+      { status: 200 }
+    );
   } catch (error) {
     console.log(error);
     return NextResponse.json({ status: 500 });

@@ -156,9 +156,9 @@ const StockoutPage = () => {
             >
               Create Stockout +
             </button>
-            <DownloadButton />
+            <DownloadButton onClick={() => {}} />
           </div>
-      <div className=" mx-5 max-h-[550px] overflow-auto border border-add-minus">
+          <div className=" mx-5 max-h-[550px] overflow-auto border border-add-minus">
             <CustomTable
               headers={headers}
               data={tableData}

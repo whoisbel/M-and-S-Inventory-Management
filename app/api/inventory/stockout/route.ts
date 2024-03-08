@@ -1,6 +1,6 @@
 import { NextResponse, NextRequest } from "next/server";
 import prisma from "@/utils/prisma";
-import { Grade, Stock, StockOutType, Stockout } from "@prisma/client";
+import { Grade, Stock, StockOutType, Stockout, Venue } from "@prisma/client";
 import { createStockout } from "@/utils/stockoutTransaction";
 
 export async function GET(request: NextRequest) {
@@ -42,6 +42,8 @@ export async function POST(request: NextRequest) {
       await Promise.all(
         stockouts.map((stockout: Stockout) => createStockout(tx, stockout))
       );
+      const prisma: any = tx;
+
       return NextResponse.json({ status: 400 });
     } catch (error) {
       console.error("Error creating stockouts:", error);

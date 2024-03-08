@@ -242,7 +242,7 @@ const HarvestLogs = () => {
         </select>
       </div>
       <div className=" flex justify-end">
-        <DownloadButton />
+        <DownloadButton onClick={() => {}} />
       </div>
       <div className=" mx-5 max-h-[550px] overflow-auto border border-add-minus">
         <CustomTable

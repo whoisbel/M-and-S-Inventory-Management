@@ -4,6 +4,7 @@ import { changePasswordType } from "@/types";
 import { options } from "@/app/api/auth/[...nextauth]/options";
 import { getServerSession } from "next-auth";
 import { sha256 } from "js-sha256";
+import { Venue } from "@prisma/client";
 export async function PATCH(req: NextRequest) {
   const session = await getServerSession(options);
   const passwordData: changePasswordType = await req.json();
@@ -48,14 +49,16 @@ export async function PATCH(req: NextRequest) {
       );
 
     //Update the password
-    await prisma.user.update({
-      where: {
-        id: session?.user.id,
-      },
-      data: {
-        password: sha256(passwordData.newPassword),
-      },
-    });
+    await prisma.$transaction([
+      prisma.user.update({
+        where: {
+          id: session?.user.id,
+        },
+        data: {
+          password: sha256(passwordData.newPassword),
+        },
+      }),
+    ]);
     return NextResponse.json({ message: "Password updated successfuly" });
   } catch (error) {
     return NextResponse.json(

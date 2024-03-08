@@ -1,6 +1,13 @@
 import { NextResponse, NextRequest } from "next/server";
-import { PrismaClient, StatusEnum, StockOutType } from "@prisma/client";
-
+import {
+  PrismaClient,
+  StatusEnum,
+  StockOutType,
+  Event,
+  Venue,
+} from "@prisma/client";
+import { getServerSession } from "next-auth";
+import { options } from "../auth/[...nextauth]/options";
 const prisma = new PrismaClient();
 
 export async function GET(request: NextRequest) {
@@ -24,6 +31,7 @@ export async function GET(request: NextRequest) {
 
 export async function PATCH(request: NextRequest) {
   const { id, status } = await request.json();
+  const session = await getServerSession(options);
 
   // if status is fullfilled, create stockout and update stock quantity
   try {
@@ -52,6 +60,13 @@ export async function PATCH(request: NextRequest) {
             quantityOnHand: {
               decrement: orderDetail.orderQuantity,
             },
+          },
+        }),
+        prisma.actionLog.create({
+          data: {
+            event: Event.update,
+            venue: Venue.orderDetails,
+            userId: session!.user.id!,
           },
         }),
       ]);

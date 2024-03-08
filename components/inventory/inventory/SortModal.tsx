@@ -6,6 +6,7 @@ import { categoryFormData } from "@/types";
 import { InventoryInputForm } from "@/components";
 import { CgAdd } from "react-icons/cg";
 import { BiError } from "react-icons/bi";
+import { swalCustomClass } from "@/utils/swalConfig";
 
 const SortModal = ({
   inventoryData,
@@ -97,6 +98,7 @@ const SortModal = ({
             title: "Success",
             icon: "success",
             text: "Inventory Saved",
+            customClass: swalCustomClass,
           })
           .then(() => {
             location.reload();
@@ -104,6 +106,7 @@ const SortModal = ({
       } else {
         swal.fire({
           title: "error",
+          customClass: swalCustomClass,
         });
       }
       setSwalShown(false);

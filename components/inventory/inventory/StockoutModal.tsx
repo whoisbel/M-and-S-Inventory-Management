@@ -3,6 +3,7 @@ import Swal from "sweetalert2";
 import { inventoryDataType } from "@/types";
 import { useState, useEffect } from "react";
 import { BiX, BiError } from "react-icons/bi";
+import { swalCustomClass } from "@/utils/swalConfig";
 const StockoutModal = ({
   swal,
   inventory,
@@ -50,15 +51,15 @@ const StockoutModal = ({
     });
     if (response.ok) {
       swal.close();
+      setSwalShown(false);
       swal
         .fire({
           title: "Success",
           icon: "success",
           text: "Stockout Recorded",
+          customClass: swalCustomClass,
         })
         .then(() => {
-          setSwalShown(false);
-
           location.reload();
         });
     }
