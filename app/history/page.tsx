@@ -28,13 +28,13 @@ const history = () => {
   }, [actionLogs]);
   function makeTableData() {
     const tableData: { [key: number]: string[] } = {};
-    actionLogs.map((actionLog) => {
-      let venue = "";
 
+    actionLogs.map((actionLog) => {
+      console.log(actionLog.venue);
       tableData[actionLog.id] = [
         new Date(actionLog.actionDate).toLocaleDateString(),
-        actionLog.venue,
-        actionLog.event,
+        actionLog.venue.toUpperCase(),
+        actionLog.event.toUpperCase(),
         actionLog.user.userName,
       ];
     });
@@ -45,12 +45,7 @@ const history = () => {
   return (
     <div className="h-full w-full bg-white text-black">
       <div className="flex justify-end">
-        <DownloadButton
-          onClick={() => {}}
-          onClick={function (): void {
-            throw new Error("Function not implemented.");
-          }}
-        />
+        <DownloadButton onClick={() => {}} />
       </div>
       <div className="overflow-auto max-h-[550px] mr-5 ml-5 mb-5">
         <CustomTable headers={headers} data={tableData} isLoading={isLoading} />
