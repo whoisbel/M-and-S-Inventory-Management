@@ -7,6 +7,7 @@ import { categoryFormData, harvestLogsCategoryDict } from "@/types";
 import { Area, Grade } from "@prisma/client";
 import { CustomTable, DownloadButton, LoadingRing } from "@/components";
 import { useRouter } from "next/navigation";
+import * as XLSX from "xlsx";
 const HarvestLogs = () => {
   const [harvestLogs, setHarvestLogs] = useState<harvestLogsCategoryDict>({});
   const [areas, setAreas] = useState<{ description: string; id: number }[]>();
@@ -192,6 +193,29 @@ const HarvestLogs = () => {
         });
       });
   };
+  function downloadTableAsExcel() {
+    const tableDataArray = Object.values(tableData).map((row) =>
+      row.slice(0, -1)
+    );
+
+    // Exclude the "actions" header
+    const headersWithoutActions = headers.slice(0, -1); // Exclude the last header ("actions")
+
+    // Create a new worksheet
+    const ws = XLSX.utils.aoa_to_sheet([
+      headersWithoutActions,
+      ...tableDataArray,
+    ]);
+
+    // Create a new workbook
+    const wb = XLSX.utils.book_new();
+
+    // Append the worksheet to the workbook
+    XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
+
+    // Write the workbook and download it as an Excel file
+    XLSX.writeFile(wb, "table_data.xlsx");
+  }
   const headers = ["Harvest Date", "Area", "Quantity", "Actions"];
   return (
     <div className="h-full w-full bg-white text-black flex flex-col">
@@ -242,7 +266,7 @@ const HarvestLogs = () => {
         </select>
       </div>
       <div className=" flex justify-end">
-        <DownloadButton />
+        <DownloadButton onClick={downloadTableAsExcel} />
       </div>
       <div className=" mx-5 max-h-[550px] overflow-auto border border-add-minus">
         <CustomTable
