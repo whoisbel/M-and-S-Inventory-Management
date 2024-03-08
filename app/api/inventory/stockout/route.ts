@@ -2,6 +2,8 @@ import { NextResponse, NextRequest } from "next/server";
 import prisma from "@/utils/prisma";
 import { Grade, Stock, StockOutType, Stockout, Venue } from "@prisma/client";
 import { createStockout } from "@/utils/stockoutTransaction";
+import { getServerSession } from "next-auth";
+import { options } from "../../auth/[...nextauth]/options";
 
 export async function GET(request: NextRequest) {
   const stocks = await prisma.stock.findMany({
@@ -35,6 +37,7 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
   const stockouts = await request.json();
   console.log(stockouts);
+  const session = await getServerSession(options);
   //update ungraded stock
 
   const transaction = await prisma.$transaction(async (tx) => {
@@ -43,6 +46,13 @@ export async function POST(request: NextRequest) {
         stockouts.map((stockout: Stockout) => createStockout(tx, stockout))
       );
       const prisma: any = tx;
+      await prisma.actionLog.create({
+        data: {
+          venue: Venue.stockout,
+          event: "add",
+          userId: session!.user.id!,
+        },
+      });
 
       return NextResponse.json({ status: 400 });
     } catch (error) {
