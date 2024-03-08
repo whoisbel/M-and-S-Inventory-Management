@@ -27,6 +27,7 @@ import Selection from "./Selection";
 import AreaModal from "./admin_mngt/inventory_mngt/area_list/AreaModal";
 import NewCustomTable from "./NewCustomTable";
 import GradeModal from "./admin_mngt/grade_and_price/GradeModal";
+import UpdateModal from "./orderdetail/UpdateModal";
 export {
   Sidepanel,
   InventoryInputForm,
@@ -56,4 +57,5 @@ export {
   NewCustomTable,
   AreaModal,
   GradeModal,
+  UpdateModal,
 };
