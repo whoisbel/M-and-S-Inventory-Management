@@ -1,25 +1,79 @@
 import { NextResponse, NextRequest } from "next/server";
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient, StatusEnum, StockOutType } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
 export async function GET(request: NextRequest) {
-  const data = await prisma.$queryRaw`SELECT
-  customer.first_name AS customerName,
-  grade.description AS gradeName,
-  stock.grade_id,
-  orderdetail.order_quantity,
-  grade.price,
-  orderdetail.order_quantity * grade.price AS total_price,
-  orderdetail.status,
-  orderdetail.loading_schedule,
-  ord.order_date
-FROM orderdetail
-JOIN \`order\` AS ord ON orderdetail.order_id = ord.id
-JOIN stock ON orderdetail.stock_id = stock.id
-JOIN grade ON stock.grade_id = grade.id
-JOIN customer ON ord.customer_id = customer.id;
-`;
-  console.log(data);
-  return NextResponse.json({ status: 200 });
+  const data = await prisma.orderDetail.findMany({
+    include: {
+      order: {
+        include: {
+          customer: true,
+        },
+      },
+      stock: {
+        include: {
+          grade: true,
+        },
+      },
+    },
+  });
+
+  return NextResponse.json({ data }, { status: 200 });
+}
+
+export async function PATCH(request: NextRequest) {
+  const { id, status } = await request.json();
+
+  // if status is fullfilled, create stockout and update stock quantity
+  try {
+    if (status == StatusEnum.fullfilled) {
+      const orderDetail = await prisma.orderDetail.findUnique({
+        where: {
+          id: id,
+        },
+        include: {
+          stock: true,
+        },
+      });
+      await prisma.$transaction([
+        prisma.stockout.create({
+          data: {
+            stockId: orderDetail.stockId,
+            quantity: orderDetail.orderQuantity,
+            stockoutType: StockOutType.sold,
+          },
+        }),
+        prisma.stock.update({
+          where: {
+            id: orderDetail.stockId,
+          },
+          data: {
+            quantityOnHand: {
+              decrement: orderDetail.orderQuantity,
+            },
+          },
+        }),
+      ]);
+    }
+
+    const updatedOrderDetail = await prisma.orderDetail.update({
+      where: {
+        id: id,
+      },
+      data: {
+        status: status,
+      },
+    });
+
+    return NextResponse.json(
+      { message: "Stockout updated successfully" },
+      { status: 200 }
+    );
+  } catch (error) {
+    return NextResponse.json(
+      { message: "An error occured while updating stockout" },
+      { status: 500 }
+    );
+  }
 }

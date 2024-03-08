@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/utils/prisma";
-import { HarvestLog } from "@prisma/client";
+import { Event, HarvestLog, Venue } from "@prisma/client";
+import { options } from "../../auth/[...nextauth]/options";
+import { getServerSession } from "next-auth";
 
 export async function GET(req: NextRequest) {
   const area = await prisma.area.findMany();
@@ -21,9 +23,11 @@ export async function POST(request: NextRequest) {
     };
     harvestLogs.push(harvestLog);
   }
+  await prisma.$transaction([
+    await prisma.harvestLog.createMany({
+      data: harvestLogs,
+    }),
+  ]);
 
-  await prisma.harvestLog.createMany({
-    data: harvestLogs,
-  });
   return NextResponse.json("");
 }

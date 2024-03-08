@@ -33,16 +33,18 @@ const CustomTable = ({
   let StockoutButton = ({ keyNo }: { keyNo: number }) => <></>;
   if (handleUpdate) {
     // eslint-disable-next-line react/display-name
-    UpdateButton = function ({ keyNo }: { keyNo: number }){ return (
-      <button
-        onClick={(e) => {
-          handleUpdate!(+keyNo);
-        }}
-        className="bg-primary-color hover:bg-green-700 text-white px-2 py-2 rounded shadow hover:scale-105"
-      >
-        <BiEdit className="w-7 h-7" />
-      </button>
-    );}
+    UpdateButton = function ({ keyNo }: { keyNo: number }) {
+      return (
+        <button
+          onClick={(e) => {
+            handleUpdate!(+keyNo);
+          }}
+          className="bg-primary-color hover:bg-green-700 text-white px-2 py-2 rounded shadow hover:scale-105"
+        >
+          <BiEdit className="w-7 h-7" />
+        </button>
+      );
+    };
   }
   if (handleDelete) {
     // eslint-disable-next-line react/display-name
@@ -111,9 +113,10 @@ const CustomTable = ({
                 <tr key={key}>
                   {row.map((data, index) => {
                     if (
-                      (data && data.includes("update")) ||
-                      data.includes("delete") ||
-                      data.includes("stockout")
+                      data &&
+                      (data.includes("update") ||
+                        data.includes("delete") ||
+                        data.includes("stockout"))
                     ) {
                       return (
                         <td key={index}>

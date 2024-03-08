@@ -264,22 +264,16 @@ export default function Dashboard() {
       <div className="w-full h-1/2 ">
         <div className="w-full h-[calc(100%-20px)] max-h-screen grid grid-cols-2 gap-5 ">
           <div className=" bg-custom-white p-4 mt-4 rounded-3xl">
-          <h1 className="subtitle-bold text-letters-color">
-                Seasonal Chart
-              </h1>
-              <Line data={lineData} options={line_options} />
+            <h1 className="subtitle-bold text-letters-color">Seasonal Chart</h1>
+            <Line data={lineData} options={line_options} />
           </div>
           <div className=" bg-custom-white p-4 mt-4 rounded-3xl">
-          <h1 className="subtitle-bold text-letters-color">
-                Yearly Chart
-              </h1>
-              <Bar data={barData} options={bar_options} />
+            <h1 className="subtitle-bold text-letters-color">Yearly Chart</h1>
+            <Bar data={barData} options={bar_options} />
           </div>
-          
         </div>
       </div>
       {/* Seasonal and Yearly chart container */}
-
     </div>
   );
 }

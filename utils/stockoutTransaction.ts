@@ -2,7 +2,7 @@ import { Stockout, StockOutType } from "@prisma/client";
 
 export async function createStockout(tx: any, stockout: Stockout) {
   // 1. Find the relevant stock record using a more concise query
-  const stock = await tx.stock.findUnique({
+  const stock = await tx.stock.findFirst({
     where: { gradeId: stockout.gradeId, isWashed: stockout.washed },
   });
 

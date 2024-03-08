@@ -40,13 +40,16 @@ const StockoutModal = ({
     }
     const response = await fetch("/api/inventory/stockout", {
       method: "POST",
-      body: JSON.stringify({
-        inventoryId: inventoryId,
-        quantity: inputQuantity,
-        date: inputDate,
-      }),
+      body: JSON.stringify([
+        {
+          inventoryId: inventoryId,
+          quantity: inputQuantity,
+          date: inputDate,
+        },
+      ]),
     });
     if (response.ok) {
+      swal.close();
       swal
         .fire({
           title: "Success",
@@ -55,6 +58,7 @@ const StockoutModal = ({
         })
         .then(() => {
           setSwalShown(false);
+
           location.reload();
         });
     }
