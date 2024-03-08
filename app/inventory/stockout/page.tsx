@@ -18,6 +18,7 @@ import withReactContent from "sweetalert2-react-content";
 import Swal from "sweetalert2";
 import { createPortal } from "react-dom";
 import * as XLSX from "xlsx";
+import { use } from "chai";
 const StockoutPage = () => {
   const [createStockOutModalShown, setCreateStockOutModalShown] =
     useState(false);
@@ -28,6 +29,7 @@ const StockoutPage = () => {
   const [tableData, setTableData] = useState<customTableDataType>({});
   const [selectedUpdateData, setSelectedUpdateData] = useState<string[]>([]);
   const headers = ["Stockout Date", "Grade", "Quantity", "Type"];
+  const [sort, setSort] = useState("");
   const swal = withReactContent(Swal);
 
   useEffect(() => {
@@ -83,6 +85,14 @@ const StockoutPage = () => {
     console.log({ tableData });
     setIsLoading(false);
   }, [stockout]);
+
+  useEffect(() => {
+    setTableData((prev) => {
+      const sortedData = sortData(prev);
+      console.log(sortedData); // Add this line
+      return sortedData;
+    });
+  }, [sort]);
   function downloadTableAsExcel() {
     // Convert the table data to an array of arrays
     const tableDataArray = Object.values(tableData);
@@ -99,6 +109,51 @@ const StockoutPage = () => {
     // Write the workbook and download it as an Excel file
     XLSX.writeFile(wb, "table_data.xlsx");
   }
+  const sortData = (data: {
+    [key: number]: string[];
+  }): { [key: number]: string[] } => {
+    //sort dating according to the option selected in my select sort below
+    const sortedKeys = Object.keys(data).sort((a, b) => {
+      if (sort == "date ascending") {
+        return (
+          new Date(data[Number(a)][0]).getTime() -
+          new Date(data[Number(b)][0]).getTime()
+        );
+      } else if (sort == "date descending") {
+        return (
+          new Date(data[Number(b)][0]).getTime() -
+          new Date(data[Number(a)][0]).getTime()
+        );
+      } else if (sort == "grade ascending") {
+        return data[Number(a)][1].localeCompare(data[Number(b)][2]);
+      } else if (sort == "grade descending") {
+        return data[Number(b)][1].localeCompare(data[Number(a)][2]);
+      } else if (sort == "quantity ascending") {
+        const quantityA = Number(data[Number(a)][3]);
+        const quantityB = Number(data[Number(b)][3]);
+        if (isNaN(quantityA) || isNaN(quantityB)) {
+          return 0;
+        }
+        return quantityA - quantityB;
+      } else if (sort == "quantity descending") {
+        const quantityA = Number(data[Number(a)][2]);
+        const quantityB = Number(data[Number(b)][2]);
+        if (isNaN(quantityA) || isNaN(quantityB)) {
+          return 0;
+        }
+        return quantityB - quantityA;
+      } else {
+        return 0;
+      }
+    });
+
+    const sortedData: { [key: number]: string[] } = {};
+    sortedKeys.forEach((key, index) => {
+      sortedData[index] = data[Number(key)];
+    });
+
+    return sortedData;
+  };
   return (
     <div className="h-full w-full bg-custom-white">
       <div className="bg-accent-gray w-full gap-2 flex items-center text-letters-color">
@@ -115,10 +170,20 @@ const StockoutPage = () => {
           <div className="bg-accent-gray py-2  px-3 flex gap-2 w-full h-max">
             <div className="flex gap-3">
               <label>Sort by:</label>
-              <select name="sort-select" id="">
+              <select
+                name="sort-select"
+                id=""
+                onChange={(e) => setSort(e.target.value)}
+              >
                 <option value="select sort" disabled>
                   Select Sort
                 </option>
+                <option value="date ascending">Date Ascending</option>
+                <option value="date descending">Date Descending</option>
+                <option value="grade ascending">Grade Ascending</option>
+                <option value="grade descending">Grade Descending</option>
+                <option value="quantity ascending">Quantity Ascending</option>
+                <option value="quantity descending">Quantity Descending</option>
               </select>
             </div>
             <div className="flex gap-3">
