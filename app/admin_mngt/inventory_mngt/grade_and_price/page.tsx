@@ -134,7 +134,7 @@ const GradeAndPrice = () => {
     grade.description.toLowerCase().includes(searchTerm.toLowerCase())
   );
   return (
-    <div className="ml-3 pt-4 px-4 max-h-[750px] h-full w-full border border-add-minus rounded-lg">
+    <div className="ml-3 pt-4 px-4  w-full border border-add-minus rounded-lg">
       {isAddAlertShown &&
         createPortal(
           <GradeModal
@@ -171,7 +171,7 @@ const GradeAndPrice = () => {
         <span className="text-[20px] bold border-b-4  border-primary-color">
           Grade and Price List
         </span>
-        <div className="overflow-auto max-h-[550px] w-full">
+        <div className="overflow-auto max-h-[calc(100vh-220px)] w-full">
           <AdminTable
             grades={filteredGrades}
             onGreenButtonClick={updateButtonClick}

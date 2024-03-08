@@ -59,7 +59,7 @@ const Inventory = () => {
     "Grade",
     "Quantity",
     "Washed",
-    "Actions",
+    " ",
   ];
 
   function getDefaultData() {
@@ -175,7 +175,7 @@ const Inventory = () => {
     );
 
     // Exclude the "actions" header
-    const headersWithoutActions = headers.slice(0, -1);
+    const headersWithoutActions = headers.slice(0, -1); // Exclude the last header ("actions")
 
     // Create a new worksheet
     const ws = XLSX.utils.aoa_to_sheet([
@@ -285,22 +285,12 @@ const Inventory = () => {
             ))}
           </select>
         </div>
-        <div className="flex-1 flex justify-end items-center ">
-          <input
-            type="text"
-            name="search"
-            id="search"
-            placeholder="Search"
-            className="rounded-lg placeholder:pl-2"
-          />
-          <BiSearch className="-ml-[1.25em] text-primary-color" />
-        </div>
       </div>
       <div className="flex justify-end">
         <DownloadButton onClick={downloadTableAsExcel} />
       </div>
 
-      <div className="mx-5 mb-5 max-h-screen overflow-auto border border-add-minus">
+      <div className="overflow-auto mx-5 max-h-[calc(100vh-220px)]">
         <CustomTable
           headers={headers}
           data={tableData}
