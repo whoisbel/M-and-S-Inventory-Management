@@ -13,7 +13,6 @@ const UserInfo = () => {
     const fetchSession = async () => {
       const session = await getSession();
       if (session) {
-        console.log(session.user);
         setUser(session.user);
       }
     };
