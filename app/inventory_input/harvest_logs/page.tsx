@@ -192,7 +192,7 @@ const HarvestLogs = () => {
         });
       });
   };
-  const headers = ["Harvest Date", "Area", "Quantity", "Actions"];
+  const headers = ["Harvest Date", "Area", "Quantity", " "];
   return (
     <div className="h-full w-full bg-white text-black flex flex-col">
       <div className="bg-accent-gray py-2 px-3 flex">
@@ -242,9 +242,11 @@ const HarvestLogs = () => {
         </select>
       </div>
       <div className=" flex justify-end">
-        <DownloadButton />
+        <DownloadButton onClick={function (): void {
+          throw new Error("Function not implemented.");
+        } } />
       </div>
-      <div className=" mx-5 max-h-[550px] overflow-auto border border-add-minus">
+      <div className="overflow-auto mx-5 max-h-[calc(100vh-220px)]">
         <CustomTable
           headers={headers}
           data={tableData}
