@@ -6,7 +6,7 @@ interface DownloadButtonProps {
 
 const DownloadButton: React.FC<DownloadButtonProps> = ({ onClick }) => {
   return (
-    <div className="icon-button" onClick={onClick}>
+    <div className="icon-button cursor-pointer" onClick={onClick}>
       <IoMdDownload className=" w-[30px] h-[30px] text-add-minus" />
     </div>
   );
