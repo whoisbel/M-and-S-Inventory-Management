@@ -126,7 +126,7 @@ model SecurityQuestionsAnswer {
   userId Int @map("user_id")
   questionId Int @map("question_id")
   answer String
-  user User @relation(fields: [userId], references: [id])
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
   question SecurityQuestions @relation(fields: [questionId], references: [id])
 }
 
