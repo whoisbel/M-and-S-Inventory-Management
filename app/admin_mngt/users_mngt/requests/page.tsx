@@ -2,6 +2,8 @@
 import { AddNewButton, AdminTable, SearchBar } from "@/components";
 import { useState, useEffect } from "react";
 import { User } from "@prisma/client";
+import Swal from "sweetalert2";
+import { swalCustomClass } from "@/utils/swalConfig";
 const Requests = () => {
   const [users, setUsers] = useState<User[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
@@ -27,6 +29,57 @@ const Requests = () => {
       return searchWords.every((word) => fullName.includes(word));
     });
   }
+  async function handleDelete(id: number) {
+    const user = { id: id };
+    const res = await fetch("/api/admin_mngt/users_mngt/requests", {
+      method: "DELETE",
+      body: JSON.stringify({ user }),
+    });
+    const { message } = await res.json();
+    if (res.ok) {
+      Swal.fire({
+        title: "Success",
+        text: message,
+        icon: "success",
+        customClass: swalCustomClass,
+      }).then(() => {
+        location.reload();
+      });
+    } else {
+      Swal.fire({
+        title: "Error",
+        text: message,
+        icon: "error",
+        customClass: swalCustomClass,
+      });
+    }
+  }
+
+  async function handleApprove(id: number) {
+    const user = { id: id };
+    const res = await fetch("/api/admin_mngt/users_mngt/requests", {
+      method: "PATCH",
+      body: JSON.stringify({ user }),
+    });
+    const { message } = await res.json();
+    if (res.ok) {
+      Swal.fire({
+        title: "Success",
+        text: message,
+        icon: "success",
+        customClass: swalCustomClass,
+      }).then(() => {
+        location.reload();
+      });
+    } else {
+      Swal.fire({
+        title: "Error",
+        text: message,
+        icon: "error",
+        customClass: swalCustomClass,
+      });
+    }
+  }
   return (
     <div className="ml-3 pt-4 px-4  w-full border border-add-minus rounded-lg">
       <div className="flex justify-between mb-5">
@@ -37,7 +90,11 @@ const Requests = () => {
           Requests for Approval
         </span>
         <div className="overflow-auto max-h-[calc(100vh-220px)] w-full">
-          <AdminTable users={filteredUsers} />
+          <AdminTable
+            users={filteredUsers}
+            onRedButtonClick={handleDelete}
+            onGreenButtonClick={handleApprove}
+          />
         </div>
       </div>
     </div>
