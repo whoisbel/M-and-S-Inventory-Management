@@ -2,7 +2,7 @@
 import { DownloadButton, NewCustomTable, CustomTable } from "@/components";
 import { useEffect, useState } from "react";
 import { ActionLog, Venue, Event } from "@prisma/client";
-const history = () => {
+const History = () => {
   const [actionLogs, setActionLogs] = useState<ActionLog[]>([]);
   const [tableData, setTableData] = useState<{
     [key: number]: string[];
@@ -54,4 +54,4 @@ const history = () => {
   );
 };
 
-export default history;
+export default History;
