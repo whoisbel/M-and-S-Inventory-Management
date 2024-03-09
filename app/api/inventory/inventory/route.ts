@@ -49,7 +49,9 @@ export async function POST(request: NextRequest) {
       const stock = await prisma.stock.upsert({
         where: {
           gradeId: data.grade,
-          isWashed: data.isWashed,
+          AND: {
+            isWashed: data.isWashed,
+          },
         },
         update: {
           quantityOnHand: {
@@ -69,6 +71,7 @@ export async function POST(request: NextRequest) {
           logId: ungradedInventory.logId,
           quantity: data.quantity,
           stockId: stock.id,
+          isWashed: data.isWashed,
         },
       });
       //paghuman ug add mag minus na sa ungraded inventory ug stock
