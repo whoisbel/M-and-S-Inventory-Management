@@ -31,7 +31,7 @@ const Inventory = () => {
   const [area, setArea] = useState<Area[]>([]);
   const [grade, setGrade] = useState<Grade[]>([]);
   const [dates, setDates] = useState<{ harvestDate: string }[]>([]);
-
+  const [sort, setSort] = useState("");
   useEffect(() => {
     const fetchData = async () => {
       const response = await fetch("/api/inventory/inventory");
@@ -53,14 +53,12 @@ const Inventory = () => {
     filterTable();
   }, [filter]);
 
-  const headers = [
-    "Harvest Date",
-    "Area",
-    "Grade",
-    "Quantity",
-    "Washed",
-    " ",
-  ];
+  useEffect(() => {
+    setTableData((prev) => {
+      return sortData(prev);
+    });
+  }, [sort]);
+  const headers = ["Harvest Date", "Area", "Grade", "Quantity", "Washed", " "];
 
   function getDefaultData() {
     return inventoryData.reduce((acc, data) => {
@@ -192,6 +190,55 @@ const Inventory = () => {
     // Write the workbook and download it as an Excel file
     XLSX.writeFile(wb, "table_data.xlsx");
   }
+  const sortData = (data: {
+    [key: number]: string[];
+  }): { [key: number]: string[] } => {
+    //sort dating according to the option selected in my select sort below
+    const sortedKeys = Object.keys(data).sort((a, b) => {
+      if (sort == "date ascending") {
+        return (
+          new Date(data[Number(a)][0]).getTime() -
+          new Date(data[Number(b)][0]).getTime()
+        );
+      } else if (sort == "date descending") {
+        return (
+          new Date(data[Number(b)][0]).getTime() -
+          new Date(data[Number(a)][0]).getTime()
+        );
+      } else if (sort == "area ascending") {
+        return data[Number(a)][1].localeCompare(data[Number(b)][1]);
+      } else if (sort == "area descending") {
+        return data[Number(b)][1].localeCompare(data[Number(a)][1]);
+      } else if (sort == "grade ascending") {
+        return data[Number(a)][2].localeCompare(data[Number(b)][2]);
+      } else if (sort == "grade descending") {
+        return data[Number(b)][2].localeCompare(data[Number(a)][2]);
+      } else if (sort == "quantity ascending") {
+        const quantityA = Number(data[Number(a)][3]);
+        const quantityB = Number(data[Number(b)][3]);
+        if (isNaN(quantityA) || isNaN(quantityB)) {
+          return 0;
+        }
+        return quantityA - quantityB;
+      } else if (sort == "quantity descending") {
+        const quantityA = Number(data[Number(a)][3]);
+        const quantityB = Number(data[Number(b)][3]);
+        if (isNaN(quantityA) || isNaN(quantityB)) {
+          return 0;
+        }
+        return quantityB - quantityA;
+      } else {
+        return 0;
+      }
+    });
+
+    const sortedData: { [key: number]: string[] } = {};
+    sortedKeys.forEach((key, index) => {
+      sortedData[index] = data[Number(key)];
+    });
+
+    return sortedData;
+  };
   return (
     <div className="h-full w-full bg-white text-black">
       {ungradedAlertShown &&
@@ -228,10 +275,18 @@ const Inventory = () => {
       <div className="bg-accent-gray py-2 px-3 flex gap-2">
         <div className="flex gap-3">
           <label>Sort by:</label>
-          <select name="sort-select" id="">
+          <select name="sort-select" onChange={(e) => setSort(e.target.value)}>
             <option value="select sort" disabled>
               Select Sort
             </option>
+            <option value="date ascending">Date Ascending</option>
+            <option value="date descending">Date Descending</option>
+            <option value="area ascending">Area Ascending</option>
+            <option value="area descending">Area Descending</option>
+            <option value="grade ascending">Grade Ascending</option>
+            <option value="grade descending">Grade Descending</option>
+            <option value="quantity ascending">Quantity Ascending</option>
+            <option value="quantity descending">Quantity Descending</option>
           </select>
         </div>
         <div className="flex gap-3">

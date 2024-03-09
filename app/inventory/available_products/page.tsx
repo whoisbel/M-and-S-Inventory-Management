@@ -25,6 +25,7 @@ const AvailableProducts = () => {
   const [grade, setGrade] = useState<Grade[]>([]);
   const [tableData, setTableData] = useState<customTableDataType>({});
   const [selectedUpdateData, setSelectedUpdateData] = useState<string[]>([]);
+  const [sort, setSort] = useState("");
   const headers = ["Grade", "Quantity", "Washed", "Price"];
 
   useEffect(() => {
@@ -47,6 +48,12 @@ const AvailableProducts = () => {
   useEffect(() => {
     filterTable();
   }, [filter]);
+
+  useEffect(() => {
+    setTableData((prev) => {
+      return sortData(prev);
+    });
+  }, [sort]);
   function getDefaultTableData() {
     const data: customTableDataType = {};
     availableProducts.forEach((product) => {
@@ -91,6 +98,54 @@ const AvailableProducts = () => {
     // Write the workbook and download it as an Excel file
     XLSX.writeFile(wb, "table_data.xlsx");
   }
+  const sortData = (data: {
+    [key: number]: string[];
+  }): { [key: number]: string[] } => {
+    const sortedKeys = Object.keys(data).sort((a, b) => {
+      if (sort == "grade ascending") {
+        return data[Number(a)][0].localeCompare(data[Number(b)][0]);
+      } else if (sort == "grade descending") {
+        return data[Number(b)][0].localeCompare(data[Number(a)][0]);
+      } else if (sort == "quantity ascending") {
+        const quantityA = Number(data[Number(a)][1]);
+        const quantityB = Number(data[Number(b)][1]);
+        if (isNaN(quantityA) || isNaN(quantityB)) {
+          return 0;
+        }
+        return quantityA - quantityB;
+      } else if (sort == "quantity descending") {
+        const quantityA = Number(data[Number(a)][1]);
+        const quantityB = Number(data[Number(b)][1]);
+        if (isNaN(quantityA) || isNaN(quantityB)) {
+          return 0;
+        }
+        return quantityB - quantityA;
+      } else if (sort == "price ascending") {
+        const priceA = Number(data[Number(a)][3].replace(/[^0-9.-]+/g, ""));
+        const priceB = Number(data[Number(b)][3].replace(/[^0-9.-]+/g, ""));
+        if (isNaN(priceA) || isNaN(priceB)) {
+          return 0;
+        }
+        return priceA - priceB;
+      } else if (sort == "price descending") {
+        const priceA = Number(data[Number(a)][3].replace(/[^0-9.-]+/g, ""));
+        const priceB = Number(data[Number(b)][3].replace(/[^0-9.-]+/g, ""));
+        if (isNaN(priceA) || isNaN(priceB)) {
+          return 0;
+        }
+        return priceB - priceA;
+      } else {
+        return 0;
+      }
+    });
+
+    const sortedData: { [key: number]: string[] } = {};
+    sortedKeys.forEach((key, index) => {
+      sortedData[index] = data[Number(key)];
+    });
+
+    return sortedData;
+  };
   return (
     <div className="h-full w-full bg-custom-white">
       <div className="bg-accent-gray w-full gap-2 flex items-center text-letters-color">
@@ -98,10 +153,20 @@ const AvailableProducts = () => {
           <div className="bg-accent-gray py-2  px-3 flex gap-2 w-full h-max">
             <div className="flex gap-3">
               <label>Sort by:</label>
-              <select name="sort-select" id="">
+              <select
+                name="sort-select"
+                id=""
+                onChange={(e) => setSort(e.target.value)}
+              >
                 <option value="select sort" disabled>
                   Select Sort
                 </option>
+                <option value="grade ascending">Grade Ascending</option>
+                <option value="grade descending">Grade Descending</option>
+                <option value="quantity ascending">Quantity Ascending</option>
+                <option value="quantity descending">Quantity Descending</option>
+                <option value="price ascending">Price Ascending</option>
+                <option value="price descending">Price Descending</option>
               </select>
             </div>
             <div className="flex gap-3">
