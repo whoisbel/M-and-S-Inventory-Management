@@ -35,21 +35,23 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
   const session = await getServerSession(options);
   const { categoryFormData, inventoryId } = await request.json();
-
+  console.log(categoryFormData);
   //ang inventoryId kay ang ungraded inventory Id nga gina sort
   const ungradedInventory = await prisma.inventory.findUnique({
     where: {
       id: inventoryId,
     },
   });
+
   await prisma.$transaction(async (tx) => {
     const prisma: any = tx;
     for (const data of categoryFormData) {
+      console.log({ data });
       //kwaon ang stock nga i-update or i-create
       const stock = await prisma.stock.upsert({
         where: {
-          gradeId: data.grade,
-          AND: {
+          gradeId_isWashed: {
+            gradeId: data.grade,
             isWashed: data.isWashed,
           },
         },

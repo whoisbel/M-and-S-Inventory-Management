@@ -8,6 +8,7 @@ export async function GET(req: NextRequest) {
   const users = await prisma.user.findMany({
     where: {
       hasAccess: true,
+      isDeleted: false,
     },
     select: {
       id: true,
@@ -24,8 +25,13 @@ export async function DELETE(req: NextRequest) {
   const { user } = await req.json();
   const session = await getServerSession(options);
   await prisma.$transaction([
-    prisma.user.delete({
-      where: { id: user.id },
+    prisma.user.update({
+      where: {
+        id: user.id,
+      },
+      data: {
+        isDeleted: true,
+      },
     }),
     prisma.actionLog.create({
       data: {

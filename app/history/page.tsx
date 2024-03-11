@@ -32,9 +32,39 @@ const History = () => {
 
     actionLogs.map((actionLog) => {
       console.log(actionLog.venue);
+      let venue = "";
+      switch (actionLog.venue) {
+        case Venue.actionLogs:
+          venue = "Action Logs";
+          break;
+
+        case Venue.areaList:
+          venue = "Area List";
+          break;
+        case Venue.availableProducts:
+          venue = "Available Products";
+          break;
+        case Venue.gradeAndPriceList:
+          venue = "Grade and Price List";
+          break;
+        case Venue.inventoryInput:
+          venue = "Inventory Input";
+          break;
+        case Venue.orderDetails:
+          venue = "Order Details";
+          break;
+        case Venue.requestForApproval:
+          venue = "Request for Approval";
+          break;
+        case Venue.manageUsers:
+          venue = "Manage Users";
+          break;
+        default:
+          venue = actionLog.venue;
+      }
       tableData[actionLog.id] = [
         new Date(actionLog.actionDate).toLocaleDateString(),
-        actionLog.venue.toUpperCase(),
+        venue.toUpperCase(),
         actionLog.event.toUpperCase(),
         actionLog.user
           ? (

@@ -3,6 +3,7 @@ import { StatusEnum } from "@prisma/client";
 import Swal from "sweetalert2";
 import { OrderDetail } from "@prisma/client";
 import { useState } from "react";
+import { swalCustomClass } from "@/utils/swalConfig";
 StatusEnum;
 const UpdateModal = ({
   swal,
@@ -31,6 +32,7 @@ const UpdateModal = ({
           icon: "success",
           title: "Order status updated",
           text: message,
+          customClass: swalCustomClass,
         })
         .then(() => {
           location.reload();
@@ -41,6 +43,7 @@ const UpdateModal = ({
         icon: "error",
         title: "An error occured",
         text: message,
+        customClass: swalCustomClass,
       });
     }
   }

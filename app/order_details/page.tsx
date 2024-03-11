@@ -1,6 +1,6 @@
 "use client";
 import { CustomTable, DownloadButton } from "@/components";
-import { OrderDetail } from "@prisma/client";
+import { OrderDetail, StatusEnum } from "@prisma/client";
 import { useState, useEffect } from "react";
 import { createPortal } from "react-dom";
 import Swal from "sweetalert2";
@@ -19,6 +19,11 @@ const OrderDetails = () => {
   const [tableData, setTableData] = useState({}); // This is the data that will be passed to the CustomTable component
   const [updateModalShown, setUpdateModalShown] = useState(false);
   const [selectedOrderDetail, setSelectedOrderDetail] = useState<OrderDetail>();
+  const [dateFilters, setDateFilters] = useState<string[]>([]);
+  const [filterOptions, setFilterOptions] = useState({
+    dateFilter: "",
+    status: "",
+  });
   useEffect(() => {
     const fetchData = async () => {
       const response = await fetch("api/order_details");
@@ -26,6 +31,16 @@ const OrderDetails = () => {
         const { data } = await response.json();
 
         setOrderDetails(data);
+        const dateFilters: string[] = [];
+        data.forEach((orderDetail: OrderDetail) => {
+          const date = new Date(
+            orderDetail.order.orderDate
+          ).toLocaleDateString();
+          if (!dateFilters.includes(date)) {
+            dateFilters.push(date);
+          }
+        });
+        setDateFilters(dateFilters);
       }
     };
     fetchData();
@@ -35,6 +50,11 @@ const OrderDetails = () => {
     const tableData = makeTableData(orderDetails);
     setTableData(tableData);
   }, [orderDetails]);
+
+  useEffect(() => {
+    filterData();
+  }, [filterOptions]);
+
   const headers = [
     "Order Id",
     "Order Date",
@@ -64,10 +84,10 @@ const OrderDetails = () => {
         orderDetail.stock.grade.description,
         orderDetail.orderQuantity,
         orderDetail.stock.grade.price,
-        orderDetail.stock.grade.price * orderDetail.orderQuantity,
+        orderDetail.unitPrice * orderDetail.orderQuantity,
         orderDetail.status,
         loadingSchedule,
-        `update`,
+        orderDetail.status != StatusEnum.fullfilled && "update",
       ];
     });
     return tableData;
@@ -95,6 +115,29 @@ const OrderDetails = () => {
     setSelectedOrderDetail(selectedOrderDetail!);
   }
 
+  const filterData = () => {
+    const defaultTableData = makeTableData(orderDetails);
+    let newTableData = Object.keys(defaultTableData).filter((data) => {
+      if (filterOptions.dateFilter == "") {
+        return true;
+      } else {
+        return defaultTableData[Number(data)][1] == filterOptions.dateFilter;
+      }
+    });
+    newTableData = newTableData.filter((data) => {
+      if (filterOptions.status == "") {
+        return true;
+      } else {
+        return defaultTableData[Number(data)][7] == filterOptions.status;
+      }
+    });
+    const filteredData: typeof defaultTableData = {};
+    newTableData.map((key) => {
+      filteredData[Number(key)] = defaultTableData[Number(key)];
+    });
+    setTableData(filteredData);
+  };
+
   return (
     <div className="h-full w-full bg-white text-black">
       {updateModalShown &&
@@ -117,24 +160,45 @@ const OrderDetails = () => {
         </div>
         <div className="flex gap-3">
           <label>Filters:</label>
-          <select className="w min-w-[150px]">
-            <option value="Date" disabled>
-              Date
-            </option>
+          <select
+            className="w min-w-[150px]"
+            onChange={(e) => {
+              setFilterOptions({
+                ...filterOptions,
+                dateFilter: e.target.value,
+              });
+            }}
+          >
+            <option value="">Date</option>
+            {dateFilters.map((date, index) => (
+              <option key={index} value={date}>
+                {date}
+              </option>
+            ))}
           </select>
 
-          <select className="w min-w-[150px]">
-            <option value="Status" disabled>
-              Status
-            </option>
+          <select
+            className="w min-w-[150px]"
+            onChange={(e) => {
+              setFilterOptions({ ...filterOptions, status: e.target.value });
+            }}
+          >
+            <option value="">Status</option>
+            {Object.keys(StatusEnum).map((status, index) => (
+              <option key={index} value={status}>
+                {status}
+              </option>
+            ))}
           </select>
         </div>
       </div>
       <div className="flex justify-end">
-            <DownloadButton onClick={function (): void {
-        throw new Error("Function not implemented.");
-      } } />
-          </div>
+        <DownloadButton
+          onClick={function (): void {
+            throw new Error("Function not implemented.");
+          }}
+        />
+      </div>
       <div className="flex flex-col p-3 bg-white">
         <CustomTable
           headers={headers}
