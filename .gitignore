@@ -13,6 +13,9 @@
 /.next/
 /out/
 
+# cypress screenshots and video
+/cypress/screenshots
+/cypress/videos
 # production
 /build
 /dist

@@ -103,27 +103,45 @@ const GradeAndPrice = () => {
   }
 
   async function handleDelete(id: number) {
-    const res = await fetch("/api/admin_mngt/inventory_mngt/grade_and_price", {
-      method: "DELETE",
-      body: JSON.stringify(id),
-    });
-    if (res.ok) {
-      swal
-        .fire({
-          title: "Grade deleted successfuly",
-          icon: "success",
-          customClass: swalCustomClass,
-        })
-        .then(() => {
-          location.reload();
-        });
-    } else {
-      swal.fire({
-        title: "Grade is in use",
-        icon: "error",
-        customClass: swalCustomClass,
+    const swal = withReactContent(Swal);
+    swal
+      .fire({
+        title: "Are you sure you want to delete?",
+        icon: "warning",
+        iconColor: "red",
+        showCancelButton: true,
+        customClass: {
+          confirmButton: "!bg-red-500",
+        },
+      })
+      .then(async (result) => {
+        if (result.isConfirmed) {
+          const res = await fetch(
+            "/api/admin_mngt/inventory_mngt/grade_and_price",
+            {
+              method: "DELETE",
+              body: JSON.stringify(id),
+            }
+          );
+          if (res.ok) {
+            swal
+              .fire({
+                title: "Grade deleted successfuly",
+                icon: "success",
+                customClass: swalCustomClass,
+              })
+              .then(() => {
+                location.reload();
+              });
+          } else {
+            swal.fire({
+              title: "Grade is in use",
+              icon: "error",
+              customClass: swalCustomClass,
+            });
+          }
+        }
       });
-    }
   }
   const [searchTerm, setSearchTerm] = useState("");
   const handleSearch = (searchTerm: string) => {
