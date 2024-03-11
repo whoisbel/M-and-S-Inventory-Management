@@ -78,6 +78,7 @@ model OrderDetail{
   subTotal Decimal @map("sub_total")
   loadingSchedule DateTime? @map("loading_schedule")
   status StatusEnum @default(processing)
+  unitPrice Decimal @map("unit_price")
   stock Stock @relation(fields: [stockId], references: [id])
   order Order @relation(fields: [orderId], references: [id], onDelete: Cascade)
   stockout Stockout[]
@@ -132,11 +133,11 @@ model SecurityQuestionsAnswer {
 
 model ActionLog{
   id Int @id @default(autoincrement())
-  userId Int @map("personnel_id")
+  userId Int? @map("personnel_id")
   venue Venue
   event Event
   actionDate DateTime @default(now()) @map("action_date")
-  user User @relation(fields: [userId], references: [id])
+  user User? @relation(fields: [userId], references: [id], onDelete: SetNull)
 }
 
 

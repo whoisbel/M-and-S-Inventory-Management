@@ -159,6 +159,8 @@ export async function DELETE(request: NextRequest) {
       return NextResponse.json({ message: "Inventory deleted successfuly" });
     }
 
+    //if the inventory is not ungraded
+
     const ungradedInventory = await prisma.inventory.findFirst({
       where: {
         harvestLog: {
