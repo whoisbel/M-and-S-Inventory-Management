@@ -73,7 +73,7 @@ model OrderDetail{
   id Int @id @default(autoincrement()) 
   orderId Int  @map("order_id")
   stockId Int @map("stock_id")
-  isFulfilled Boolean @map("is_fulfilled")
+  isFulfilled Boolean @map("is_fulfilled") @default(false)
   orderQuantity Decimal @map("order_quantity")
   subTotal Decimal @map("sub_total")
   loadingSchedule DateTime? @map("loading_schedule")
@@ -90,7 +90,7 @@ model Order {
   isPreorder Boolean  @map("is_preorder")
   orderDate DateTime @default(now()) @map("order_date")
   orderTotal Decimal @map("order_total")
-  isFulfilled Boolean @map("is_fulfilled")
+  isFulfilled Boolean @map("is_fulfilled") @default(false)
   orderDetails OrderDetail[]
   customer Customer @relation(fields: [customerId], references: [id], onDelete: Cascade)
 }
