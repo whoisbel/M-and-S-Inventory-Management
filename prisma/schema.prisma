@@ -73,7 +73,7 @@ model OrderDetail{
   id Int @id @default(autoincrement()) 
   orderId Int  @map("order_id")
   stockId Int @map("stock_id")
-  isFulfilled Boolean @map("is_fullfilled")
+  isFulfilled Boolean @map("is_fulfilled")
   orderQuantity Decimal @map("order_quantity")
   subTotal Decimal @map("sub_total")
   loadingSchedule DateTime? @map("loading_schedule")
