@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { User } from "@prisma/client";
 import Swal from "sweetalert2";
 import { swalCustomClass } from "@/utils/swalConfig";
+import withReactContent from "sweetalert2-react-content";
 const ManageUsers = () => {
   const [users, setUsers] = useState<User[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
@@ -33,28 +34,44 @@ const ManageUsers = () => {
   }
   async function handleDelete(id: number) {
     const user = { id: id };
-    const res = await fetch("/api/admin_mngt/users_mngt/manage_users", {
-      method: "DELETE",
-      body: JSON.stringify({ user }),
-    });
-    const { message } = await res.json();
-    if (res.ok) {
-      Swal.fire({
-        title: "Success",
-        text: message,
-        icon: "success",
-        customClass: swalCustomClass,
-      }).then(() => {
-        location.reload();
+    const swal = withReactContent(Swal);
+    swal
+      .fire({
+        title: "Are you sure you want to delete?",
+        icon: "warning",
+        iconColor: "red",
+        showCancelButton: true,
+        customClass: {
+          confirmButton: "!bg-red-500",
+        },
+      })
+      .then(async (result) => {
+        if (result.isConfirmed) {
+          const res = await fetch("/api/admin_mngt/users_mngt/manage_users", {
+            method: "DELETE",
+            body: JSON.stringify({ user }),
+          });
+          const { message } = await res.json();
+          if (res.ok) {
+            Swal.fire({
+              title: "Success",
+              text: message,
+              icon: "success",
+              customClass: swalCustomClass,
+            }).then(() => {
+              location.reload();
+            });
+          } else {
+            Swal.fire({
+              title: "Error",
+              text: message,
+              icon: "error",
+              customClass: swalCustomClass,
+            });
+          }
+          location.reload();
+        }
       });
-    } else {
-      Swal.fire({
-        title: "Error",
-        text: message,
-        icon: "error",
-        customClass: swalCustomClass,
-      });
-    }
   }
 
   return (

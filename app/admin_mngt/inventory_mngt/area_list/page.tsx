@@ -48,29 +48,45 @@ const AreaList = () => {
     });
   }
   async function handleDeleteArea(id: number) {
-    const res = await fetch("/api/admin_mngt/inventory_mngt/area_list", {
-      method: "DELETE",
-      body: JSON.stringify(id),
-    });
-    if (res.ok) {
-      swal
-        .fire({
-          title: "Area Deleted",
-          icon: "success",
-          customClass: swalCustomClass,
-        })
-        .then(() => {
-          swal.close();
-          location.reload();
-        });
-    } else {
-      swal.fire({
-        title: "Error",
-        text: "Area could not be deleted, it is probably in use",
-        icon: "error",
-        customClass: swalCustomClass,
+    const swal = withReactContent(Swal);
+
+    swal
+      .fire({
+        title: "Are you sure you want to delete?",
+        icon: "warning",
+        iconColor: "red",
+        showCancelButton: true,
+        customClass: {
+          confirmButton: "!bg-red-500",
+        },
+      })
+      .then(async (result) => {
+        if (result.isConfirmed) {
+          const res = await fetch("/api/admin_mngt/inventory_mngt/area_list", {
+            method: "DELETE",
+            body: JSON.stringify(id),
+          });
+          if (res.ok) {
+            swal
+              .fire({
+                title: "Area Deleted",
+                icon: "success",
+                customClass: swalCustomClass,
+              })
+              .then(() => {
+                swal.close();
+                location.reload();
+              });
+          } else {
+            swal.fire({
+              title: "Error",
+              text: "Area could not be deleted, it is probably in use",
+              icon: "error",
+              customClass: swalCustomClass,
+            });
+          }
+        }
       });
-    }
   }
 
   async function handleUpdateAreaSubmit(area: Area) {
