@@ -2,6 +2,7 @@
 import { DownloadButton, NewCustomTable, CustomTable } from "@/components";
 import { useEffect, useState } from "react";
 import { ActionLog, Venue, Event } from "@prisma/client";
+import * as XLSX from "xlsx";
 const History = () => {
   const [actionLogs, setActionLogs] = useState<ActionLog[]>([]);
   const [tableData, setTableData] = useState<{
@@ -47,11 +48,24 @@ const History = () => {
     console.log(tableData);
     setTableData(tableData);
   }
+  function downloadTableAsExcel() {
+    // Convert tableData into an array of objects
+    const data = Object.values(tableData).map(([date, venue, event, user]) => ({
+      Date: date,
+      Venue: venue,
+      Event: event,
+      User: user,
+    }));
 
+    const ws = XLSX.utils.json_to_sheet(data);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
+    XLSX.writeFile(wb, "tableData.xlsx");
+  }
   return (
     <div className="h-full w-full bg-white text-black">
       <div className="flex justify-end">
-        <DownloadButton onClick={() => {}} />
+        <DownloadButton onClick={downloadTableAsExcel} />
       </div>
       <div className="overflow-auto max-h-[550px] mr-5 ml-5 mb-5">
         <CustomTable headers={headers} data={tableData} isLoading={isLoading} />
