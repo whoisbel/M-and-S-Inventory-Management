@@ -51,9 +51,10 @@ model Stock{
 
   id Int @id @default(autoincrement()) 
   quantityOnHand Decimal @map("quantity_on_hand")
-  gradeId Int @map("grade_id") @unique
+  gradeId Int @map("grade_id") 
   grade Grade @relation(fields: [gradeId], references: [id]) 
   isWashed Boolean @map("is_washed") @default(false)
+  @@unique([gradeId, isWashed])
   orderDetail OrderDetail[]
   inventory Inventory[]
   stockout Stockout[]

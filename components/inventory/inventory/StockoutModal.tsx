@@ -4,6 +4,7 @@ import { inventoryDataType } from "@/types";
 import { useState, useEffect } from "react";
 import { BiX, BiError } from "react-icons/bi";
 import { swalCustomClass } from "@/utils/swalConfig";
+import { Stockout } from "@prisma/client";
 const StockoutModal = ({
   swal,
   inventory,
@@ -39,15 +40,14 @@ const StockoutModal = ({
     if (inputQuantity === 0 || inputDate === "") {
       return;
     }
-    const response = await fetch("/api/inventory/stockout", {
+
+    const response = await fetch("/api/inventory/stockout/ungraded", {
       method: "POST",
-      body: JSON.stringify([
-        {
-          inventoryId: inventoryId,
-          quantity: inputQuantity,
-          date: inputDate,
-        },
-      ]),
+      body: JSON.stringify({
+        inventoryId: inventoryId,
+        quantity: inputQuantity,
+        date: inputDate,
+      }),
     });
     if (response.ok) {
       swal.close();
