@@ -35,7 +35,11 @@ const History = () => {
         new Date(actionLog.actionDate).toLocaleDateString(),
         actionLog.venue.toUpperCase(),
         actionLog.event.toUpperCase(),
-        actionLog.user.firstName + " " + actionLog.user.lastName,
+        (
+          actionLog.user.firstName +
+          " " +
+          actionLog.user.lastName
+        ).toUpperCase(),
       ];
     });
     console.log(tableData);
