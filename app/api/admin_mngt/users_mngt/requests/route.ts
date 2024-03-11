@@ -7,7 +7,10 @@ import { Console } from "console";
 export async function GET(req: NextRequest) {
   const users = await prisma.user.findMany({
     where: {
-      hasAccess: false,
+      AND: {
+        hasAccess: false,
+        isDeleted: false,
+      },
     },
     select: {
       id: true,

@@ -113,6 +113,7 @@ model User{
   actions ActionLog[]
   hasAccess Boolean @map("has_access") @default(false)
   isAdmin Boolean @map("is_admin")
+  isDeleted Boolean @map("is_deleted") @default(false)
   dateCreated DateTime @map("date_created") @default(now())
   securitQuestionsAnswer SecurityQuestionsAnswer[]
 }
