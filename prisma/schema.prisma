@@ -168,7 +168,7 @@ enum Venue {
 }
 enum StatusEnum {
   processing 
-  fullfilled
+  fulfilled
 }
 enum StockOutType {
   disposed
