@@ -36,7 +36,10 @@ export async function POST(request: NextRequest) {
     });
     const ungradedStock = await prisma.stock.findFirst({
       where: {
-        gradeId: ungradedGrade.id,
+        AND: {
+          gradeId: ungradedGrade.id,
+          isWashed: false,
+        },
       },
     });
 
@@ -49,7 +52,10 @@ export async function POST(request: NextRequest) {
       //update or create the stock if update increment the quantity on hand
       const ungradeStock = await prisma.stock.upsert({
         where: {
-          gradeId: ungradedGrade.id,
+          gradeId_isWashed: {
+            gradeId: ungradedGrade.id,
+            isWashed: false,
+          },
         },
         update: {
           quantityOnHand: {
