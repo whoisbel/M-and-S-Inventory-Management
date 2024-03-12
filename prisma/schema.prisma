@@ -144,27 +144,28 @@ model ActionLog{
 
 
 enum Event {
-  Downloaded
-  Added
-  Updated
-  Deleted
-  Approved
-  Denied
-  Removed
+  download
+  add
+  update
+  delete
+  approve
+  deny
+  remove
+  
 }
 
 enum Venue {
-  Dashboard
-  AreaList
-  GradeAndPriceList
-  RequestForApproval
-  ManageUsers
-  AddInventory
-  HarvestLogs
-  Inventory
-  AvailableProducts
-  Stockout
-  OrderDetails
+  dashboard
+  areaList
+  gradeAndPriceList
+  requestForApproval
+  manageUsers
+  inventoryInput
+  inventory
+  availableProducts
+  stockout
+  orderDetails
+  actionLogs
 }
 enum StatusEnum {
   processing 
