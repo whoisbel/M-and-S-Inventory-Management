@@ -1,11 +1,11 @@
 INSERT INTO grade (description, price) VALUES
-1    ('Ungraded', 0),
-2    ('Reject', 0),
-3    ('Regular A', 90),
-4    ('Regular B', 80),
-5    ('Regular C', 70),
-6    ('Oversized', 45),
-7    ('Peewee', 35);
+    ('Ungraded', 0),
+    ('Reject', 0),
+    ('Regular A', 90),
+    ('Regular B', 80),
+    ('Regular C', 70),
+    ('Oversized', 45),
+    ('Peewee', 35);
 
 INSERT INTO area (description) VALUES
     ('Block 3'),

@@ -81,11 +81,11 @@ model OrderDetail{
   status StatusEnum @default(processing)
   unitPrice Decimal @map("unit_price")
   stock Stock @relation(fields: [stockId], references: [id])
-  order Order @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  order Orders @relation(fields: [orderId], references: [id], onDelete: Cascade)
   stockout Stockout[]
 }
 
-model Order {
+model Orders {
   id Int @id @default(autoincrement()) 
   customerId Int @map("customer_id")
   isPreorder Boolean  @map("is_preorder")
@@ -102,7 +102,7 @@ model Customer{
   middleName String @map("middle_name")
   mobileNumber String @map("mobile_number")
   email String 
-  orders Order[]
+  orders Orders[]
 }
 
 model User{
@@ -144,33 +144,30 @@ model ActionLog{
 
 
 enum Event {
-  download
-  add
-  update
-  delete
-  approve
-  deny
-  remove
-  
+  Downloaded
+  Added
+  Updated
+  Deleted
+  Approved
+  Denied
+  Removed
 }
 
 enum Venue {
-  dashboard
-  areaList
-  gradeAndPriceList
-  requestForApproval
-  manageUsers
-  inventoryInput
-  inventory
-  availableProducts
-  stockout
-  orderDetails
-  actionLogs
+  Dashboard
+  AreaList
+  GradeAndPriceList
+  RequestForApproval
+  ManageUsers
+  AddInventory
+  HarvestLogs
+  Inventory
+  AvailableProducts
+  Stockout
+  OrderDetails
 }
 enum StatusEnum {
   processing 
-  packed
-  scheduled_for_loading
   fullfilled
 }
 enum StockOutType {
