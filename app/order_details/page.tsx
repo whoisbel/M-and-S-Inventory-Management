@@ -79,15 +79,15 @@ const OrderDetails = () => {
       ).toLocaleDateString();
       tableData[orderDetail.id] = [
         `${orderDetail.order.id}`,
-        orderDate,
-        orderDetail.order.customer.firstName,
-        orderDetail.stock.grade.description,
-        orderDetail.orderQuantity,
-        orderDetail.stock.grade.price,
-        orderDetail.unitPrice * orderDetail.orderQuantity,
-        orderDetail.status,
-        loadingSchedule,
-        orderDetail.status != StatusEnum.fulfilled && "update",
+        `${orderDate}`,
+        `${orderDetail.order.customer.firstName}`,
+        `${orderDetail.stock.grade.description}`,
+        `${orderDetail.orderQuantity}`,
+        `${orderDetail.stock.grade.price}`,
+        `${orderDetail.unitPrice * orderDetail.orderQuantity}`,
+        `${orderDetail.status}`,
+        `${loadingSchedule}`,
+        orderDetail.status != StatusEnum.fulfilled ? "update" : "",
       ];
     });
     return tableData;
