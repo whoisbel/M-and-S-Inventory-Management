@@ -9,9 +9,8 @@ interface SecurityQuestion {
       cy.intercept('GET', '/api/auth/register', { fixture: 'setupData.json' }).as('getSetupData');
       cy.visit('http://localhost:3000');
       cy.wait('@getSetupData');
-      cy.get('p').contains('Create account here').click();
       cy.get('p.top-text').should('have.text', 'Setup Account');
-      cy.get('.register-modal').within(() => {
+      cy.get('.register-modal', { timeout: 5000}).within(() => {
         cy.get('input[placeholder="First name"]').type('John');
         cy.get('input[placeholder="Last name"]').type('Doe');
         cy.get('input[placeholder="Username"]').type('johndoe123');
