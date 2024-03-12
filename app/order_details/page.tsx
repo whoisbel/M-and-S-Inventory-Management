@@ -1,5 +1,5 @@
 "use client";
-import { CustomTable, DownloadButton } from "@/components";
+import { CustomTable, DownloadButton, SearchBar } from "@/components";
 import { OrderDetail, StatusEnum } from "@prisma/client";
 import { useState, useEffect } from "react";
 import { createPortal } from "react-dom";
@@ -36,6 +36,7 @@ const OrderDetails = () => {
     status: "",
   });
   const [sort, setSort] = useState("");
+  const [searchTerm, setSearchTerm] = useState("");
   useEffect(() => {
     const fetchData = async () => {
       const response = await fetch("api/order_details");
@@ -73,6 +74,21 @@ const OrderDetails = () => {
       return sortedData;
     });
   }, [sort]);
+  useEffect(() => {
+    if (searchTerm === "") {
+      setTableData(makeTableData(orderDetails));
+    } else {
+      const filteredData = Object.values(
+        tableData as { [key: string]: string[] }
+      ).filter((row: string[]) => {
+        return (
+          row[0].toLowerCase().includes(searchTerm.toLowerCase()) ||
+          row[2].toLowerCase().includes(searchTerm.toLowerCase())
+        );
+      });
+      setTableData(filteredData);
+    }
+  }, [searchTerm]);
   const headers = [
     "Order Id",
     "Order Date",
@@ -222,6 +238,10 @@ const OrderDetails = () => {
 
     return sortedData;
   }
+
+  const handleSearch = (searchTerm: string) => {
+    setSearchTerm(searchTerm);
+  };
   return (
     <div className="h-full w-full bg-white text-black">
       {updateModalShown &&
@@ -234,6 +254,9 @@ const OrderDetails = () => {
           swal.getHtmlContainer()!
         )}
       <div className="bg-accent-gray py-2 px-3 flex gap-2">
+        <div className="flex gap-3">
+          <SearchBar onSearch={handleSearch} />
+        </div>
         <div className="flex gap-3">
           <label>Sort by:</label>
           <select
