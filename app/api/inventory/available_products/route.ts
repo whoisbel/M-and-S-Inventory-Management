@@ -1,7 +1,10 @@
 import { NextResponse, NextRequest } from "next/server";
 import prisma from "@/utils/prisma";
+import { getServerSession } from "next-auth";
+import { options } from "../../auth/[...nextauth]/options";
 
 export async function GET(request: NextRequest) {
+  const session = await getServerSession(options);
   const availableProducts = await prisma.stock.findMany({
     include: {
       grade: {

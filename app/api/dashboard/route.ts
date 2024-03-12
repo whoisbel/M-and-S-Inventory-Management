@@ -1,4 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
+import { getServerSession } from "next-auth";
+import { options } from "../auth/[...nextauth]/options";
 
 import { DashboardData } from "@/types";
 
@@ -29,6 +31,7 @@ import prisma from "@/utils/prisma";
   }
 */
 export async function GET(request: NextRequest) {
+  const session = await getServerSession(options);
   const gradeSummary = await prisma.$queryRaw`
     SELECT SUM(quantity_on_hand) AS quantity,
           grade.description AS name

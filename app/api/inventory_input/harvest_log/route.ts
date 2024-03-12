@@ -96,13 +96,13 @@ export async function DELETE(request: NextRequest) {
   const session = await getServerSession(options);
   const response = await request.json();
   try {
-    prisma.$transaction([
-      await prisma.harvestLog.delete({
+    await prisma.$transaction([
+      prisma.harvestLog.delete({
         where: {
           id: response.id,
         },
       }),
-      await prisma.actionLog.create({
+      prisma.actionLog.create({
         data: {
           venue: Venue.inventoryInput,
           event: Event.delete,
@@ -112,6 +112,7 @@ export async function DELETE(request: NextRequest) {
     ]);
     return NextResponse.json("success");
   } catch (error) {
+    console.log(error);
     return NextResponse.json("error");
   }
 }
