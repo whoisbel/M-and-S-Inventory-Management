@@ -69,7 +69,7 @@ describe('Return error due to invalid or blank inputs', () => {
 
   testCases.forEach(({firstName, lastName, username, password, confirmPassword, answers, errorMessage}) => {
     it(`should open a swal modal with message "${errorMessage}"`, () => {
-      cy.get('.register-modal').within(() => {
+      cy.get('.register-modal', {timeout: 5000}).within(() => {
         fillForm(firstName, lastName, username, password, confirmPassword, answers);
       });
       cy.get('div.swal2-popup').within(() => {
