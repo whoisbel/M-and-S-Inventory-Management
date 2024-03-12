@@ -8,6 +8,17 @@ import withReactContent from "sweetalert2-react-content";
 import { UpdateModal } from "@/components";
 import { swalCustomClass } from "@/utils/swalConfig";
 import { utils, writeFile } from "xlsx";
+interface TableDataRow {
+  id: string;
+  date: Date;
+  name: string;
+  grade: string;
+  quantity: number;
+  price: number;
+  total: number;
+  status: string;
+  loading_schedule: Date;
+}
 const OrderDetails = () => {
   const [filters, setFilters] = useState({
     date: "",
@@ -24,6 +35,7 @@ const OrderDetails = () => {
     dateFilter: "",
     status: "",
   });
+  const [sort, setSort] = useState("");
   useEffect(() => {
     const fetchData = async () => {
       const response = await fetch("api/order_details");
@@ -54,7 +66,13 @@ const OrderDetails = () => {
   useEffect(() => {
     filterData();
   }, [filterOptions]);
-
+  useEffect(() => {
+    setTableData((prev) => {
+      const sortedData = sortData(prev);
+      console.log(sortedData); // Add this line
+      return sortedData;
+    });
+  }, [sort]);
   const headers = [
     "Order Id",
     "Order Date",
@@ -167,6 +185,43 @@ const OrderDetails = () => {
     // Write the workbook to a file
     writeFile(wb, "tableData.xlsx");
   }
+  function sortData(data: { [key: string]: string[] }): {
+    [key: string]: string[];
+  } {
+    const sortedKeys = Object.keys(data).sort((a, b) => {
+      switch (sort) {
+        case "order-date ascending":
+          return (
+            new Date(data[Number(a)][1]).getTime() -
+            new Date(data[Number(b)][1]).getTime()
+          );
+        case "order-date descending":
+          return (
+            new Date(data[Number(b)][1]).getTime() -
+            new Date(data[Number(a)][1]).getTime()
+          );
+        case "loading-schedule ascending":
+          return (
+            new Date(data[Number(a)][8]).getTime() -
+            new Date(data[Number(b)][8]).getTime()
+          );
+        case "loading-schedule descending":
+          return (
+            new Date(data[Number(b)][8]).getTime() -
+            new Date(data[Number(a)][8]).getTime()
+          );
+        default:
+          return 0;
+      }
+    });
+
+    const sortedData: { [key: string]: string[] } = {};
+    sortedKeys.forEach((key, index) => {
+      sortedData[index] = data[Number(key)];
+    });
+
+    return sortedData;
+  }
   return (
     <div className="h-full w-full bg-white text-black">
       {updateModalShown &&
@@ -181,10 +236,20 @@ const OrderDetails = () => {
       <div className="bg-accent-gray py-2 px-3 flex gap-2">
         <div className="flex gap-3">
           <label>Sort by:</label>
-          <select name="sort-select" id="">
+          <select
+            name="sort-select"
+            id=""
+            onChange={(e) => setSort(e.target.value)}
+          >
             <option value="select sort">Select Sort</option>
-            <option value="quantity-ascending">Quantity-Ascending</option>
-            <option value="quantity-descending">Quantity-Descending</option>
+            <option value="order-date ascending">Order Date Ascending</option>
+            <option value="order-date descending">Order Date Descending</option>
+            <option value="loading-schedule ascending">
+              Loading Schedule Ascending
+            </option>
+            <option value="loading-schedule descending">
+              Loading Schedule Descending
+            </option>
           </select>
         </div>
         <div className="flex gap-3">
