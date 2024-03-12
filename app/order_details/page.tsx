@@ -87,7 +87,7 @@ const OrderDetails = () => {
         orderDetail.unitPrice * orderDetail.orderQuantity,
         orderDetail.status,
         loadingSchedule,
-        orderDetail.status != StatusEnum.fullfilled && "update",
+        orderDetail.status != StatusEnum.fulfilled && "update",
       ];
     });
     return tableData;
