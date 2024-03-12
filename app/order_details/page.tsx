@@ -7,7 +7,7 @@ import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import { UpdateModal } from "@/components";
 import { swalCustomClass } from "@/utils/swalConfig";
-
+import * as XLSX from "xlsx";
 const OrderDetails = () => {
   const [filters, setFilters] = useState({
     date: "",
@@ -137,7 +137,45 @@ const OrderDetails = () => {
     });
     setTableData(filteredData);
   };
+  function downloadTableAsExcel() {
+    // Define the headers
+    const headers = [
+      "Order Id",
+      "Order Date",
+      "Customer",
+      "Grade",
+      "Quantity",
+      "Unit Price",
+      "Total Price",
+      "Status",
+      "Loading Scedule",
+    ];
 
+    // Convert the data to the format expected by the function
+    const tableDataArray = Object.values(tableData).map((row: any) => [
+      row.orderId,
+      row.order.orderDate,
+      `${row.order.customer.firstName} ${row.order.customer.lastName}`,
+      row.stock.grade.description,
+      row.orderQuantity,
+      row.unitPrice,
+      row.subTotal,
+      row.status,
+      row.loadingSchedule,
+    ]);
+
+    // Create a new worksheet
+    const ws = XLSX.utils.aoa_to_sheet([headers, ...tableDataArray]);
+
+    // Create a new workbook
+    const wb = XLSX.utils.book_new();
+
+    // Append the worksheet to the workbook
+    XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
+
+    // Write the workbook and download it as an Excel file
+    XLSX.writeFile(wb, "table_data.xlsx");
+  }
   return (
     <div className="h-full w-full bg-white text-black">
       {updateModalShown &&
@@ -193,11 +231,7 @@ const OrderDetails = () => {
         </div>
       </div>
       <div className="flex justify-end">
-        <DownloadButton
-          onClick={function (): void {
-            throw new Error("Function not implemented.");
-          }}
-        />
+        <DownloadButton onClick={downloadTableAsExcel} />
       </div>
       <div className="flex flex-col p-3 bg-white">
         <CustomTable
