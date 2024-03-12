@@ -65,7 +65,7 @@ const OrderDetails = () => {
     "Total Price",
     "Status",
     "Loading Scedule",
-    "Actions",
+    " ",
   ];
   function makeTableData(data: OrderDetail[]) {
     const tableData: { [key: string]: any[] } = {};
