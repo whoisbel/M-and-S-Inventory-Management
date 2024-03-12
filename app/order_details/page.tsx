@@ -231,7 +231,6 @@ const OrderDetails = () => {
           handleUpdate={handleUpdateButtonClick}
         />
       </div>
-      {JSON.stringify(tableData)}
     </div>
   );
 };
