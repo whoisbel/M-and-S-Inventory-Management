@@ -43,7 +43,7 @@ const LoginModal = ({
   }
 
   return (
-    <div className="">
+    <div className="login-inputs">
       <div className=" pb-2">
         <div className=" relative bg-main-background rounded-[20px] w-[300px] h-[46px] mb-[18px] shadow-lg border-2 group login-modal">
           <input

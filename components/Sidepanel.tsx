@@ -17,7 +17,7 @@ const Sidepanel = ({ user }: User) => {
   // active:bg-main-background active:text-letters-color
   //h-[calc(100vh-1em)] 1em paras padding top (.5em) and bottom (.5em)
   return (
-    <div className="sticky top-2 left-2 bottom-2 lg:min-w-[300px] h-[calc(100vh-1em)] bg-primary-green rounded-lg lg:block bg-primary-color ">
+    <div className="sticky top-2 left-2 bottom-2 lg:min-w-[300px] h-[calc(100vh-1em)] bg-primary-green rounded-lg lg:block bg-primary-color sidepanel-component">
       <ul className="text-[20px] flex flex-col w-full">
         <li className="rounded-t-lg sidepanel_link bg-accent-green text-letters-color h-[95px]">
           <div className="set_icon">
