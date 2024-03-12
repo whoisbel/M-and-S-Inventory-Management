@@ -94,11 +94,15 @@ const StockoutForm = ({
         <option value={0} disabled>
           Choose Grade
         </option>
-        {grade.map((grade) => (
-          <option key={grade.id} value={grade.id}>
-            {grade.description}
-          </option>
-        ))}
+        {grade.map((grade) => {
+          if (grade.description.toLowerCase() != "ungraded") {
+            return (
+              <option key={grade.id} value={grade.id}>
+                {grade.description}
+              </option>
+            );
+          }
+        })}
       </select>
       <label>Washed:</label>
       <input

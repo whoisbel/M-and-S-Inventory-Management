@@ -12,11 +12,6 @@ export async function GET(request: NextRequest) {
       quantityOnHand: {
         gt: 0,
       },
-      grade: {
-        description: {
-          not: "Ungraded",
-        },
-      },
     },
     select: {
       grade: true,

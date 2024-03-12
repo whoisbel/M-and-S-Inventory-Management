@@ -24,7 +24,9 @@ const StockoutPage = () => {
     useState(false);
   const [stockout, setStockout] = useState<Stockout[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [filterOptions, setFilterOptions] = useState({ grade: "", date: "" });
 
+  const [dateFilter, setDateFilter] = useState<string[]>([]);
   const [grade, setGrade] = useState<Grade[]>([]);
   const [tableData, setTableData] = useState<customTableDataType>({});
   const [selectedUpdateData, setSelectedUpdateData] = useState<string[]>([]);
@@ -39,6 +41,16 @@ const StockoutPage = () => {
       console.log(stockout);
       setStockout(stockout);
       setGrade(grade);
+      const dateFilters: string[] = [];
+
+      stockout.forEach((stockout: Stockout) => {
+        console.log(stockout.dateOut);
+        const date = new Date(stockout.dateOut).toLocaleDateString();
+        if (!dateFilters.includes(date)) {
+          dateFilters.push(date);
+        }
+      });
+      setDateFilter(dateFilters);
     };
     fetchData();
   }, []);
@@ -56,7 +68,6 @@ const StockoutPage = () => {
     setSelectedUpdateData(tableData[index]);
     console.log(swal.getHtmlContainer());
   }
-
   function handleCreateStockOut() {
     swal.fire({
       didOpen: () => setCreateStockOutModalShown(true),
@@ -109,6 +120,7 @@ const StockoutPage = () => {
     // Write the workbook and download it as an Excel file
     XLSX.writeFile(wb, "table_data.xlsx");
   }
+
   const sortData = (data: {
     [key: number]: string[];
   }): { [key: number]: string[] } => {
@@ -154,6 +166,31 @@ const StockoutPage = () => {
 
     return sortedData;
   };
+  const filterData = () => {
+    const defaultTableData = getDefaultTableData();
+    let newTableData = Object.keys(defaultTableData).filter((data) => {
+      if (filterOptions.date == "") {
+        return true;
+      } else {
+        return defaultTableData[Number(data)][0] == filterOptions.date;
+      }
+    });
+    newTableData = newTableData.filter((data) => {
+      if (filterOptions.grade == "") {
+        return true;
+      } else {
+        return defaultTableData[Number(data)][1] == filterOptions.grade;
+      }
+    });
+    const filteredData: typeof defaultTableData = {};
+    newTableData.map((key) => {
+      filteredData[Number(key)] = defaultTableData[Number(key)];
+    });
+    setTableData(filteredData);
+  };
+  useEffect(() => {
+    filterData();
+  }, [filterOptions]);
   return (
     <div className="h-full w-full bg-custom-white">
       <div className="bg-accent-gray w-full gap-2 flex items-center text-letters-color">
@@ -193,23 +230,29 @@ const StockoutPage = () => {
                 defaultValue=""
                 onChange={(e) => {
                   {
-                    /*setFilter({ ...filter, dateFilter: e.target.value });*/
+                    setFilterOptions({
+                      ...filterOptions,
+                      date: e.target.value,
+                    });
                   }
                 }}
               >
                 <option value="">Date</option>
-                {/* {dates.map((date, ind) => (
-        <option key={ind} value={date.harvestDate}>
-          {date.harvestDate}
-        </option>
-      ))} */}
+                {dateFilter.map((date, ind) => (
+                  <option key={ind} value={date}>
+                    {date}
+                  </option>
+                ))}
               </select>
               <select
                 className="w min-w-[150px]"
                 defaultValue=""
                 onChange={(e) => {
                   {
-                    /*setFilter({ ...filter, dateFilter: e.target.value });*/
+                    setFilterOptions({
+                      ...filterOptions,
+                      grade: e.target.value,
+                    });
                   }
                 }}
               >
