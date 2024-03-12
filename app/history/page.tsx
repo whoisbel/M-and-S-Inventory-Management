@@ -15,9 +15,9 @@ const History = () => {
     async function fetchActionLogs() {
       const response = await fetch("/api/history/");
       const { actionLogs } = await response.json();
+      console.log("action Logs", actionLogs);
       setActionLogs(actionLogs);
       setIsLoading(false);
-      console.log(actionLogs);
     }
     fetchActionLogs();
   }, []);
@@ -62,6 +62,7 @@ const History = () => {
         default:
           venue = actionLog.venue;
       }
+
       tableData[actionLog.id] = [
         new Date(actionLog.actionDate).toLocaleDateString(),
         venue.toUpperCase(),
