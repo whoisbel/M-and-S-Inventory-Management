@@ -31,6 +31,7 @@ const OrderDetails = () => {
         const { data } = await response.json();
 
         setOrderDetails(data);
+        console.log(data);
         const dateFilters: string[] = [];
         data.forEach((orderDetail: OrderDetail) => {
           const date = new Date(
