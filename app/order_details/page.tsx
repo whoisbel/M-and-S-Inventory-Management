@@ -7,7 +7,7 @@ import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import { UpdateModal } from "@/components";
 import { swalCustomClass } from "@/utils/swalConfig";
-import * as XLSX from "xlsx";
+import { utils, writeFile } from "xlsx";
 const OrderDetails = () => {
   const [filters, setFilters] = useState({
     date: "",
@@ -137,44 +137,35 @@ const OrderDetails = () => {
     });
     setTableData(filteredData);
   };
+  function processTableData(tableData: { [key: string]: string[] }) {
+    const processedData = Object.values(tableData).map((row) => ({
+      id: row[0],
+      date: row[1],
+      name: row[2],
+      grade: row[3],
+      quantity: row[4],
+      price: row[5],
+      total: row[6],
+      status: row[7],
+      loading_schedule: row[8],
+    }));
+
+    return processedData;
+  }
   function downloadTableAsExcel() {
-    // Define the headers
-    const headers = [
-      "Order Id",
-      "Order Date",
-      "Customer",
-      "Grade",
-      "Quantity",
-      "Unit Price",
-      "Total Price",
-      "Status",
-      "Loading Scedule",
-    ];
-
-    // Convert the data to the format expected by the function
-    const tableDataArray = Object.values(tableData).map((row: any) => [
-      row.orderId,
-      row.order.orderDate,
-      `${row.order.customer.firstName} ${row.order.customer.lastName}`,
-      row.stock.grade.description,
-      row.orderQuantity,
-      row.unitPrice,
-      row.subTotal,
-      row.status,
-      row.loadingSchedule,
-    ]);
-
-    // Create a new worksheet
-    const ws = XLSX.utils.aoa_to_sheet([headers, ...tableDataArray]);
+    const processedData = processTableData(tableData);
 
     // Create a new workbook
-    const wb = XLSX.utils.book_new();
+    const wb = utils.book_new();
 
-    // Append the worksheet to the workbook
-    XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
+    // Convert the processed data to a worksheet
+    const ws = utils.json_to_sheet(processedData);
 
-    // Write the workbook and download it as an Excel file
-    XLSX.writeFile(wb, "table_data.xlsx");
+    // Add the worksheet to the workbook
+    utils.book_append_sheet(wb, ws, "Sheet1");
+
+    // Write the workbook to a file
+    writeFile(wb, "tableData.xlsx");
   }
   return (
     <div className="h-full w-full bg-white text-black">
@@ -240,6 +231,7 @@ const OrderDetails = () => {
           handleUpdate={handleUpdateButtonClick}
         />
       </div>
+      {JSON.stringify(tableData)}
     </div>
   );
 };
