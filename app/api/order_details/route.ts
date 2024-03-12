@@ -35,7 +35,7 @@ export async function PATCH(request: NextRequest) {
 
   // if status is fullfilled, create stockout and update stock quantity
   try {
-    if (status == StatusEnum.fullfilled) {
+    if (status == StatusEnum.fulfilled) {
       const orderDetail = await prisma.orderDetail.findUnique({
         where: {
           id: id,
