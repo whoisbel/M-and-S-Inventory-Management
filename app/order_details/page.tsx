@@ -37,7 +37,7 @@ const OrderDetails = () => {
   });
   const [sort, setSort] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
-  
+
   useEffect(() => {
     const fetchData = async () => {
       const response = await fetch("api/order_details");
@@ -257,57 +257,59 @@ const OrderDetails = () => {
         )}
       <div className="bg-accent-gray py-2 px-3 grid grid-cols-2">
         <div className="flex  gap-2">
-        <div className="flex gap-3">
-          <label>Sort by:</label>
-          <select
-            name="sort-select"
-            id=""
-            onChange={(e) => setSort(e.target.value)}
-          >
-            <option value="select sort">Select Sort</option>
-            <option value="order-date ascending">Order Date Ascending</option>
-            <option value="order-date descending">Order Date Descending</option>
-            <option value="loading-schedule ascending">
-              Loading Schedule Ascending
-            </option>
-            <option value="loading-schedule descending">
-              Loading Schedule Descending
-            </option>
-          </select>
-        </div>
-        <div className="flex gap-3">
-          <label>Filters:</label>
-          <select
-            className="w min-w-[150px]"
-            onChange={(e) => {
-              setFilterOptions({
-                ...filterOptions,
-                dateFilter: e.target.value,
-              });
-            }}
-          >
-            <option value="">Date</option>
-            {dateFilters.map((date, index) => (
-              <option key={index} value={date}>
-                {date}
+          <div className="flex gap-3">
+            <label>Sort by:</label>
+            <select
+              name="sort-select"
+              id=""
+              onChange={(e) => setSort(e.target.value)}
+            >
+              <option value="select sort">Select Sort</option>
+              <option value="order-date ascending">Order Date Ascending</option>
+              <option value="order-date descending">
+                Order Date Descending
               </option>
-            ))}
-          </select>
+              <option value="loading-schedule ascending">
+                Loading Schedule Ascending
+              </option>
+              <option value="loading-schedule descending">
+                Loading Schedule Descending
+              </option>
+            </select>
+          </div>
+          <div className="flex gap-3">
+            <label>Filters:</label>
+            <select
+              className="w min-w-[150px]"
+              onChange={(e) => {
+                setFilterOptions({
+                  ...filterOptions,
+                  dateFilter: e.target.value,
+                });
+              }}
+            >
+              <option value="">Date</option>
+              {dateFilters.map((date, index) => (
+                <option key={index} value={date}>
+                  {date}
+                </option>
+              ))}
+            </select>
 
-          <select
-            className="w min-w-[150px]"
-            onChange={(e) => {
-              setFilterOptions({ ...filterOptions, status: e.target.value });
-            }}
-          >
-            <option value="">Status</option>
-            {Object.keys(StatusEnum).map((status, index) => (
-              <option key={index} value={status}>
-                {status}
-              </option>
-            ))}
-          </select>
-        </div>
+            <select
+              className="w min-w-[150px]"
+              onChange={(e) => {
+                setFilterOptions({ ...filterOptions, status: e.target.value });
+              }}
+            >
+              <option value="">Status</option>
+              {Object.keys(StatusEnum).map((status, index) => (
+                <option key={index} value={status}>
+                  {status}
+                </option>
+              ))}
+            </select>
+          </div>
         </div>
         <div className="flex justify-end">
           <SearchBar onSearch={handleSearch} />

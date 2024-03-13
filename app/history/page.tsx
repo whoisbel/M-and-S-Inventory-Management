@@ -1,14 +1,21 @@
 "use client";
-import { DownloadButton, NewCustomTable, CustomTable, SearchBar } from "@/components";
+import {
+  DownloadButton,
+  NewCustomTable,
+  CustomTable,
+  SearchBar,
+} from "@/components";
 import { useEffect, useState } from "react";
 import { ActionLog, Venue, Event } from "@prisma/client";
 import * as XLSX from "xlsx";
+import { use } from "chai";
 const History = () => {
   const [actionLogs, setActionLogs] = useState<ActionLog[]>([]);
   const [tableData, setTableData] = useState<{
     [key: number]: string[];
   }>({});
   const [isLoading, setIsLoading] = useState(true);
+  const [searchTerm, setSearchTerm] = useState("");
 
   //get data
   useEffect(() => {
@@ -27,6 +34,21 @@ const History = () => {
   useEffect(() => {
     makeTableData();
   }, [actionLogs]);
+
+  useEffect(() => {
+    if (searchTerm === "") {
+      makeTableData();
+    } else {
+      const filteredData = Object.values(tableData).filter((row) =>
+        row[row.length - 1].toLowerCase().includes(searchTerm.toLowerCase())
+      );
+      const filteredTableData: { [key: number]: string[] } = {};
+      filteredData.forEach((row, index) => {
+        filteredTableData[index] = row;
+      });
+      setTableData(filteredTableData);
+    }
+  }, [actionLogs, searchTerm]);
   function makeTableData() {
     const tableData: { [key: number]: string[] } = {};
 
@@ -93,12 +115,13 @@ const History = () => {
     XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
     XLSX.writeFile(wb, "tableData.xlsx");
   }
+  const handleSearch = (searchTerm: string) => {
+    setSearchTerm(searchTerm);
+  };
   return (
     <div className="h-full w-full bg-white text-black">
       <div className="bg-accent-gray py-2 px-3 flex justify-end">
-          <SearchBar onSearch={function (searchTerm: string): void {
-          throw new Error("Function not implemented.");
-        } }  />
+        <SearchBar onSearch={handleSearch} />
       </div>
       <div className="flex justify-end">
         <DownloadButton onClick={downloadTableAsExcel} />
