@@ -1,5 +1,5 @@
 "use client";
-import { DownloadButton, NewCustomTable, CustomTable } from "@/components";
+import { DownloadButton, NewCustomTable, CustomTable, SearchBar } from "@/components";
 import { useEffect, useState } from "react";
 import { ActionLog, Venue, Event } from "@prisma/client";
 import * as XLSX from "xlsx";
@@ -95,6 +95,11 @@ const History = () => {
   }
   return (
     <div className="h-full w-full bg-white text-black">
+      <div className="bg-accent-gray py-2 px-3 flex justify-end">
+          <SearchBar onSearch={function (searchTerm: string): void {
+          throw new Error("Function not implemented.");
+        } }  />
+      </div>
       <div className="flex justify-end">
         <DownloadButton onClick={downloadTableAsExcel} />
       </div>
