@@ -37,6 +37,7 @@ const OrderDetails = () => {
   });
   const [sort, setSort] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
+  
   useEffect(() => {
     const fetchData = async () => {
       const response = await fetch("api/order_details");
@@ -254,10 +255,8 @@ const OrderDetails = () => {
           />,
           swal.getHtmlContainer()!
         )}
-      <div className="bg-accent-gray py-2 px-3 flex gap-2">
-        <div className="flex gap-3">
-          <SearchBar onSearch={handleSearch} />
-        </div>
+      <div className="bg-accent-gray py-2 px-3 grid grid-cols-2">
+        <div className="flex  gap-2">
         <div className="flex gap-3">
           <label>Sort by:</label>
           <select
@@ -308,6 +307,10 @@ const OrderDetails = () => {
               </option>
             ))}
           </select>
+        </div>
+        </div>
+        <div className="flex justify-end">
+          <SearchBar onSearch={handleSearch} />
         </div>
       </div>
       <div className="flex justify-end">

@@ -137,19 +137,19 @@ const StockoutPage = () => {
           new Date(data[Number(a)][0]).getTime()
         );
       } else if (sort == "grade ascending") {
-        return data[Number(a)][1].localeCompare(data[Number(b)][2]);
+        return data[Number(a)][0].localeCompare(data[Number(b)][0]);
       } else if (sort == "grade descending") {
-        return data[Number(b)][1].localeCompare(data[Number(a)][2]);
-      } else if (sort == "quantity ascending") {
-        const quantityA = Number(data[Number(a)][3]);
-        const quantityB = Number(data[Number(b)][3]);
+        return data[Number(b)][0].localeCompare(data[Number(a)][0]);
+      } else if (sort == "quantity descending") {
+        const quantityA = Number(data[Number(a)][1]);
+        const quantityB = Number(data[Number(b)][1]);
         if (isNaN(quantityA) || isNaN(quantityB)) {
           return 0;
         }
         return quantityA - quantityB;
-      } else if (sort == "quantity descending") {
-        const quantityA = Number(data[Number(a)][2]);
-        const quantityB = Number(data[Number(b)][2]);
+      } else if (sort == "quantity ascending") {
+        const quantityA = Number(data[Number(a)][1]);
+        const quantityB = Number(data[Number(b)][1]);
         if (isNaN(quantityA) || isNaN(quantityB)) {
           return 0;
         }

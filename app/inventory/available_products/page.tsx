@@ -106,28 +106,28 @@ const AvailableProducts = () => {
         return data[Number(a)][0].localeCompare(data[Number(b)][0]);
       } else if (sort == "grade descending") {
         return data[Number(b)][0].localeCompare(data[Number(a)][0]);
-      } else if (sort == "quantity ascending") {
-        const quantityA = Number(data[Number(a)][1]);
-        const quantityB = Number(data[Number(b)][1]);
-        if (isNaN(quantityA) || isNaN(quantityB)) {
-          return 0;
-        }
-        return quantityA - quantityB;
       } else if (sort == "quantity descending") {
         const quantityA = Number(data[Number(a)][1]);
         const quantityB = Number(data[Number(b)][1]);
         if (isNaN(quantityA) || isNaN(quantityB)) {
           return 0;
         }
+        return quantityA - quantityB;
+      } else if (sort == "quantity ascending") {
+        const quantityA = Number(data[Number(a)][1]);
+        const quantityB = Number(data[Number(b)][1]);
+        if (isNaN(quantityA) || isNaN(quantityB)) {
+          return 0;
+        }
         return quantityB - quantityA;
-      } else if (sort == "price ascending") {
+      } else if (sort == "price descending") {
         const priceA = Number(data[Number(a)][3].replace(/[^0-9.-]+/g, ""));
         const priceB = Number(data[Number(b)][3].replace(/[^0-9.-]+/g, ""));
         if (isNaN(priceA) || isNaN(priceB)) {
           return 0;
         }
         return priceA - priceB;
-      } else if (sort == "price descending") {
+      } else if (sort == "price ascending") {
         const priceA = Number(data[Number(a)][3].replace(/[^0-9.-]+/g, ""));
         const priceB = Number(data[Number(b)][3].replace(/[^0-9.-]+/g, ""));
         if (isNaN(priceA) || isNaN(priceB)) {

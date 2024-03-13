@@ -239,13 +239,13 @@ const HarvestLogs = () => {
           new Date(data[Number(b)][0]).getTime() -
           new Date(data[Number(a)][0]).getTime()
         );
-      } else if (sort == "area ascending") {
-        return data[Number(a)][1].localeCompare(data[Number(b)][1]);
       } else if (sort == "area descending") {
+        return data[Number(a)][1].localeCompare(data[Number(b)][1]);
+      } else if (sort == "area ascending") {
         return data[Number(b)][1].localeCompare(data[Number(a)][1]);
-      } else if (sort == "quantity ascending") {
-        return Number(data[Number(a)][2]) - Number(data[Number(b)][2]);
       } else if (sort == "quantity descending") {
+        return Number(data[Number(a)][2]) - Number(data[Number(b)][2]);
+      } else if (sort == "quantity ascending") {
         return Number(data[Number(b)][2]) - Number(data[Number(a)][2]);
       } else {
         return 0;

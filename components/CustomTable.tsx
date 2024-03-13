@@ -118,11 +118,11 @@ const CustomTable = ({
                     ) {
                       return (
                         <td className="body_border" align="right" key={index}>
-                          {data.includes("update") && (
-                            <UpdateButton keyNo={+key} />
-                          )}{" "}
                           {data.includes("stockout") && (
                             <StockoutButton keyNo={+key} />
+                          )}{" "}
+                          {data.includes("update") && (
+                            <UpdateButton keyNo={+key} />
                           )}{" "}
                           {data.includes("delete") && (
                             <DeleteButton keyNo={+key} />
