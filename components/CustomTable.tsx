@@ -4,22 +4,6 @@ import { BsBagXFill } from "react-icons/bs";
 import { LuSendToBack } from "react-icons/lu";
 import { GiStockpiles } from "react-icons/gi";
 import { LoadingRing } from ".";
-/* 
-  Custom Table 
-  params: 
-  array of string for the table headers,
-  object where key is type number and returns a array value,
-  handleDelete a function (id: number) => {delete}
-  handleUpdate (id: number) => update,
-  ex. Usage
-  const headers = ['id','name', 'age' , 'actions']
-  cosnt data = {
-    1: [1, 'name1', 23, 'update delete']
-    2: [2, 'name2', 23, 'delete']  //pwede ra update or delete or both make sure lang nga naay update and delete functions para di 
-                                      mag error inig click
-  }
-  
-*/
 const CustomTable = ({
   headers,
   data,
@@ -32,7 +16,6 @@ const CustomTable = ({
   let DeleteButton = ({ keyNo }: { keyNo: number }) => <></>;
   let StockoutButton = ({ keyNo }: { keyNo: number }) => <></>;
   if (handleUpdate) {
-    // eslint-disable-next-line react/display-name
     UpdateButton = function ({ keyNo }: { keyNo: number }) {
       return (
         <button
@@ -47,7 +30,6 @@ const CustomTable = ({
     };
   }
   if (handleDelete) {
-    // eslint-disable-next-line react/display-name
     DeleteButton = ({ keyNo }: { keyNo: number }) => (
       <button
         onClick={(e) => {
@@ -60,7 +42,6 @@ const CustomTable = ({
     );
   }
   if (handleStockout) {
-    // eslint-disable-next-line react/display-name
     StockoutButton = ({ keyNo }: { keyNo: number }) => (
       <button
         onClick={(e) => {
@@ -74,9 +55,7 @@ const CustomTable = ({
   }
 
   return (
-    <table
-    align="left" className="table-auto border-0 rounded-none w-full"
-    >
+    <table align="left" className="table-auto border-0 rounded-none w-full">
       <thead>
         <tr>
           {headers.map((header, ind) => (
@@ -106,7 +85,6 @@ const CustomTable = ({
             .reverse()
             .map((key, ind) => {
               const row = data[Number(key)];
-
               return (
                 <tr key={key}>
                   {row.map((data, index) => {
@@ -130,7 +108,15 @@ const CustomTable = ({
                         </td>
                       );
                     } else {
-                      return <td className="body_border" key={index}>{data}</td>;
+                      // Check if the header is "Quantity" and append "KG"
+                      const header = headers[index];
+                      const displayData =
+                        header.toLowerCase() === "quantity" ? `${data} KG` : data;
+                      return (
+                        <td className="body_border" key={index}>
+                          {displayData}
+                        </td>
+                      );
                     }
                   })}
                 </tr>
